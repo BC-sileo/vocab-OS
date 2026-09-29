@@ -10,7 +10,7 @@
 <body>
   <header class="topbar">
     <div>
-      <div class="eyebrow">VOCAB OS · v0.2</div>
+      <div class="eyebrow">VOCAB OS · v0.3</div>
       <h1>単語を、構造から覚える。</h1>
     </div>
     <button id="tocBtn" class="icon-btn" aria-label="目次">☰</button>
@@ -49,9 +49,9 @@
       <div class="mode-block">
         <div class="label-title">想起方法</div>
         <div class="mode-grid">
-          <button class="mode-btn active" data-mode="sheet">
-            <strong>赤シート</strong>
-            <small>単語を見て、意味を思い出す</small>
+          <button class="mode-btn active" data-mode="swipe">
+            <strong>右スワイプ</strong>
+            <small>スペルを右へスワイプして答えを見る</small>
           </button>
           <button class="mode-btn" data-mode="image">
             <strong>画像</strong>
@@ -96,10 +96,6 @@
       <div id="tocItems"></div>
     </div>
   </aside>
-
-  <div id="sheetLine" class="sheet-line hidden" role="slider" aria-label="赤シート境界" tabindex="0">
-    <span>↕</span>
-  </div>
 
   <script src="app.js"></script>
 </body>
