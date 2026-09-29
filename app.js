@@ -25,20 +25,18 @@ const KEY="vocabOS_v02";
 const saved=JSON.parse(localStorage.getItem(KEY)||"{}");
 let pageSize=Number(saved.pageSize)||10;
 let sessionPages=Number(saved.sessionPages)||1;
-let mode=saved.mode||"sheet";
+let mode=saved.mode==="sheet"||!saved.mode?"swipe":saved.mode;
 let order=saved.order||WORDS.map(w=>w.id);
 let states=saved.states||{};
-let sheetY=Number(saved.sheetY)||window.innerHeight*.45;
 let reviewPageIndex=0;
 let sessionStartPage=1;
 let sessionWordIds=[];
 let resultIds=[];
-let dragging=false;
 
 const $=s=>document.querySelector(s);
 const pageSizeEl=$("#pageSize"),sessionPagesEl=$("#sessionPages"),list=$("#wordList");
 
-function save(){localStorage.setItem(KEY,JSON.stringify({pageSize,sessionPages,mode,order,states,sheetY}));}
+function save(){localStorage.setItem(KEY,JSON.stringify({pageSize,sessionPages,mode,order,states}));}
 function pageCount(){return Math.max(1,Math.ceil(order.length/pageSize))}
 function pageIds(p){const n=p||1;return order.slice((n-1)*pageSize,n*pageSize)}
 function wordsFor(p){const ids=new Set(pageIds(p));return order.filter(id=>ids.has(id)).map(id=>WORDS[id-1])}
@@ -76,13 +74,27 @@ function renderReviewPage(){
     const el=document.createElement("article");
     el.className="word"; el.id="word-"+w.id;
     const img='<img class="image-cue" loading="lazy" src="https://loremflickr.com/720/405/'+encodeURIComponent(w.imageSearch)+'?lock='+w.id+'" alt="'+w.word+'の画像">';
-    const answer='<div class="image-answer"><div class="word-head"><h3>'+w.word+'</h3><span class="pos">'+w.pos+'</span></div><div class="translation">'+w.translation+'</div><div class="core-line">コアイメージ：'+w.coreImage+'</div></div>';
-    const sheet='<div class="word-head"><h3>'+w.word+'</h3><span class="pos">'+w.pos+'</span></div><div class="translation answer">'+w.translation+'</div><div class="core-line">コアイメージ：'+w.coreImage+'</div>';
+    const answer='<div class="swipe-answer"><div class="translation">'+w.translation+'</div><div class="core-line">コアイメージ：'+w.coreImage+'</div></div>';
+    const swipe='<div class="swipe-target"><div class="word-head"><h3>'+w.word+'</h3><span class="pos">'+w.pos+'</span></div></div>'+answer;
+    const imageAnswer='<div class="image-answer"><div class="word-head"><h3>'+w.word+'</h3><span class="pos">'+w.pos+'</span></div><div class="translation">'+w.translation+'</div><div class="core-line">コアイメージ：'+w.coreImage+'</div></div>';
     el.innerHTML=mode==="image"
-      ? img+'<button class="image-reveal" type="button">答えを見る</button>'+answer
-      : sheet;
+      ? img+'<button class="image-reveal" type="button">答えを見る</button>'+imageAnswer
+      : swipe;
     if(mode==="image"){
       el.querySelector(".image-reveal").onclick=e=>{e.currentTarget.style.display="none";el.querySelector(".image-answer").classList.add("revealed");};
+    }else{
+      const target=el.querySelector(".swipe-target"),answerEl=el.querySelector(".swipe-answer");
+      let startX=0,startY=0;
+      target.addEventListener("touchstart",e=>{
+        const t=e.changedTouches[0];startX=t.clientX;startY=t.clientY;
+      },{passive:true});
+      target.addEventListener("touchend",e=>{
+        const t=e.changedTouches[0],dx=t.clientX-startX,dy=Math.abs(t.clientY-startY);
+        if(dx>55&&dx>dy*1.2){
+          answerEl.classList.add("revealed");
+          target.classList.add("revealed");
+        }
+      },{passive:true});
     }
     const row=document.createElement("div"); row.className="state-row";
     ["即答","遅い","曖昧","不正解"].forEach(s=>{const b=document.createElement("button");b.textContent=s;b.dataset.state=s;if(state===s)b.classList.add("active");b.onclick=()=>setState(w.id,s);row.appendChild(b)});
@@ -91,9 +103,7 @@ function renderReviewPage(){
   $("#progressText").textContent=(reviewPageIndex*pageSize+ids.length)+" / "+Math.min(sessionPages*pageSize,order.length)+"語";
   $("#pageText").textContent="Page "+p+" / "+sessionPages;
   $("#progressBar").style.width=(p/sessionPages*100)+"%";
-  $("#modeHint").textContent=mode==="sheet"?"赤い境界線より下が隠れます。思い出したら線を動かして答え合わせ。":"画像を手掛かりに単語を想起。答えを見てから自己評価します。";
-  $("#sheetLine").classList.toggle("hidden",mode!=="sheet");
-  if(mode==="sheet")applySheet();
+  $("#modeHint").textContent=mode==="swipe"?"スペルを右へスワイプすると、意味とコアイメージが出ます。":"画像を手掛かりに単語を想起。答えを見てから自己評価します.";
   renderToc();
   window.scrollTo({top:0,behavior:"instant"});
 }
@@ -127,8 +137,6 @@ function renderResults(){
   $("#finishHint").textContent="一番下までスクロールすると終了できます。";
 }
 function enableFinish(){if(!$("#resultView").classList.contains("hidden")){$("#finishBtn").disabled=false;$("#finishHint").textContent="ここまで見たら終了できます。";}}
-function applySheet(){document.querySelectorAll(".answer").forEach(el=>{const r=el.getBoundingClientRect();el.classList.toggle("sheet-hidden",r.top>sheetY)})}
-function setSheet(y){sheetY=Math.max(80,Math.min(window.innerHeight-40,y));$("#sheetLine").style.top=sheetY+"px";applySheet();save()}
 function renderToc(){
   $("#tocItems").innerHTML=wordsFor(currentReviewPage()).map((w,i)=>'<button class="toc-item" data-target="'+w.id+'">'+(i+1)+". "+w.word+'<small>'+w.translation+'</small></button>').join("");
   $("#tocItems").querySelectorAll(".toc-item").forEach(b=>b.onclick=()=>{document.getElementById("word-"+b.dataset.target)?.scrollIntoView({behavior:"smooth",block:"start"});closeToc()});
@@ -146,15 +154,4 @@ $("#finishBtn").onclick=()=>{showView("homeView");window.scrollTo({top:0,behavio
 $("#tocBtn").onclick=openToc;$("#tocClose").onclick=closeToc;$("#toc").onclick=e=>{if(e.target.id==="toc")closeToc()};
 window.addEventListener("scroll",()=>{if(window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-20)enableFinish()});
 
-const line=$("#sheetLine");
-line.addEventListener("pointerdown",e=>{dragging=true;line.setPointerCapture(e.pointerId)});
-line.addEventListener("pointermove",e=>{if(dragging)setSheet(e.clientY)});
-line.addEventListener("pointerup",()=>{dragging=false});
-line.addEventListener("keydown",e=>{if(e.key==="ArrowUp"){e.preventDefault();setSheet(sheetY-20)}if(e.key==="ArrowDown"){e.preventDefault();setSheet(sheetY+20)}});
-
-let touchStartX=0;
-document.addEventListener("touchstart",e=>{touchStartX=e.changedTouches[0].clientX},{passive:true});
-document.addEventListener("touchend",e=>{const x=e.changedTouches[0].clientX;if(touchStartX>window.innerWidth-35&&x<touchStartX-60)openToc()},{passive:true});
-window.addEventListener("resize",()=>{sheetY=Math.min(sheetY,window.innerHeight-40);setSheet(sheetY)});
-window.addEventListener("scroll",()=>{if(mode==="sheet"&&!$("#reviewView").classList.contains("hidden"))applySheet()},{passive:true});
 showView("homeView");
