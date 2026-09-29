@@ -10,33 +10,84 @@
 <body>
   <header class="topbar">
     <div>
-      <div class="eyebrow">VOCAB OS · v0.1</div>
+      <div class="eyebrow">VOCAB OS · v0.2</div>
       <h1>単語を、構造から覚える。</h1>
     </div>
     <button id="tocBtn" class="icon-btn" aria-label="目次">☰</button>
   </header>
 
-  <main>
-    <section class="controls card">
-      <label>1ページの語数
-        <select id="pageSize"><option>5</option><option selected>10</option><option>15</option><option>20</option></select>
-      </label>
-      <label>ページ
-        <select id="pageSelect"></select>
-      </label>
-      <div class="actions">
-        <button id="shuffleBtn">ページ内シャッフル</button>
-        <button id="resetBtn" class="subtle">順序を戻す</button>
+  <main id="homeView">
+    <section class="hero card">
+      <p class="eyebrow">REVIEW</p>
+      <h2>今日は、どこまでやる？</h2>
+      <p>語数・ページ数・想起方法を開始前に決めて、終わったページから次へ進みます。</p>
+      <button id="reviewBtn" class="primary-btn">復習モード</button>
+    </section>
+  </main>
+
+  <main id="setupView" class="hidden">
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">REVIEW SETUP</p>
+          <h2>開始前に設定</h2>
+        </div>
+        <button id="setupBack" class="subtle-btn">戻る</button>
       </div>
-    </section>
 
+      <div class="setup-grid">
+        <label>1ページの語数
+          <select id="pageSize">
+            <option>5</option><option selected>10</option><option>15</option><option>20</option>
+          </select>
+        </label>
+        <label>今日やるページ数
+          <select id="sessionPages"></select>
+        </label>
+      </div>
+
+      <div class="mode-block">
+        <div class="label-title">想起方法</div>
+        <div class="mode-grid">
+          <button class="mode-btn active" data-mode="sheet">
+            <strong>赤シート</strong>
+            <small>単語を見て、意味を思い出す</small>
+          </button>
+          <button class="mode-btn" data-mode="image">
+            <strong>画像</strong>
+            <small>画像を手掛かりに、単語を思い出す</small>
+          </button>
+        </div>
+      </div>
+
+      <button id="startReview" class="primary-btn">この設定で開始</button>
+    </section>
+  </main>
+
+  <main id="reviewView" class="hidden">
     <section class="session card">
-      <div><strong id="progressText">0 / 0語</strong><span id="pageText"></span></div>
+      <div class="session-top">
+        <strong id="progressText">0 / 0語</strong>
+        <span id="pageText"></span>
+      </div>
       <div class="progress"><div id="progressBar"></div></div>
-      <p class="hint">赤い境界線より下が隠れます。思い出したら線を動かして答え合わせ。</p>
+      <p id="modeHint" class="hint"></p>
     </section>
-
     <section id="wordList" class="word-list" aria-live="polite"></section>
+  </main>
+
+  <main id="resultView" class="hidden">
+    <section class="result-intro card">
+      <p class="eyebrow">RESULT</p>
+      <h2>今回の接触ポイント</h2>
+      <p id="resultSummary"></p>
+      <p class="hint">苦手だった語を、画像 → スペル → コアイメージの順で繰り返し見ます。</p>
+    </section>
+    <section id="resultList" class="result-list"></section>
+    <section id="finishGate" class="finish-gate card">
+      <p id="finishHint">一番下までスクロールすると終了できます。</p>
+      <button id="finishBtn" class="primary-btn" disabled>復習を終了</button>
+    </section>
   </main>
 
   <aside id="toc" class="toc" aria-hidden="true">
@@ -46,7 +97,7 @@
     </div>
   </aside>
 
-  <div id="sheetLine" class="sheet-line" role="slider" aria-label="赤シート境界" tabindex="0">
+  <div id="sheetLine" class="sheet-line hidden" role="slider" aria-label="赤シート境界" tabindex="0">
     <span>↕</span>
   </div>
 
