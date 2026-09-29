@@ -156,4 +156,5 @@ let touchStartX=0;
 document.addEventListener("touchstart",e=>{touchStartX=e.changedTouches[0].clientX},{passive:true});
 document.addEventListener("touchend",e=>{const x=e.changedTouches[0].clientX;if(touchStartX>window.innerWidth-35&&x<touchStartX-60)openToc()},{passive:true});
 window.addEventListener("resize",()=>{sheetY=Math.min(sheetY,window.innerHeight-40);setSheet(sheetY)});
-openSetup();
+window.addEventListener("scroll",()=>{if(mode==="sheet"&&!$("#reviewView").classList.contains("hidden"))applySheet()},{passive:true});
+showView("homeView");
