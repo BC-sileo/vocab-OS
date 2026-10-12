@@ -1,20 +1,36 @@
 # Vocab OS
 
-「情報は豊富に、操作は少なく、視線は迷わせない。」
+スマートフォン中心の語彙学習OS。現在は試作段階。
 
-V0.1 prototype for a smartphone-first vocabulary learning OS.
+## 単語ノート（初版）
+- 20語の検索可能な一覧と詳細ノート
+- 意味の核、コアイメージ、使い方の骨格
+- 英語例文と開閉式の日本語訳
+- 日本語＋英語の混合例文
+- 語源・分解メモ、注意事項
+- ブラウザ音声合成による自動発音と手動再生
+- 単語ごとの画像URL・出典ページ・作者・ライセンスの保存
+- Wikimedia Commons検索リンクと、画像未設定状態の表示
 
-## Implemented
-- vertical word → translation layout
-- fixed page scope with configurable words per page
-- page selector and session progress
-- page-internal shuffle / reset
-- draggable pseudo red-sheet boundary
-- keyboard adjustment of the boundary
-- right-edge swipe-left TOC
-- TOC jump navigation
-- learning state (即答 / 遅い / 曖昧 / 不正解)
-- localStorage persistence
+## 復習プロトタイプ
+- ページ単位での語数設定・進捗
+- 右スワイプで答えを表示するモード
+- 画像を手掛かりにするモード
+- 目次から単語へのジャンプ
+- localStorageによる一部状態の保存
 
-## Not yet
-OCR / AI generation / audio / cloud sync / accounts / native Android app.
+## 画像の探し方
+画像の選定基準と登録手順は [IMAGE_WORKFLOW.md](IMAGE_WORKFLOW.md) を参照。現在は自動で画像を選ばず、単語の意味に合う画像を人が選び、出典情報とともに登録する。
+
+## 現在の制限
+- 語彙データは20語の試作データで、約4,600語の本データではない。
+- 例文・語源メモは初期案で、学習用コンテンツとしての校正が必要。
+- 画像・出典情報はブラウザのlocalStorage保存。別端末同期・バックアップは未実装。
+- 実機での操作テストは未完了。
+- 学習評価の最終仕様、長期復習スケジュール、語彙データモデルは未確定。
+
+## Project records
+- [次回の入口](START_HERE.md)
+- [会話ログ](SESSION_LOG.md)
+- [決定・未決事項台帳](DECISION_LEDGER.md)
+- [画像の選定・登録手順](IMAGE_WORKFLOW.md)
