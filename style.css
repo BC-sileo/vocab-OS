@@ -177,3 +177,11 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .commons-image-option small{font-size:10px;line-height:1.4;color:var(--muted)}
 .commons-image-option:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media(max-width:360px){.commons-image-results{grid-template-columns:1fr}}
+
+
+/* Home-screen background selector */
+.home-theme-card{margin-top:12px}
+.home-theme-card h2{margin-bottom:8px}
+.home-theme-card>.hint{margin-bottom:14px}
+.home-theme-picker{display:grid;gap:7px;margin-top:12px;font-size:13px}
+.home-theme-picker select{width:100%;padding:12px 13px;font-size:14px}
