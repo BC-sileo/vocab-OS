@@ -24,6 +24,31 @@ const NOTE_CONTENT = {
 const IMAGE_QUERIES = {
   1:"person making a commitment handshake promise", 2:"two objects side by side comparison", 3:"person complaining customer service", 4:"complex network of connected parts", 5:"person focusing on one task", 6:"checking confirming a document", 7:"person thinking considering options", 8:"container holding water inside", 9:"people signing a contract", 10:"team contributing pieces to a project", 11:"photo cropping frame", 12:"cruel act unfair treatment", 13:"two people debating discussion", 14:"person denying accusation gesture", 15:"person reaching for desired object", 16:"disturbing a quiet room interruption", 17:"efficient workflow organized tools", 18:"highlighting important text", 19:"teacher encouraging student", 20:"plant existing growing in soil"
 };
+const DECOMP_ELEMENTS = {
+ "com-":{meaning:"共に・一緒に",kind:"接頭辞"},
+ "con-":{meaning:"共に・一緒に",kind:"接頭辞"},
+ "de-":{meaning:"離れる・下へ・反対方向など（語により異なる）",kind:"接頭辞"},
+ "dis-":{meaning:"分離・反対・否定など（語により異なる）",kind:"接頭辞"},
+ "ex-":{meaning:"外へ・外に",kind:"接頭辞"},
+ "en-":{meaning:"〜にする・中へ（語により異なる）",kind:"接頭辞"},
+ "mittere":{meaning:"送る・委ねる",kind:"語根"},
+ "tenere":{meaning:"保つ・つかむ",kind:"語根"},
+ "trahere":{meaning:"引く",kind:"語根"},
+ "firm":{meaning:"堅い・確かな",kind:"語根に関係"},
+ "ness":{meaning:"性質・状態を表す",kind:"接尾辞"}
+};
+const NOTE_PARTS = {
+ 1:["com-","mittere"],2:["com-"],3:["com-"],4:["com-"],5:["con-"],6:["con-","firm"],8:["con-","tenere"],9:["con-","trahere"],10:["con-"],14:["de-"],16:["dis-"],19:["en-"],20:["ex-"]
+};
+let activeDecompFilter="";
+function renderDecompParts(w){
+ const parts=NOTE_PARTS[w.id]||[];
+ if(!parts.length)return "";
+ return '<div class="decomp-parts"><p class="hint">分解要素（タップで関連語）</p><div class="decomp-chips">'+parts.map(part=>{
+  const meta=DECOMP_ELEMENTS[part]||{meaning:"関連要素",kind:"要素"};
+  return '<button type="button" class="decomp-chip" data-part="'+escapeHtml(part)+'"><strong>'+escapeHtml(part)+'</strong><span>'+escapeHtml(meta.meaning)+'</span></button>';
+ }).join("")+'</div></div>';
+}
 function noteFor(w){return {...(NOTE_CONTENT[w.id]||{}),...(notesById[w.id]||{})};}
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function visualSearchQuery(w){return IMAGE_QUERIES[w.id]||w.imageSearch||w.word;}
@@ -40,11 +65,12 @@ function imageCueMarkup(w){
  return url ? '<img class="image-cue" loading="lazy" src="'+escapeHtml(url)+'" alt="'+escapeHtml(w.word)+'の画像" onerror="this.remove()">' : "";
 }
 let noteListScrollY=0;
-function openNotes(){noteListScrollY=0;showView("notesView");$("#notesListPanel").classList.remove("hidden");$("#noteDetailPanel").classList.add("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});}
+function openNotes(){activeDecompFilter="";noteListScrollY=0;showView("notesView");$("#notesListPanel").classList.remove("hidden");$("#noteDetailPanel").classList.add("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});}
 function renderNoteList(){
  const q=$("#noteSearch").value.trim().toLowerCase();
- const rows=WORDS.filter(w=>{const n=noteFor(w);return [w.word,w.translation,w.coreImage,n.meaning,n.usage].join(" ").toLowerCase().includes(q);});
- $("#notesListPanel").innerHTML=rows.map(w=>{const n=noteFor(w);return '<button class="note-list-item" data-id="'+w.id+'"><span class="note-list-word">'+escapeHtml(w.word)+'</span><span class="note-list-core">'+escapeHtml(n.meaning||w.translation)+'</span><span class="note-list-meta">'+escapeHtml(w.pos)+' · '+(imageUrl(w)?'画像あり':'画像未設定')+'</span></button>';}).join("")||'<div class="card">該当する単語がありません。</div>';
+ const rows=WORDS.filter(w=>{const n=noteFor(w),text=[w.word,w.translation,w.coreImage,n.meaning,n.usage].join(" ").toLowerCase();return text.includes(q)&&(!activeDecompFilter||(NOTE_PARTS[w.id]||[]).includes(activeDecompFilter));});
+ $("#notesListPanel").innerHTML=(activeDecompFilter?'<button class="subtle-btn" id="clearDecompFilter">← 全単語に戻る：'+escapeHtml(activeDecompFilter)+'</button>':"")+rows.map(w=>{const n=noteFor(w);return '<button class="note-list-item" data-id="'+w.id+'"><span class="note-list-word">'+escapeHtml(w.word)+'</span><span class="note-list-core">'+escapeHtml(n.meaning||w.translation)+'</span><span class="note-list-meta">'+escapeHtml(w.pos)+' · '+(imageUrl(w)?'画像あり':'画像未設定')+'</span></button>';}).join("")||'<div class="card">該当する単語がありません。</div>';
+ const clear=$("#clearDecompFilter");if(clear)clear.onclick=()=>{activeDecompFilter="";renderNoteList();};
  $("#notesListPanel").querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openNote(Number(b.dataset.id)));
 }
 function openNote(id,autoplay=true){
@@ -54,7 +80,7 @@ function openNote(id,autoplay=true){
  d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button>'+
  '<div class="note-hero">'+imageCueMarkup(w)+'<p class="eyebrow">WORD NOTE</p><div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(w.pos)+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button></div>'+
  '<p class="note-core">'+escapeHtml(w.coreImage||n.meaning||w.translation)+'</p></div>'+
- '<section class="note-section"><h3>語源・分解</h3><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p></section>'+
+ '<section class="note-section"><h3>語源・分解</h3><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w)+'</section>'+
  '<section class="note-section"><h3>使い方の骨格</h3><p>'+escapeHtml(n.usage||"使い方メモは未登録です.")+'</p>'+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
  '<section class="note-section"><h3>例文</h3><p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p><button class="reveal-translation" id="revealExample">日本語訳を見る</button><p id="exampleJa" class="example-ja hidden">'+escapeHtml(n.ja||"")+'</p></section>'+
  '<section class="note-section"><h3>日本語＋英語の混合例文</h3><p class="mixed-sentence">'+mixedExampleMarkup(n)+'</p><p class="hint">文中の英語部分を押すと、そこが表している元の日本語が赤字で表示されます。</p></section>'+
@@ -68,6 +94,7 @@ function openNote(id,autoplay=true){
  '<button id="saveImageData" class="primary-btn">画像情報を保存</button><p id="imageSaveStatus" class="hint" aria-live="polite"></p>'+
  '<p class="hint">端末から選んだ画像は縮小してこのブラウザ内に保存します。URL画像と同じく、出典・作者・ライセンスは必要に応じて記録してください。別端末への同期はありません。</p></div></details>';
  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();requestAnimationFrame(()=>window.scrollTo({top:noteListScrollY,behavior:"instant"}));};
+ d.querySelectorAll("[data-part]").forEach(btn=>btn.onclick=()=>{activeDecompFilter=btn.dataset.part;d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});});
  $("#playWordAudio").onclick=()=>speakWord(w);
  if(autoplay)speakWord(w);
  $("#revealExample").onclick=()=>{$("#exampleJa").classList.toggle("hidden");$("#revealExample").textContent=$("#exampleJa").classList.contains("hidden")?"日本語訳を見る":"日本語訳を隠す";};
