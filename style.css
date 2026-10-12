@@ -117,3 +117,13 @@ select{width:100%;padding:11px;background:var(--panel2);color:var(--text);border
 @media(max-width:420px){.image-meta-grid{grid-template-columns:1fr}.note-title-row h2{font-size:31px}}
 
 .audio-btn{font-size:12px;padding:7px 9px;white-space:nowrap}
+
+/* Word-note order and tappable Japanese source phrase in mixed examples */
+.note-title-row{align-items:center}
+.note-word-line{display:flex;align-items:baseline;gap:9px;min-width:0}
+.note-word-line h2{margin:0}
+.note-word-line .pos{flex:0 0 auto}
+.mixed-sentence{font-size:16px!important;line-height:2!important}
+.mixed-token{display:inline;border:0;border-bottom:1px dashed #dbe2ea;border-radius:0;background:transparent;padding:0 2px;color:#f2f4f7;font:inherit;font-weight:750;vertical-align:baseline}
+.mixed-token:focus-visible{outline:2px solid #dbe2ea;outline-offset:3px}
+.mixed-target{display:block;margin-top:9px;color:#ff5964;font-size:14px;font-weight:750;line-height:1.7}
