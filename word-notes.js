@@ -58,7 +58,9 @@ function openNote(id){
  '<div class="image-meta-grid"><label>作者・権利者<input id="noteImageCreator" placeholder="作者名／不明" value="'+escapeHtml(n.imageCreator||"")+'"></label><label>ライセンス<input id="noteImageLicense" placeholder="例：CC BY-SA 4.0" value="'+escapeHtml(n.imageLicense||"")+'"></label></div>'+
  '<button id="saveImageData" class="primary-btn">画像情報を保存</button><p id="imageSaveStatus" class="hint" aria-live="polite"></p>'+
  '<p class="hint">画像URLと出典情報はこのブラウザのローカル保存に記録されます。別端末への同期はまだありません。画像が表示されない場合は、画像ファイルURLを確認してください。</p></div></details>';
- $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();};\n $("#playWordAudio").onclick=()=>speakWord(w);\n speakWord(w);
+ $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();};
+ $("#playWordAudio").onclick=()=>speakWord(w);
+ speakWord(w);
  $("#revealExample").onclick=()=>{$("#exampleJa").classList.toggle("hidden");$("#revealExample").textContent=$("#exampleJa").classList.contains("hidden")?"日本語訳を見る":"日本語訳を隠す";};
  $("#saveImageData").onclick=()=>saveImageData(id);
  window.scrollTo({top:0,behavior:"instant"});
