@@ -83,7 +83,7 @@ select{width:100%;padding:11px;background:var(--panel2);color:var(--text);border
 .note-list{display:grid;gap:8px}
 .note-list-item{display:grid;grid-template-columns:1fr;gap:5px;text-align:left;padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px}
 .note-list-word{font-size:22px;font-weight:750;letter-spacing:-.02em}
-.note-list-core{font-size:13px;line-height:1.55;color:#d7dde4}
+.note-list-core{font-size:14px;line-height:1.6;color:var(--text)}
 .note-list-meta{font-size:11px;color:var(--muted)}
 .note-detail{padding:15px}
 .note-back{padding:7px 0;margin-bottom:8px;border:0;background:transparent}
@@ -98,14 +98,14 @@ select{width:100%;padding:11px;background:var(--panel2);color:var(--text);border
 .note-section p{font-size:14px;line-height:1.8;margin:0}
 .note-section .hint{font-size:11px;line-height:1.6;margin-top:7px}
 .example-en{font-size:18px!important;font-weight:650}
-.example-ja{margin-top:9px!important;color:#d7dde4}
+.example-ja{margin-top:9px!important;color:var(--text)}
 .reveal-translation{margin-top:10px;font-size:12px}
 .note-fold{padding:13px 0;border-bottom:1px solid var(--line)}
 .note-fold summary{cursor:pointer;font-size:13px;font-weight:650;list-style:none}
 .note-fold summary::-webkit-details-marker{display:none}
 .note-fold summary::after{content:"＋";float:right;color:var(--muted)}
 .note-fold[open] summary::after{content:"−"}
-.note-fold>p{font-size:13px;line-height:1.8;color:#d7dde4;margin:12px 0 0}
+.note-fold>p{font-size:13px;line-height:1.8;color:var(--text);margin:12px 0 0}
 .image-workflow{display:grid;gap:12px;margin-top:13px}
 .image-workflow>p{font-size:12px;line-height:1.7;color:var(--muted)}
 .image-workflow label{display:grid;gap:6px}
@@ -124,9 +124,9 @@ select{width:100%;padding:11px;background:var(--panel2);color:var(--text);border
 .note-word-line h2{margin:0}
 .note-word-line .pos{flex:0 0 auto}
 .mixed-sentence{font-size:16px!important;line-height:2!important}
-.mixed-token{display:inline;border:0;border-bottom:1px dashed #dbe2ea;border-radius:0;background:transparent;padding:0 2px;color:#f2f4f7;font:inherit;font-weight:750;vertical-align:baseline}
+.mixed-token{display:inline;border:0;border-bottom:1px dashed #dbe2ea;border-radius:0;background:transparent;padding:0 2px;color:var(--accent);font:inherit;font-weight:800;vertical-align:baseline}
 .mixed-token:focus-visible{outline:2px solid #dbe2ea;outline-offset:3px}
-.mixed-target{display:block;margin-top:9px;color:#ff5964;font-size:14px;font-weight:750;line-height:1.7}
+.mixed-target{display:block;margin-top:9px;color:var(--red);font-size:14px;font-weight:750;line-height:1.7}
 
 /* User-selectable color themes */
 body[data-theme="paper"]{--bg:#f4f1e8;--panel:#fffdf8;--panel2:#ebe7dc;--text:#292c27;--muted:#646b62;--line:#d8d3c7;--accent:#456b5b;--red:#c62838;--green:#507765}
@@ -141,3 +141,17 @@ body[data-theme="dark"] .topbar{background:color-mix(in srgb,var(--bg) 95%,trans
 .theme-picker{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);white-space:nowrap}
 .theme-picker select{width:auto;max-width:115px;padding:8px 7px;font-size:12px;background:var(--panel);color:var(--text);border-color:var(--line)}
 @media(max-width:420px){.topbar{padding-left:10px;padding-right:10px}.topbar h1{font-size:16px}.theme-picker{gap:3px}.theme-picker select{max-width:94px;padding:7px 5px}.topbar-actions{gap:4px}}
+
+.note-section p,.note-fold>p,.example-ja,.note-list-core{color:var(--text)}
+.note-section .hint,.note-list-meta{color:var(--muted)}
+.usage-warning{margin-top:8px!important;padding:9px 11px;border-left:3px solid var(--red);background:color-mix(in srgb,var(--red) 8%,var(--panel));border-radius:0 8px 8px 0}
+body.has-background-image{background-image:linear-gradient(rgba(12,18,28,.58),rgba(12,18,28,.58)),var(--user-bg-image);background-size:cover;background-position:center;background-attachment:fixed;background-repeat:no-repeat}
+body.has-background-image .topbar{background:rgba(12,18,28,.92);color:#fff;border-color:rgba(255,255,255,.24)}
+body.has-background-image .topbar .eyebrow,body.has-background-image .theme-picker{color:#eaf1f8}
+body.has-background-image .card,body.has-background-image .note-detail,body.has-background-image .note-list-item,body.has-background-image .toc-panel{background:rgba(18,27,39,.95);color:#fff;border-color:rgba(255,255,255,.28)}
+body.has-background-image .note-section,body.has-background-image .note-hero{border-color:rgba(255,255,255,.25)}
+body.has-background-image .note-section p,body.has-background-image .note-fold>p,body.has-background-image .example-ja,body.has-background-image .note-list-core{color:#fff}
+body.has-background-image .note-section .hint,body.has-background-image .note-list-meta{color:#e0e8f0}
+body.has-background-image .theme-picker select{background:#182331;color:#fff;border-color:#657487}
+.background-url{width:100%;max-width:145px;padding:7px 8px!important;font-size:11px!important}
+@media(max-width:520px){.background-url{max-width:94px}.topbar-actions{flex-wrap:wrap;justify-content:flex-end}}
