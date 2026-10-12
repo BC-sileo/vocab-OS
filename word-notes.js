@@ -61,7 +61,7 @@ function openNote(id,autoplay=true){
 
  '<details class="note-fold"><summary>画像の設定・出典情報</summary><div class="image-workflow"><p>画像を端末から選ぶか、画像検索で候補を探して登録できます。</p>'+
  '<div class="image-pick-row"><button id="chooseLocalImage" class="secondary-wide-btn" type="button">📁 端末から画像を選ぶ</button><input id="noteImageFile" type="file" accept="image/*" hidden></div>'+
- '<a class="search-image-link" href="'+commonsSearchUrl(w)+'" target="_blank" rel="noopener">Wikimedia Commonsで画像を探す ↗（別画面）</a>'+
+ '<div class="commons-search"><label>画像を検索<input id="commonsImageQuery" type="search" value="'+escapeHtml(visualSearchQuery(w))+'" placeholder="例：person making a promise"></label><button id="searchCommonsImages" class="secondary-wide-btn" type="button">🔎 候補画像をアプリ内で検索</button><p id="commonsSearchStatus" class="hint" aria-live="polite"></p><div id="commonsImageResults" class="commons-image-results"></div><a class="search-image-link" href="'+commonsSearchUrl(w)+'" target="_blank" rel="noopener">Wikimedia Commonsを別画面で開く ↗</a></div>'+
  '<label>画像ファイルURL<input id="noteImageUrl" type="url" placeholder="URLで登録する場合 https://…" value="'+escapeHtml(n.imageUrl||"")+'"></label>'+
  '<label>出典ページURL<input id="noteImageSource" type="url" placeholder="画像の掲載ページURL" value="'+escapeHtml(n.imageSource||"")+'"></label>'+
  '<div class="image-meta-grid"><label>作者・権利者<input id="noteImageCreator" placeholder="作者名／不明" value="'+escapeHtml(n.imageCreator||"")+'"></label><label>ライセンス<input id="noteImageLicense" placeholder="例：CC BY-SA 4.0" value="'+escapeHtml(n.imageLicense||"")+'"></label></div>'+
@@ -75,6 +75,8 @@ function openNote(id,autoplay=true){
  if(mixedToken&&mixedTarget)mixedToken.onclick=()=>{mixedTarget.classList.toggle("hidden");mixedToken.setAttribute("aria-expanded",String(!mixedTarget.classList.contains("hidden")));};
  $("#saveImageData").onclick=()=>saveImageData(id);
  $("#chooseLocalImage").onclick=()=>$("#noteImageFile").click();
+ $("#searchCommonsImages").onclick=()=>searchCommonsImages(w,id);
+ $("#commonsImageQuery").addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();searchCommonsImages(w,id);}});
  $("#noteImageFile").onchange=async event=>{
   const file=event.target.files&&event.target.files[0];if(!file)return;
   const status=$("#imageSaveStatus");status.textContent="画像を読み込んでいます…";
@@ -93,6 +95,32 @@ function speakWord(w){
  const utterance=new SpeechSynthesisUtterance(w.word);
  utterance.lang="en-US";utterance.rate=0.86;utterance.pitch=1;
  window.speechSynthesis.speak(utterance);
+}
+async function searchCommonsImages(w,id){
+ const query=$("#commonsImageQuery").value.trim(),status=$("#commonsSearchStatus"),results=$("#commonsImageResults"),button=$("#searchCommonsImages");
+ if(!query){status.textContent="検索語を入力してください。";return;}
+ status.textContent="画像候補を検索しています…";results.innerHTML="";button.disabled=true;
+ try{
+  const params=new URLSearchParams({action:"query",format:"json",origin:"*",generator:"search",gsrsearch:query,gsrnamespace:"6",gsrlimit:"12",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"480"});
+  const response=await fetch("https://commons.wikimedia.org/w/api.php?"+params.toString());
+  if(!response.ok)throw new Error("画像検索サービスに接続できませんでした。");
+  const data=await response.json(),pages=Object.values(data.query&&data.query.pages||{});
+  const candidates=pages.map(page=>{
+   const info=(page.imageinfo||[])[0]||{},meta=info.extmetadata||{};
+   const metaText=key=>String(meta[key]&&meta[key].value||"").replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim();
+   return {title:page.title||"",thumb:info.thumburl||info.url||"",url:info.url||"",source:info.descriptionurl||("https://commons.wikimedia.org/wiki/"+encodeURIComponent((page.title||"").replace(/ /g,"_"))),creator:metaText("Artist"),license:metaText("LicenseShortName")||metaText("UsageTerms")};
+  }).filter(item=>item.thumb&&item.url);
+  if(!candidates.length){status.textContent="候補が見つかりません。別の検索語を試してください。";return;}
+  results.innerHTML=candidates.map((item,index)=>'<button class="commons-image-option" type="button" data-index="'+index+'"><img loading="lazy" src="'+escapeHtml(item.thumb)+'" alt=""><span>'+escapeHtml(item.title.replace(/^File:/,""))+'</span><small>'+escapeHtml(item.license||"ライセンス情報を確認してください")+'</small></button>').join("");
+  results.querySelectorAll("[data-index]").forEach(btn=>btn.onclick=()=>{
+   const item=candidates[Number(btn.dataset.index)];
+   notesById[id]={...(notesById[id]||{}),imageUrl:item.url,imageDataUrl:"",imageSource:item.source,imageCreator:item.creator||"不明",imageLicense:item.license||"要確認"};
+   save();openNote(id,false);
+   const savedStatus=$("#imageSaveStatus");if(savedStatus)savedStatus.textContent="画像候補を登録しました。利用条件を確認してください。";
+  });
+  status.textContent=candidates.length+"件の候補。画像をタップすると登録します。作者・ライセンスを確認してから利用してください。";
+ }catch(error){status.textContent=(error&&error.message)||"検索に失敗しました。通信状態を確認してください。";}
+ finally{button.disabled=false;}
 }
 function compressImageFile(file){
  return new Promise((resolve,reject)=>{
