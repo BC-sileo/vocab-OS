@@ -101,10 +101,12 @@ async function searchCommonsImages(w,id){
  if(!query){status.textContent="検索語を入力してください。";return;}
  status.textContent="画像候補を検索しています…";results.innerHTML="";button.disabled=true;
  try{
-  const params=new URLSearchParams({action:"query",format:"json",origin:"*",generator:"search",gsrsearch:query,gsrnamespace:"6",gsrlimit:"12",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"480"});
+  const params=new URLSearchParams({action:"query",format:"json",origin:"*",generator:"search",gsrsearch:"filetype:bitmap "+query,gsrnamespace:"6",gsrlimit:"12",gsrwhat:"text",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"480"});
   const response=await fetch("https://commons.wikimedia.org/w/api.php?"+params.toString());
-  if(!response.ok)throw new Error("画像検索サービスに接続できませんでした。");
-  const data=await response.json(),pages=Object.values(data.query&&data.query.pages||{});
+  if(!response.ok)throw new Error("画像検索サービスがHTTP "+response.status+" を返しました。通信状態を確認して、もう一度試してください。");
+  const data=await response.json();
+  if(data.error)throw new Error("画像検索サービスのエラー："+(data.error.info||data.error.code||"詳細不明"));
+  const pages=Object.values(data.query&&data.query.pages||{});
   const candidates=pages.map(page=>{
    const info=(page.imageinfo||[])[0]||{},meta=info.extmetadata||{};
    const metaText=key=>String(meta[key]&&meta[key].value||"").replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim();
