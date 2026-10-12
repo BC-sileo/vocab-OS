@@ -155,3 +155,12 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 body.has-background-image .theme-picker select{background:#182331;color:#fff;border-color:#657487}
 .background-url{width:100%;max-width:145px;padding:7px 8px!important;font-size:11px!important}
 @media(max-width:520px){.background-url{max-width:94px}.topbar-actions{flex-wrap:wrap;justify-content:flex-end}}
+
+.topbar{position:sticky}
+body.has-background-image{background-image:linear-gradient(rgba(9,15,26,.63),rgba(9,15,26,.63)),var(--user-bg-image);background-size:cover;background-position:center;background-attachment:fixed;background-repeat:no-repeat}
+body.has-background-image .topbar{background:rgba(12,18,28,.93);color:#fff;border-color:rgba(255,255,255,.25)}
+body.has-background-image .topbar .eyebrow,body.has-background-image .theme-picker{color:#eaf1f8}
+body.has-background-image .card,body.has-background-image .note-detail,body.has-background-image .note-list-item,body.has-background-image .toc-panel{background:rgba(18,27,39,.96);color:#fff;border-color:rgba(255,255,255,.3)}
+body.has-background-image .note-section p,body.has-background-image .note-fold>p,body.has-background-image .example-ja,body.has-background-image .note-list-core{color:#fff}
+body.has-background-image .note-section .hint,body.has-background-image .note-list-meta{color:#e0e8f0}
+.background-credit{position:fixed;z-index:9;right:8px;bottom:6px;padding:4px 7px;background:rgba(12,18,28,.78);border-radius:6px;font-size:10px;color:#fff}.background-credit a{color:#fff}
