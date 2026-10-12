@@ -45,7 +45,7 @@ function openNote(id){
  const w=WORDS.find(x=>x.id===id);if(!w)return;const n=noteFor(w);
  $("#notesListPanel").classList.add("hidden");const d=$("#noteDetailPanel");d.classList.remove("hidden");
  d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button>'+
- '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div><p class="eyebrow">WORD NOTE</p><h2>'+escapeHtml(w.word)+'</h2></div><span class="pos">'+escapeHtml(w.pos)+'</span></div>'+
+ '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div><p class="eyebrow">WORD NOTE</p><h2>'+escapeHtml(w.word)+'</h2></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button><span class="pos">'+escapeHtml(w.pos)+'</span></div>'+
  '<p class="note-core">'+escapeHtml(n.meaning||w.translation)+'</p><p class="note-core-image"><span>コアイメージ</span>'+escapeHtml(w.coreImage)+'</p></div>'+
  '<section class="note-section"><h3>使い方の骨格</h3><p>'+escapeHtml(n.usage||"使い方メモは未登録です。")+'</p></section>'+
  '<section class="note-section"><h3>例文</h3><p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p><button class="reveal-translation" id="revealExample">日本語訳を見る</button><p id="exampleJa" class="example-ja hidden">'+escapeHtml(n.ja||"")+'</p></section>'+
@@ -58,10 +58,17 @@ function openNote(id){
  '<div class="image-meta-grid"><label>作者・権利者<input id="noteImageCreator" placeholder="作者名／不明" value="'+escapeHtml(n.imageCreator||"")+'"></label><label>ライセンス<input id="noteImageLicense" placeholder="例：CC BY-SA 4.0" value="'+escapeHtml(n.imageLicense||"")+'"></label></div>'+
  '<button id="saveImageData" class="primary-btn">画像情報を保存</button><p id="imageSaveStatus" class="hint" aria-live="polite"></p>'+
  '<p class="hint">画像URLと出典情報はこのブラウザのローカル保存に記録されます。別端末への同期はまだありません。画像が表示されない場合は、画像ファイルURLを確認してください。</p></div></details>';
- $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();};
+ $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();};\n $("#playWordAudio").onclick=()=>speakWord(w);\n speakWord(w);
  $("#revealExample").onclick=()=>{$("#exampleJa").classList.toggle("hidden");$("#revealExample").textContent=$("#exampleJa").classList.contains("hidden")?"日本語訳を見る":"日本語訳を隠す";};
  $("#saveImageData").onclick=()=>saveImageData(id);
  window.scrollTo({top:0,behavior:"instant"});
+}
+function speakWord(w){
+ if(!("speechSynthesis" in window)||!("SpeechSynthesisUtterance" in window))return;
+ window.speechSynthesis.cancel();
+ const utterance=new SpeechSynthesisUtterance(w.word);
+ utterance.lang="en-US";utterance.rate=0.86;utterance.pitch=1;
+ window.speechSynthesis.speak(utterance);
 }
 function saveImageData(id){
  const url=$("#noteImageUrl").value.trim(),source=$("#noteImageSource").value.trim();
