@@ -7,7 +7,7 @@ const NOTE_CONTENT = {
   5: { meaning:"注意・力・資源を一点へ集める", usage:"concentrate on + 対象。集中する先には on を使う。", decomp:"center（中心）と関連づけ、「中心へ集める」と覚える学習用の連想が役立つ。", example:"I can't concentrate on this task.", ja:"この作業に集中できない。", mixed:"この作業に concentrate できない。", caution:"集中する対象を言うときは concentrate on が基本。" },
   6: { meaning:"照合して、不確かだったことを確かなものにする", usage:"confirm a booking / confirm that ...。情報・予定・事実などを確かめ、確定させる。", decomp:"firm（堅い）と関連づけ、「確かな状態にする」と捉える。", example:"Please confirm your email address.", ja:"メールアドレスを確認してください。", mixed:"メールアドレスを confirm してください。", caution:"check は広く「確認する」、confirm は正しい・確かだと確定させるニュアンスが出やすい。" },
   7: { meaning:"対象を頭の中に置き、判断材料としてよく考える", usage:"consider doing（〜することを検討する）/ consider A (to be) B。", decomp:"語源説明には諸説や歴史的背景があるため、まず「判断材料として考慮に入れる」を軸にする。", example:"We're considering moving to Kyoto.", ja:"私たちは京都へ引っ越すことを検討している。", mixed:"私たちは京都へ引っ越すことを consider している。", caution:"consider の後ろは通常、動名詞 doing。consider to do とはしない。" },
-  8: { meaning:"何かを内側に収め、範囲の中に含む", usage:"contain A（Aを含む・収容する）。物理的な容器にも抽象的な内容にも使う。", decomp:"「内側に保つ」というイメージで、容器と内容の関係をつかむ。", example:"This bottle contains clean water.", ja:"この瓶にはきれいな水が入っている。", mixed:"この瓶にはきれいな水が contain されている。", caution:"contain は「含む／収容する」。include は全体の一部として含めることに焦点がある。" },
+  8: { meaning:"何かを内側に収め、範囲の中に含む", usage:"contain A（Aを含む・収容する）。物理的な容器にも抽象的な内容にも使う。", decomp:"「内側に保つ」というイメージで、容器と内容の関係をつかむ。", example:"This bottle contains clean water.", ja:"この瓶にはきれいな水が入っている。", mixed:"この瓶はきれいな水を contain している。", caution:"contain は「含む／収容する」。include は全体の一部として含めることに焦点がある。" },
   9: { meaning:"条件を定めて当事者を結びつける契約／契約する", usage:"sign a contract（契約に署名する）/ contract with a company。動詞には「縮む」「病気にかかる」など別の意味もある。", decomp:"契約は条件によって当事者を結びつけるもの。これは意味理解のための要約。", example:"They signed a contract yesterday.", ja:"彼らは昨日、契約に署名した。", mixed:"彼らは昨日、契約に sign した。", caution:"contract は名詞・動詞で発音が変わる場合があり、意味も文脈で判断する。" },
   10: { meaning:"全体に対して、自分の一部を差し出す・寄与する", usage:"contribute to + 名詞 / 動名詞。to は前置詞なので後ろに名詞相当が来る。", decomp:"全体へ何かを差し出すイメージで理解する。", example:"Everyone contributed to the project.", ja:"全員がそのプロジェクトに貢献した。", mixed:"全員がそのプロジェクトに contribute した。", caution:"contribute to doing の形では to の後ろが動名詞になる。" },
   11: { meaning:"全体から一部分を切り取る／切り取られた部分", usage:"crop a photo（写真をトリミングする）/ a crop of rice（米の作物・収穫）。", decomp:"画像編集では「枠の外を切り落として一部を残す」という動きを思い浮かべる。", example:"Crop the image to remove the empty space.", ja:"余白を取り除くために画像をトリミングして。", mixed:"余白を取り除くために画像を crop して。", caution:"crop は写真の切り抜きだけでなく、農作物・収穫という意味もある。" },
@@ -41,7 +41,7 @@ function renderNoteList(){
  $("#notesListPanel").innerHTML=rows.map(w=>{const n=noteFor(w);return '<button class="note-list-item" data-id="'+w.id+'"><span class="note-list-word">'+escapeHtml(w.word)+'</span><span class="note-list-core">'+escapeHtml(n.meaning||w.translation)+'</span><span class="note-list-meta">'+escapeHtml(w.pos)+' · '+(imageUrl(w)?'画像あり':'画像未設定')+'</span></button>';}).join("")||'<div class="card">該当する単語がありません。</div>';
  $("#notesListPanel").querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openNote(Number(b.dataset.id)));
 }
-function openNote(id){
+function openNote(id,autoplay=true){
  const w=WORDS.find(x=>x.id===id);if(!w)return;const n=noteFor(w);
  $("#notesListPanel").classList.add("hidden");const d=$("#noteDetailPanel");d.classList.remove("hidden");
  d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button>'+
@@ -60,7 +60,7 @@ function openNote(id){
  '<p class="hint">画像URLと出典情報はこのブラウザのローカル保存に記録されます。別端末への同期はまだありません。画像が表示されない場合は、画像ファイルURLを確認してください。</p></div></details>';
  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();};
  $("#playWordAudio").onclick=()=>speakWord(w);
- speakWord(w);
+ if(autoplay)speakWord(w);
  $("#revealExample").onclick=()=>{$("#exampleJa").classList.toggle("hidden");$("#revealExample").textContent=$("#exampleJa").classList.contains("hidden")?"日本語訳を見る":"日本語訳を隠す";};
  $("#saveImageData").onclick=()=>saveImageData(id);
  window.scrollTo({top:0,behavior:"instant"});
@@ -77,7 +77,7 @@ function saveImageData(id){
  if(url&&!url.toLowerCase().startsWith("http://")&&!url.toLowerCase().startsWith("https://")){$("#imageSaveStatus").textContent="画像URLは http:// または https:// から始めてください。";return;}
  if(source&&!source.toLowerCase().startsWith("http://")&&!source.toLowerCase().startsWith("https://")){$("#imageSaveStatus").textContent="出典ページURLは http:// または https:// から始めてください。";return;}
  notesById[id]={...(notesById[id]||{}),imageUrl:url,imageSource:source,imageCreator:$("#noteImageCreator").value.trim(),imageLicense:$("#noteImageLicense").value.trim()};
- save();openNote(id);$("#imageSaveStatus").textContent="画像情報を保存しました。";
+ save();openNote(id,false);$("#imageSaveStatus").textContent="画像情報を保存しました。";
 }
 $("#notesBtn").onclick=openNotes;
 $("#notesHomeBtn").onclick=()=>showView("homeView");
