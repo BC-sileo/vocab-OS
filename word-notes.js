@@ -31,7 +31,7 @@ function commonsSearchUrl(w){return "https://commons.wikimedia.org/w/index.php?s
 function imageCueMarkup(w){
  const url=imageUrl(w);
  return url
-  ? '<img class="image-cue" loading="lazy" src="'+escapeHtml(url)+'" alt="'+escapeHtml(w.word)+'の画像" onerror="this.style.display=\\'none\\';this.nextElementSibling.style.display=\\'grid\\'"><div class="image-missing" style="display:none">画像を読み込めませんでした</div>'
+  ? '<img class="image-cue" loading="lazy" src="'+escapeHtml(url)+'" alt="'+escapeHtml(w.word)+'の画像" onerror="this.style.display=&quot;none&quot;;this.nextElementSibling.style.display=&quot;grid&quot;"><div class="image-missing" style="display:none">画像を読み込めませんでした</div>'
   : '<div class="image-missing"><strong>画像未設定</strong><span>意味に合う画像を選んで登録できます</span></div>';
 }
 function openNotes(){showView("notesView");$("#notesListPanel").classList.remove("hidden");$("#noteDetailPanel").classList.add("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});}
@@ -65,8 +65,8 @@ function openNote(id){
 }
 function saveImageData(id){
  const url=$("#noteImageUrl").value.trim(),source=$("#noteImageSource").value.trim();
- if(url&&!/^https?:\\/\\//i.test(url)){$("#imageSaveStatus").textContent="画像URLは http:// または https:// から始めてください。";return;}
- if(source&&!/^https?:\\/\\//i.test(source)){$("#imageSaveStatus").textContent="出典ページURLは http:// または https:// から始めてください。";return;}
+ if(url&&!url.toLowerCase().startsWith("http://")&&!url.toLowerCase().startsWith("https://")){$("#imageSaveStatus").textContent="画像URLは http:// または https:// から始めてください。";return;}
+ if(source&&!source.toLowerCase().startsWith("http://")&&!source.toLowerCase().startsWith("https://")){$("#imageSaveStatus").textContent="出典ページURLは http:// または https:// から始めてください。";return;}
  notesById[id]={...(notesById[id]||{}),imageUrl:url,imageSource:source,imageCreator:$("#noteImageCreator").value.trim(),imageLicense:$("#noteImageLicense").value.trim()};
  save();openNote(id);$("#imageSaveStatus").textContent="画像情報を保存しました。";
 }
