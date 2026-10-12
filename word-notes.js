@@ -59,12 +59,14 @@ function openNote(id,autoplay=true){
  '<section class="note-section"><h3>例文</h3><p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p><button class="reveal-translation" id="revealExample">日本語訳を見る</button><p id="exampleJa" class="example-ja hidden">'+escapeHtml(n.ja||"")+'</p></section>'+
  '<section class="note-section"><h3>日本語＋英語の混合例文</h3><p class="mixed-sentence">'+mixedExampleMarkup(n)+'</p><p class="hint">文中の英語部分を押すと、そこが表している元の日本語が赤字で表示されます。</p></section>'+
 
- '<details class="note-fold"><summary>画像の設定・出典情報</summary><div class="image-workflow"><p>1. 画像を探す → 2. 画像ファイルのURLを入力 → 3. 出典・作者・ライセンスを記録して保存。</p><a class="search-image-link" href="'+commonsSearchUrl(w)+'" target="_blank" rel="noopener">Wikimedia Commonsで画像を探す ↗</a>'+
- '<label>画像ファイルURL<input id="noteImageUrl" type="url" placeholder="https://…/image.jpg" value="'+escapeHtml(n.imageUrl||"")+'"></label>'+
+ '<details class="note-fold"><summary>画像の設定・出典情報</summary><div class="image-workflow"><p>画像を端末から選ぶか、画像検索で候補を探して登録できます。</p>'+
+ '<div class="image-pick-row"><button id="chooseLocalImage" class="secondary-wide-btn" type="button">📁 端末から画像を選ぶ</button><input id="noteImageFile" type="file" accept="image/*" hidden></div>'+
+ '<a class="search-image-link" href="'+commonsSearchUrl(w)+'" target="_blank" rel="noopener">Wikimedia Commonsで画像を探す ↗（別画面）</a>'+
+ '<label>画像ファイルURL<input id="noteImageUrl" type="url" placeholder="URLで登録する場合 https://…" value="'+escapeHtml(n.imageUrl||"")+'"></label>'+
  '<label>出典ページURL<input id="noteImageSource" type="url" placeholder="画像の掲載ページURL" value="'+escapeHtml(n.imageSource||"")+'"></label>'+
  '<div class="image-meta-grid"><label>作者・権利者<input id="noteImageCreator" placeholder="作者名／不明" value="'+escapeHtml(n.imageCreator||"")+'"></label><label>ライセンス<input id="noteImageLicense" placeholder="例：CC BY-SA 4.0" value="'+escapeHtml(n.imageLicense||"")+'"></label></div>'+
  '<button id="saveImageData" class="primary-btn">画像情報を保存</button><p id="imageSaveStatus" class="hint" aria-live="polite"></p>'+
- '<p class="hint">画像URLと出典情報はこのブラウザのローカル保存に記録されます。別端末への同期はまだありません。画像が表示されない場合は、画像ファイルURLを確認してください。</p></div></details>';
+ '<p class="hint">端末から選んだ画像は縮小してこのブラウザ内に保存します。URL画像と同じく、出典・作者・ライセンスは必要に応じて記録してください。別端末への同期はありません。</p></div></details>';
  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();};
  $("#playWordAudio").onclick=()=>speakWord(w);
  if(autoplay)speakWord(w);
@@ -72,6 +74,17 @@ function openNote(id,autoplay=true){
  const mixedToken=$("#mixedWordToken"),mixedTarget=$("#mixedTarget");
  if(mixedToken&&mixedTarget)mixedToken.onclick=()=>{mixedTarget.classList.toggle("hidden");mixedToken.setAttribute("aria-expanded",String(!mixedTarget.classList.contains("hidden")));};
  $("#saveImageData").onclick=()=>saveImageData(id);
+ $("#chooseLocalImage").onclick=()=>$("#noteImageFile").click();
+ $("#noteImageFile").onchange=async event=>{
+  const file=event.target.files&&event.target.files[0];if(!file)return;
+  const status=$("#imageSaveStatus");status.textContent="画像を読み込んでいます…";
+  try{
+   const dataUrl=await compressImageFile(file);
+   notesById[id]={...(notesById[id]||{}),imageDataUrl:dataUrl,imageUrl:""};
+   save();openNote(id,false);
+   $("#imageSaveStatus").textContent="端末の画像を保存しました。";
+  }catch(error){status.textContent=error.message||"画像を保存できませんでした。別の画像を試してください。";}
+ };
  window.scrollTo({top:0,behavior:"instant"});
 }
 function speakWord(w){
@@ -81,11 +94,33 @@ function speakWord(w){
  utterance.lang="en-US";utterance.rate=0.86;utterance.pitch=1;
  window.speechSynthesis.speak(utterance);
 }
+function compressImageFile(file){
+ return new Promise((resolve,reject)=>{
+  if(!file.type.startsWith("image/")){reject(new Error("画像ファイルを選んでください。"));return;}
+  const reader=new FileReader();
+  reader.onerror=()=>reject(new Error("画像ファイルを読み込めませんでした。"));
+  reader.onload=()=>{
+   const img=new Image();
+   img.onerror=()=>reject(new Error("この画像形式は読み込めませんでした。JPEGまたはPNGを試してください。"));
+   img.onload=()=>{
+    const maxSide=1200,scale=Math.min(1,maxSide/Math.max(img.naturalWidth,img.naturalHeight));
+    const canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+    const ctx=canvas.getContext("2d");if(!ctx){reject(new Error("画像処理を開始できませんでした。"));return;}
+    ctx.fillStyle="#ffffff";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);
+    const dataUrl=canvas.toDataURL("image/jpeg",0.78);
+    if(dataUrl.length>900000){reject(new Error("画像が大きすぎます。小さい画像を選んでください。"));return;}
+    resolve(dataUrl);
+   };
+   img.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+ });
+}
 function saveImageData(id){
  const url=$("#noteImageUrl").value.trim(),source=$("#noteImageSource").value.trim();
  if(url&&!url.toLowerCase().startsWith("http://")&&!url.toLowerCase().startsWith("https://")){$("#imageSaveStatus").textContent="画像URLは http:// または https:// から始めてください。";return;}
  if(source&&!source.toLowerCase().startsWith("http://")&&!source.toLowerCase().startsWith("https://")){$("#imageSaveStatus").textContent="出典ページURLは http:// または https:// から始めてください。";return;}
- notesById[id]={...(notesById[id]||{}),imageUrl:url,imageSource:source,imageCreator:$("#noteImageCreator").value.trim(),imageLicense:$("#noteImageLicense").value.trim()};
+ notesById[id]={...(notesById[id]||{}),imageUrl:url,imageDataUrl:url?"":(notesById[id]||{}).imageDataUrl||"",imageSource:source,imageCreator:$("#noteImageCreator").value.trim(),imageLicense:$("#noteImageLicense").value.trim()};
  save();openNote(id,false);$("#imageSaveStatus").textContent="画像情報を保存しました。";
 }
 $("#notesBtn").onclick=openNotes;
