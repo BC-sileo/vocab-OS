@@ -28,6 +28,7 @@ let sessionPages=Number(saved.sessionPages)||1;
 let mode=saved.mode==="sheet"||!saved.mode?"swipe":saved.mode;
 let order=saved.order||WORDS.map(w=>w.id);
 let states=saved.states||{};
+let notesById=saved.notes||{};
 let reviewPageIndex=0;
 let sessionStartPage=1;
 let sessionWordIds=[];
@@ -36,11 +37,11 @@ let resultIds=[];
 const $=s=>document.querySelector(s);
 const pageSizeEl=$("#pageSize"),sessionPagesEl=$("#sessionPages"),list=$("#wordList");
 
-function save(){localStorage.setItem(KEY,JSON.stringify({pageSize,sessionPages,mode,order,states}));}
+function save(){localStorage.setItem(KEY,JSON.stringify({pageSize,sessionPages,mode,order,states,notes:notesById}));}
 function pageCount(){return Math.max(1,Math.ceil(order.length/pageSize))}
 function pageIds(p){const n=p||1;return order.slice((n-1)*pageSize,n*pageSize)}
 function wordsFor(p){const ids=new Set(pageIds(p));return order.filter(id=>ids.has(id)).map(id=>WORDS[id-1])}
-function showView(id){["homeView","setupView","reviewView","resultView"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id));}
+function showView(id){["homeView","notesView","setupView","reviewView","resultView"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id));}
 function populateSessionPages(){
   const max=pageCount();
   sessionPages=Math.max(1,Math.min(sessionPages,max));
@@ -73,7 +74,7 @@ function renderReviewPage(){
     const state=states[w.id]||"";
     const el=document.createElement("article");
     el.className="word"; el.id="word-"+w.id;
-    const img='<img class="image-cue" loading="lazy" src="https://loremflickr.com/720/405/'+encodeURIComponent(w.imageSearch)+'?lock='+w.id+'" alt="'+w.word+'の画像">';
+    const img=imageCueMarkup(w);
     const answer='<div class="swipe-answer"><div class="translation">'+w.translation+'</div><div class="core-line">コアイメージ：'+w.coreImage+'</div></div>';
     const swipe='<div class="swipe-target"><div class="word-head"><h3>'+w.word+'</h3><span class="pos">'+w.pos+'</span></div></div>'+answer;
     const imageAnswer='<div class="image-answer"><div class="word-head"><h3>'+w.word+'</h3><span class="pos">'+w.pos+'</span></div><div class="translation">'+w.translation+'</div><div class="core-line">コアイメージ：'+w.coreImage+'</div></div>';
@@ -125,13 +126,13 @@ function finishReview(){
   window.scrollTo({top:0,behavior:"instant"});
 }
 function severity(s){return s==="不正解"?3:s==="曖昧"?2:s==="遅い"?1:0}
-function imageUrl(w){return "https://loremflickr.com/720/405/"+encodeURIComponent(w.imageSearch)+"?lock="+w.id}
+function imageUrl(w){return (notesById[w.id]&&notesById[w.id].imageUrl)||""}
 function renderResults(){
   const weak=resultIds.length;
   $("#resultSummary").textContent=weak?weak+"語が今回の再接触対象です。":"今回はすべて即答でした。";
   $("#resultList").innerHTML=resultIds.length?resultIds.map(id=>{
     const w=WORDS[id-1],s=states[id];
-    return '<article class="result-card"><img loading="lazy" src="'+imageUrl(w)+'" alt="'+w.word+'の画像"><div class="result-meta"><div class="result-word">'+w.word+'</div><span class="status">'+s+'</span></div><div class="result-label">コアイメージ</div><div class="result-core">'+w.coreImage+'</div></article>';
+    return '<article class="result-card">'+imageCueMarkup(w)+'<div class="result-meta"><div class="result-word">'+w.word+'</div><span class="status">'+s+'</span></div><div class="result-label">コアイメージ</div><div class="result-core">'+w.coreImage+'</div></article>';
   }).join(""):'<section class="card"><strong>苦手語はありません。</strong><p class="hint">今回の接触はここで完了です。</p></section>';
   $("#finishBtn").disabled=true;
   $("#finishHint").textContent="一番下までスクロールすると終了できます。";
