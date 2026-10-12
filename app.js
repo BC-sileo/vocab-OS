@@ -126,7 +126,7 @@ function finishReview(){
   window.scrollTo({top:0,behavior:"instant"});
 }
 function severity(s){return s==="不正解"?3:s==="曖昧"?2:s==="遅い"?1:0}
-function imageUrl(w){return (notesById[w.id]&&notesById[w.id].imageUrl)||""}
+function imageUrl(w){const note=notesById[w.id]||{};return note.imageDataUrl||note.imageUrl||""}
 function renderResults(){
   const weak=resultIds.length;
   $("#resultSummary").textContent=weak?weak+"語が今回の再接触対象です。":"今回はすべて即答でした。";
