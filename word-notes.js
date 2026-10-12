@@ -37,11 +37,10 @@ function mixedExampleMarkup(n){
 }
 function imageCueMarkup(w){
  const url=imageUrl(w);
- return url
-  ? '<img class="image-cue" loading="lazy" src="'+escapeHtml(url)+'" alt="'+escapeHtml(w.word)+'の画像" onerror="this.style.display=&quot;none&quot;;this.nextElementSibling.style.display=&quot;grid&quot;"><div class="image-missing" style="display:none">画像を読み込めませんでした</div>'
-  : '<div class="image-missing"><strong>画像未設定</strong><span>意味に合う画像を選んで登録できます</span></div>';
+ return url ? '<img class="image-cue" loading="lazy" src="'+escapeHtml(url)+'" alt="'+escapeHtml(w.word)+'の画像" onerror="this.remove()">' : "";
 }
-function openNotes(){showView("notesView");$("#notesListPanel").classList.remove("hidden");$("#noteDetailPanel").classList.add("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});}
+let noteListScrollY=0;
+function openNotes(){noteListScrollY=0;showView("notesView");$("#notesListPanel").classList.remove("hidden");$("#noteDetailPanel").classList.add("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});}
 function renderNoteList(){
  const q=$("#noteSearch").value.trim().toLowerCase();
  const rows=WORDS.filter(w=>{const n=noteFor(w);return [w.word,w.translation,w.coreImage,n.meaning,n.usage].join(" ").toLowerCase().includes(q);});
@@ -49,6 +48,7 @@ function renderNoteList(){
  $("#notesListPanel").querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openNote(Number(b.dataset.id)));
 }
 function openNote(id,autoplay=true){
+ if(!$("#notesListPanel").classList.contains("hidden"))noteListScrollY=window.scrollY;
  const w=WORDS.find(x=>x.id===id);if(!w)return;const n=noteFor(w);
  $("#notesListPanel").classList.add("hidden");const d=$("#noteDetailPanel");d.classList.remove("hidden");
  d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button>'+
@@ -67,7 +67,7 @@ function openNote(id,autoplay=true){
  '<div class="image-meta-grid"><label>作者・権利者<input id="noteImageCreator" placeholder="作者名／不明" value="'+escapeHtml(n.imageCreator||"")+'"></label><label>ライセンス<input id="noteImageLicense" placeholder="例：CC BY-SA 4.0" value="'+escapeHtml(n.imageLicense||"")+'"></label></div>'+
  '<button id="saveImageData" class="primary-btn">画像情報を保存</button><p id="imageSaveStatus" class="hint" aria-live="polite"></p>'+
  '<p class="hint">端末から選んだ画像は縮小してこのブラウザ内に保存します。URL画像と同じく、出典・作者・ライセンスは必要に応じて記録してください。別端末への同期はありません。</p></div></details>';
- $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();};
+ $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();requestAnimationFrame(()=>window.scrollTo({top:noteListScrollY,behavior:"instant"}));};
  $("#playWordAudio").onclick=()=>speakWord(w);
  if(autoplay)speakWord(w);
  $("#revealExample").onclick=()=>{$("#exampleJa").classList.toggle("hidden");$("#revealExample").textContent=$("#exampleJa").classList.contains("hidden")?"日本語訳を見る":"日本語訳を隠す";};
