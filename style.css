@@ -115,3 +115,5 @@ select{width:100%;padding:11px;background:var(--panel2);color:var(--text);border
 .image-missing strong{font-size:15px;color:#d7dde4}
 .image-missing span{font-size:11px;line-height:1.5}
 @media(max-width:420px){.image-meta-grid{grid-template-columns:1fr}.note-title-row h2{font-size:31px}}
+
+.audio-btn{font-size:12px;padding:7px 9px;white-space:nowrap}
