@@ -21,8 +21,24 @@
       <p class="eyebrow">REVIEW</p>
       <h2>今日は、どこまでやる？</h2>
       <p>語数・ページ数・想起方法を開始前に決めて、終わったページから次へ進みます。</p>
-      <button id="reviewBtn" class="primary-btn">復習モード</button>
+      <button id="notesBtn" class="primary-btn">単語ノートを開く</button>
+      <button id="reviewBtn" class="secondary-wide-btn">復習モード</button>
     </section>
+  </main>
+
+  <main id="notesView" class="hidden">
+    <section class="card notes-head">
+      <div class="section-head">
+        <div><p class="eyebrow">WORD NOTE</p><h2>単語ノート</h2></div>
+        <button id="notesHomeBtn" class="subtle-btn">ホーム</button>
+      </div>
+      <p class="hint">単語を選ぶと、コアイメージ・使い方・例文・語源メモを確認できます。画像は単語ごとに選び、出典を記録します。</p>
+      <label class="search-label">単語を検索
+        <input id="noteSearch" type="search" placeholder="英単語・意味・コアイメージ" autocomplete="off">
+      </label>
+    </section>
+    <section id="notesListPanel" class="note-list"></section>
+    <section id="noteDetailPanel" class="note-detail card hidden"></section>
   </main>
 
   <main id="setupView" class="hidden">
