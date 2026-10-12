@@ -13,7 +13,7 @@
       <div class="eyebrow">VOCAB OS · v0.4</div>
       <h1>単語を、構造から覚える。</h1>
     </div>
-    <div class="topbar-actions"><label class="theme-picker">背景<select id="themeSelect" aria-label="背景色"><option value="paper">ペーパー</option><option value="sage">セージ</option><option value="lavender">ラベンダー</option><option value="blue">ブルー</option><option value="dark">ダーク</option><option value="night-city">夜の街</option><option value="dark-window">窓辺の夜</option><option value="night-bedroom">夜の寝室</option></select></label><button id="tocBtn" class="icon-btn" aria-label="目次">☰</button></div>
+    <div class="topbar-actions"><button id="tocBtn" class="icon-btn" aria-label="目次">☰</button></div>
   <div id="backgroundCredit" class="background-credit hidden"></div></header>
 
   <main id="homeView">
@@ -23,6 +23,23 @@
       <p>語数・ページ数・想起方法を開始前に決めて、終わったページから次へ進みます。</p>
       <button id="notesBtn" class="primary-btn">単語ノートを開く</button>
       <button id="reviewBtn" class="secondary-wide-btn">復習モード</button>
+    </section>
+    <section class="card home-theme-card">
+      <p class="eyebrow">APPEARANCE</p>
+      <h2>背景を選ぶ</h2>
+      <p class="hint">好きな背景に切り替えられます。選択はこの端末に保存され、次回も引き継がれます。</p>
+      <label class="home-theme-picker">背景テーマ
+        <select id="themeSelect" aria-label="背景テーマ">
+          <option value="paper">ペーパー</option>
+          <option value="sage">セージ</option>
+          <option value="lavender">ラベンダー</option>
+          <option value="blue">ブルー</option>
+          <option value="dark">ダーク</option>
+          <option value="night-city">夜の街</option>
+          <option value="dark-window">窓辺の夜</option>
+          <option value="night-bedroom">夜の寝室</option>
+        </select>
+      </label>
     </section>
   </main>
 
