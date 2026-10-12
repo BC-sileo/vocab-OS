@@ -185,3 +185,11 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .home-theme-card>.hint{margin-bottom:14px}
 .home-theme-picker{display:grid;gap:7px;margin-top:12px;font-size:13px}
 .home-theme-picker select{width:100%;padding:12px 13px;font-size:14px}
+
+
+/* Tappable word-part links in word notes */
+.decomp-parts{margin-top:14px}
+.decomp-chips{display:flex;flex-wrap:wrap;gap:9px}
+.decomp-chip{display:flex;flex-direction:column;align-items:flex-start;gap:4px;max-width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--text);text-align:left}
+.decomp-chip strong{font-size:16px}
+.decomp-chip span{font-size:12px;line-height:1.4;color:var(--muted)}
