@@ -1,6 +1,6 @@
 // Word-note module. Loaded after app.js so it can reuse WORDS, notesById, save(), showView() and imageUrl().
 const NOTE_CONTENT = {
-  1: { meaning:"自分をある行動・状態へ送り込み、引き受ける", usage:"commit to + 名詞 / 動名詞。「何かに自分を結びつける」感覚。commit a crime のように行為を実行する意味もある。", decomp:"ラテン語 committere（結びつける・委ねる）に由来。com-（共に）+ mittere（送る）から成る。", example:"She committed herself to learning English.", ja:"彼女は英語を学ぶことに本腰を入れた。", mixed:"彼女は新しい学習計画に {{word}} した。", mixedToken:"commit", mixedTarget:"責任を持って取り組むと決めた", caution:"commit は「決める」だけでなく、約束や責任を引き受ける含みが出ることがある。" },
+  1: { meaning:"自分をある行動・状態へ送り込み、引き受ける", usage:"commit to + 名詞 / 動名詞。「何かに自分を結びつける」感覚。commit a crime のように行為を実行する意味もある。", decomp:"ラテン語 committere（結びつける・委ねる）に由来。", example:"She committed herself to learning English.", ja:"彼女は英語を学ぶことに本腰を入れた。", mixed:"彼女は新しい学習計画に {{word}} した。", mixedToken:"commit", mixedTarget:"責任を持って取り組むと決めた", caution:"commit は「決める」だけでなく、約束や責任を引き受ける含みが出ることがある。" },
   2: { meaning:"複数のものを並べ、共通点や違いを見比べる", usage:"compare A with B：AとBを並べ、共通点・相違点を検討する。compare A to B：AをBになぞらえ、似ている点を示す。例：Compare this poem with that one.（2つの詩を比較して違いも検討する）／She compared his voice to the sound of rain.（声を雨音にたとえた）。⚠️ これは傾向で、完全な二分法ではない。with でも類似点を扱い、to でも比較の意味になることがある。文脈で判断する。", decomp:"ラテン語 comparare（比べる・並べる）に由来する。", example:"Compare the two plans before you decide.", ja:"決める前に、その2つの計画を比較しなさい。", mixed:"二つの案を並べて、長所と短所を {{word}} した。", mixedToken:"compare", mixedTarget:"比較", caution:"" },
   3: { meaning:"不満や苦情を言葉にして外へ出す", usage:"complain about + 対象 / complain to + 人。何について不満なのか、誰に言うのかを分ける。", decomp:"ラテン語 complangere（嘆き悲しむ）に由来する。", example:"He complained about the noise.", ja:"彼は騒音について苦情を言った。", mixed:"彼は店員に、商品の不具合について {{word}} した。", mixedToken:"complain", mixedTarget:"苦情を申し立て", caution:"complain は必ずしも「文句ばかり言う」という人格評価を含まない。" },
   4: { meaning:"多くの要素が絡み合い、単純には扱えない", usage:"a complex problem / a complex system。名詞 complex は「複合施設・複合体」など。", decomp:"ラテン語 complexus（絡み合ったもの）に由来し、com-（共に）+ plectere（編む・絡める）と関係する。", example:"The problem is more complex than it seems.", ja:"その問題は見た目より複雑だ。", mixed:"このゲームの攻略法は、見た目よりずっと {{word}} だ。", mixedToken:"complex", mixedTarget:"複雑", caution:"complex は「難しい」と完全に同義ではなく、要素や関係が入り組んでいることに焦点がある。" },
@@ -49,6 +49,8 @@ function renderDecompParts(w){
   return '<button type="button" class="decomp-chip" data-part="'+escapeHtml(part)+'"><strong>'+escapeHtml(part)+'</strong><span>'+escapeHtml(meta.meaning)+'</span></button>';
  }).join("")+'</div></div>';
 }
+const USAGE_FRAMES={2:{parts:["compare","A","with","B"],selected:"with",options:[{value:"with",label:"with",explanation:"compare A with B：AとBを並べ、共通点や違いを検討する。"},{value:"to",label:"to",explanation:"compare A to B：AをBになぞらえる用法で使われやすい。ただし意味は文脈で重なる。"}]}};
+function renderUsageFrame(w){const f=USAGE_FRAMES[w.id];if(!f)return "<p>"+escapeHtml(noteFor(w).usage||"使い方メモは未登録です。")+"</p>";return '<div class="usage-frame"><div class="usage-diagram">'+f.parts.map(p=>p==="A"||p==="B"?'<span class="usage-part usage-slot">'+p+'</span>':'<span class="usage-part">'+p+'</span>').join('<span class="usage-join"> </span>')+'</div><div class="usage-options">'+f.options.map(o=>'<button type="button" class="usage-option'+(o.value===f.selected?" is-selected":"")+'" data-usage-value="'+o.value+'">'+o.label+'</button>').join("")+'</div><p class="usage-explanation" id="usageExplanation">'+f.options[0].explanation+'</p></div>'}
 function noteFor(w){return {...(NOTE_CONTENT[w.id]||{}),...(notesById[w.id]||{})};}
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function visualSearchQuery(w){return IMAGE_QUERIES[w.id]||w.imageSearch||w.word;}
@@ -81,7 +83,7 @@ function openNote(id,autoplay=true){
  '<div class="note-hero">'+imageCueMarkup(w)+'<p class="eyebrow">WORD NOTE</p><div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(w.pos)+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button></div>'+
  '<p class="note-core">'+escapeHtml(w.coreImage||n.meaning||w.translation)+'</p></div>'+
  '<section class="note-section"><h3>語源・分解</h3><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w)+'</section>'+
- '<section class="note-section"><h3>使い方の骨格</h3><p>'+escapeHtml(n.usage||"使い方メモは未登録です.")+'</p>'+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
+ '<section class="note-section"><h3>使い方の骨格</h3>'+renderUsageFrame(w)+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
  '<section class="note-section"><h3>例文</h3><p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p><button class="reveal-translation" id="revealExample">日本語訳を見る</button><p id="exampleJa" class="example-ja hidden">'+escapeHtml(n.ja||"")+'</p></section>'+
  '<section class="note-section"><h3>日本語＋英語の混合例文</h3><p class="mixed-sentence">'+mixedExampleMarkup(n)+'</p><p class="hint">文中の英語部分を押すと、そこが表している元の日本語が赤字で表示されます。</p></section>'+
 
@@ -95,6 +97,7 @@ function openNote(id,autoplay=true){
  '<p class="hint">端末から選んだ画像は縮小してこのブラウザ内に保存します。URL画像と同じく、出典・作者・ライセンスは必要に応じて記録してください。別端末への同期はありません。</p></div></details>';
  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();requestAnimationFrame(()=>window.scrollTo({top:noteListScrollY,behavior:"instant"}));};
  d.querySelectorAll("[data-part]").forEach(btn=>btn.onclick=()=>{activeDecompFilter=btn.dataset.part;d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});});
+ d.querySelectorAll("[data-usage-value]").forEach(btn=>btn.onclick=()=>{const f=USAGE_FRAMES[w.id];f.selected=btn.dataset.usageValue;d.querySelectorAll("[data-usage-value]").forEach(b=>b.classList.toggle("is-selected",b.dataset.usageValue===f.selected));$("#usageExplanation").textContent=f.options.find(o=>o.value===f.selected).explanation;});
  $("#playWordAudio").onclick=()=>speakWord(w);
  if(autoplay)speakWord(w);
  $("#revealExample").onclick=()=>{$("#exampleJa").classList.toggle("hidden");$("#revealExample").textContent=$("#exampleJa").classList.contains("hidden")?"日本語訳を見る":"日本語訳を隠す";};
