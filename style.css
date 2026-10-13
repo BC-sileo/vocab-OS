@@ -196,3 +196,15 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 
 /* Usage-frame inline choice */
 .usage-frame{display:grid;gap:10px;margin:10px 0}.usage-diagram{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px}.usage-part{padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--text);font-weight:650}.usage-slot{background:var(--panel);border-style:dashed}.usage-join{color:var(--muted)}.usage-choice-wrap{position:relative;display:inline-flex;z-index:2}.usage-choice{min-width:62px;padding:9px 12px;border:1px solid var(--accent);border-radius:9px;background:var(--panel2);color:var(--text);font-weight:750}.usage-choice-list{position:absolute;top:100%;left:0;min-width:100%;display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--line);border-radius:0 0 9px 9px;background:var(--panel);box-shadow:0 5px 12px #0002}.usage-choice-option{width:100%;padding:9px 12px;border:0;border-radius:0;background:var(--panel);color:var(--text);text-align:left}.usage-choice-option+.usage-choice-option{border-top:1px solid var(--line)}.usage-choice-option.is-selected{background:var(--accent);color:var(--panel);font-weight:750}.usage-explanation{margin:0;padding:10px 12px;border-radius:9px;background:var(--panel2);line-height:1.65}
+
+/* Compact word-note UI: prioritize learning content over page chrome */
+.notes-toolbar{display:flex;gap:8px;align-items:center;margin:0 0 8px;padding:0 2px}
+.notes-toolbar input{flex:1;min-width:0;padding:10px 12px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;font:inherit;font-size:14px}
+.notes-toolbar button{flex:0 0 auto;padding:9px 11px}
+.note-title-row .pos{font-size:15px;padding:4px 9px;font-weight:700}
+.note-section h3{display:none}
+.note-section{padding:10px 0}
+.note-hero{padding-bottom:10px}
+.note-core{margin:9px 0 2px}
+.decomp-parts{margin-top:8px}
+.note-section .hint{margin-top:5px}
