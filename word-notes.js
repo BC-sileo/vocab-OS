@@ -80,12 +80,12 @@ function openNote(id,autoplay=true){
  const w=WORDS.find(x=>x.id===id);if(!w)return;const n=noteFor(w);
  $("#notesListPanel").classList.add("hidden");const d=$("#noteDetailPanel");d.classList.remove("hidden");
  d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button>'+
- '<div class="note-hero">'+imageCueMarkup(w)+'<p class="eyebrow">WORD NOTE</p><div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(w.pos)+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button></div>'+
+ '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(w.pos)+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button></div>'+
  '<p class="note-core">'+escapeHtml(w.coreImage||n.meaning||w.translation)+'</p></div>'+
- '<section class="note-section"><h3>語源・分解</h3><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w)+'</section>'+
- '<section class="note-section"><h3>使い方の骨格</h3>'+renderUsageFrame(w)+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
- '<section class="note-section"><h3>例文</h3><p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p><button class="reveal-translation" id="revealExample">日本語訳を見る</button><p id="exampleJa" class="example-ja hidden">'+escapeHtml(n.ja||"")+'</p></section>'+
- '<section class="note-section"><h3>日本語＋英語の混合例文</h3><p class="mixed-sentence">'+mixedExampleMarkup(n)+'</p><p class="hint">文中の英語部分を押すと、そこが表している元の日本語が赤字で表示されます。</p></section>'+
+ '<section class="note-section"><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w)+'</section>'+
+ '<section class="note-section">'+renderUsageFrame(w)+'<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p><button class="reveal-translation" id="revealExample">日本語訳を見る</button><p id="exampleJa" class="example-ja hidden">'+escapeHtml(n.ja||"")+'</p>'+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
+ 
+ '<section class="note-section"><p class="mixed-sentence">'+mixedExampleMarkup(n)+'</p><p class="hint">英語部分をタップすると、元の日本語表現を表示。</p></section>'+
 
  '<details class="note-fold"><summary>画像の設定・出典情報</summary><div class="image-workflow"><p>画像を端末から選ぶか、画像検索で候補を探して登録できます。</p>'+
  '<div class="image-pick-row"><button id="chooseLocalImage" class="secondary-wide-btn" type="button">📁 端末から画像を選ぶ</button><input id="noteImageFile" type="file" accept="image/*" hidden></div>'+
