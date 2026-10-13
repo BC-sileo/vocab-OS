@@ -215,3 +215,12 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .usage-example-en{font-size:17px;font-weight:650;line-height:1.45;margin:0}
 .usage-example-ja{font-size:14px;line-height:1.5;margin:0;color:var(--muted)}
 .usage-example-button{align-self:center;margin-top:5px}
+
+/* Compact inline example control; keep the usage skeleton and example in a stable slot */
+.usage-topline{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0}
+.usage-topline .usage-diagram{flex:1;min-width:0}
+.usage-topline .usage-example{flex:1;min-width:0;padding:2px 0;gap:4px}
+.usage-topline .usage-example-en{font-size:15px}
+.usage-topline .usage-example-ja{font-size:12px}
+.usage-topline .usage-example-button{flex:0 0 auto;margin:0;padding:6px 8px;font-size:12px}
+.usage-topline>[data-usage-example]{flex:0 0 auto;margin:0;padding:6px 9px;font-size:12px}
