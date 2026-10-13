@@ -50,8 +50,18 @@ function renderDecompParts(w){
  }).join("")+'</div></div>';
 }
 const USAGE_FRAMES={2:{parts:["compare","A","with","B"],selected:"with",open:false,showExample:false,options:[{value:"with",explanation:"AとBを並べ、共通点や違いを検討する。",example:"I compared the two phones with each other.",ja:"私はその2台のスマートフォンを互いに比較した。"},{value:"to",explanation:"AをBになぞらえ、類似性に注目する傾向がある。使い分けは絶対ではなく、文脈によって重なる。",example:"She compared his voice to the sound of rain.",ja:"彼女は彼の声を雨音にたとえた。"}]}};
-function renderUsageFrame(w){const f=USAGE_FRAMES[w.id];if(!f)return "<p>"+escapeHtml(noteFor(w).usage||"使い方メモは未登録です。")+"</p>";const o=f.options.find(x=>x.value===f.selected);return '<div class="usage-frame"><div class="usage-stage">'+(f.showExample?'<div class="usage-example"><p class="usage-example-en">'+escapeHtml(o.example)+'</p><p class="usage-example-ja">'+escapeHtml(o.ja)+'</p><button type="button" class="subtle-btn" data-usage-back="1">骨格に戻る</button></div>':'<div class="usage-diagram">'+f.parts.map(p=>{if(p==="A"||p==="B")return '<span class="usage-part usage-slot">'+p+'</span>';if(f.options.some(x=>x.value===p))return '<span class="usage-choice-wrap"><button type="button" class="usage-choice" data-usage-toggle="1" aria-expanded="'+f.open+'">'+escapeHtml(f.selected)+'</button><span class="usage-choice-list'+(f.open?"":" hidden")+'">'+f.options.map(x=>'<button type="button" class="usage-choice-option'+(x.value===f.selected?" is-selected":"")+'" data-usage-value="'+x.value+'">'+x.value+'</button>').join("")+'</span></span>';return '<span class="usage-part">'+escapeHtml(p)+'</span>'}).join('<span class="usage-join"> </span>')+'</div><p class="usage-explanation">'+o.explanation+'</p><button type="button" class="subtle-btn usage-example-button" data-usage-example="1">例文を見る</button>')+'</div></div>'}
-function noteFor(w){return {...(NOTE_CONTENT[w.id]||{}),...(notesById[w.id]||{})};}
+function renderUsageFrame(w){
+ const f=USAGE_FRAMES[w.id];
+ if(!f)return "<p>"+escapeHtml(noteFor(w).usage||"使い方メモは未登録です。")+"</p>";
+ const o=f.options.find(x=>x.value===f.selected);
+ const diagram='<div class="usage-diagram">'+f.parts.map(p=>{
+  if(p==="A"||p==="B")return '<span class="usage-part usage-slot">'+p+'</span>';
+  if(f.options.some(x=>x.value===p))return '<span class="usage-choice-wrap"><button type="button" class="usage-choice" data-usage-toggle="1" aria-expanded="'+f.open+'">'+escapeHtml(f.selected)+'</button><span class="usage-choice-list'+(f.open?"":" hidden")+'">'+f.options.map(x=>'<button type="button" class="usage-choice-option'+(x.value===f.selected?" is-selected":"")+'" data-usage-value="'+x.value+'">'+x.value+'</button>').join("")+'</span></span>';
+  return '<span class="usage-part">'+escapeHtml(p)+'</span>';
+ }).join('<span class="usage-join"> </span>')+'</div>';
+ const example=f.showExample?'<div class="usage-example"><p class="usage-example-en">'+escapeHtml(o.example)+'</p><p class="usage-example-ja">'+escapeHtml(o.ja)+'</p><button type="button" class="subtle-btn usage-example-button" data-usage-back="1">骨格に戻る</button></div>':diagram;
+ return '<div class="usage-frame"><div class="usage-topline">'+example+(f.showExample?'':'<button type="button" class="subtle-btn usage-example-button" data-usage-example="1">例</button>')+'</div><p class="usage-explanation">'+o.explanation+'</p></div>';
+}function noteFor(w){return {...(NOTE_CONTENT[w.id]||{}),...(notesById[w.id]||{})};}
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function visualSearchQuery(w){return IMAGE_QUERIES[w.id]||w.imageSearch||w.word;}
 function commonsSearchUrl(w){return "https://commons.wikimedia.org/w/index.php?search="+encodeURIComponent(visualSearchQuery(w))+"&title=Special:MediaSearch&type=image";}
@@ -83,7 +93,7 @@ function openNote(id,autoplay=true){
  '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(w.pos)+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button></div>'+
  '<p class="note-core">'+escapeHtml(w.coreImage||n.meaning||w.translation)+'</p></div>'+
  '<section class="note-section"><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w)+'</section>'+
- '<section class="note-section">'+renderUsageFrame(w)+'<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p><button class="reveal-translation" id="revealExample">日本語訳を見る</button><p id="exampleJa" class="example-ja hidden">'+escapeHtml(n.ja||"")+'</p>'+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
+ '<section class="note-section">'+renderUsageFrame(w)+'<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p>'+(w.id===2?'<p class="hint">before you decide＝「決める前に」。時を表す節で、compare の語法の例外ではない。</p>':'')+'<button class="reveal-translation" id="revealExample">日本語訳を見る</button><p id="exampleJa" class="example-ja hidden">'+escapeHtml(n.ja||"")+'</p>'+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
  
  '<section class="note-section"><p class="mixed-sentence">'+mixedExampleMarkup(n)+'</p><p class="hint">英語部分をタップすると、元の日本語表現を表示。</p></section>'+
 
@@ -97,10 +107,19 @@ function openNote(id,autoplay=true){
  '<p class="hint">端末から選んだ画像は縮小してこのブラウザ内に保存します。URL画像と同じく、出典・作者・ライセンスは必要に応じて記録してください。別端末への同期はありません。</p></div></details>';
  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();requestAnimationFrame(()=>window.scrollTo({top:noteListScrollY,behavior:"instant"}));};
  d.querySelectorAll("[data-part]").forEach(btn=>btn.onclick=()=>{activeDecompFilter=btn.dataset.part;d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});});
- d.querySelector("[data-usage-toggle]")?.addEventListener("click",()=>{const f=USAGE_FRAMES[w.id];f.open=!f.open;const list=d.querySelector(".usage-choice-list"),toggle=d.querySelector("[data-usage-toggle]");list.classList.toggle("hidden",!f.open);toggle.setAttribute("aria-expanded",String(f.open));});
-  d.querySelectorAll("[data-usage-value]").forEach(btn=>btn.onclick=()=>{const f=USAGE_FRAMES[w.id];f.selected=btn.dataset.usageValue;f.open=false;f.showExample=false;openNote(id,false);});
-  d.querySelector("[data-usage-example]")?.addEventListener("click",()=>{USAGE_FRAMES[w.id].showExample=true;openNote(id,false);});
-  d.querySelector("[data-usage-back]")?.addEventListener("click",()=>{USAGE_FRAMES[w.id].showExample=false;openNote(id,false);});
+ d.addEventListener("click",event=>{
+  const target=event.target.closest("[data-usage-toggle],[data-usage-value],[data-usage-example],[data-usage-back]");
+  if(!target||!d.contains(target))return;
+  const f=USAGE_FRAMES[w.id];if(!f)return;
+  const scrollY=window.scrollY;
+  if(target.hasAttribute("data-usage-toggle")){f.open=!f.open;}
+  else if(target.hasAttribute("data-usage-value")){f.selected=target.dataset.usageValue;f.open=false;f.showExample=false;}
+  else if(target.hasAttribute("data-usage-example")){f.showExample=true;f.open=false;}
+  else if(target.hasAttribute("data-usage-back")){f.showExample=false;}
+  const frame=d.querySelector(".usage-frame");
+  if(frame)frame.outerHTML=renderUsageFrame(w);
+  requestAnimationFrame(()=>window.scrollTo({top:scrollY,behavior:"instant"}));
+ });
  $("#playWordAudio").onclick=()=>speakWord(w);
  if(autoplay)speakWord(w);
  $("#revealExample").onclick=()=>{$("#exampleJa").classList.toggle("hidden");$("#revealExample").textContent=$("#exampleJa").classList.contains("hidden")?"日本語訳を見る":"日本語訳を隠す";};
