@@ -44,16 +44,7 @@
   </main>
 
   <main id="notesView" class="hidden">
-    <section class="card notes-head">
-      <div class="section-head">
-        <div><p class="eyebrow">WORD NOTE</p><h2>単語ノート</h2></div>
-        <button id="notesHomeBtn" class="subtle-btn">ホーム</button>
-      </div>
-      <p class="hint">単語を選ぶと、コアイメージ・使い方・例文・語源メモを確認できます。画像は単語ごとに選び、出典を記録します。</p>
-      <label class="search-label">単語を検索
-        <input id="noteSearch" type="search" placeholder="英単語・意味・コアイメージ" autocomplete="off">
-      </label>
-    </section>
+    <div class="notes-toolbar"><input id="noteSearch" type="search" placeholder="単語・意味・コアイメージを検索" aria-label="単語を検索" autocomplete="off"><button id="notesHomeBtn" class="subtle-btn">ホーム</button></div>
     <section id="notesListPanel" class="note-list"></section>
     <section id="noteDetailPanel" class="note-detail card hidden"></section>
   </main>
