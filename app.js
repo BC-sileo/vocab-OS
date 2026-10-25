@@ -18,7 +18,10 @@ const WORDS=[
 ["efficient","無駄を減らし、少ない資源で結果を出す","adj","少ない資源で結果を出す","efficient work"],
 ["emphasize","重要な部分を目立たせる","v","重要部分を強く目立たせる","emphasize highlight"],
 ["encourage","相手が進めるよう後押しする","v","進めるよう背中を押す","encourage support"],
-["exist","そこに実際に存在している","v","実際にそこにある","exist presence"]
+["exist","そこに実際に存在している","v","実際にそこにある","exist presence"],
+["get","何かを得る／ある状態・結果に至る","v","状態や結果に至る","get become understand"],
+["abandon","人・物・計画などを手放して離れる／続けるのをやめる","v","手放して離れる・続けるのをやめる","abandon leaving something"],
+["with","人・物・状態などを別のものに結びつけて示す前置詞","p","同伴・道具・特徴・対象などの関係を示す","with person scissors blue eyes"]
 ].map(([word,translation,pos,coreImage,imageSearch],i)=>({id:i+1,word,translation,pos,coreImage,imageSearch}));
 
 const KEY="vocabOS_v02";
