@@ -29,7 +29,7 @@ const saved=JSON.parse(localStorage.getItem(KEY)||"{}");
 let pageSize=Number(saved.pageSize)||10;
 let sessionPages=Number(saved.sessionPages)||1;
 let mode=saved.mode==="sheet"||!saved.mode?"swipe":saved.mode;
-let order=saved.order||WORDS.map(w=>w.id);
+let order=[...(saved.order||[]),...WORDS.map(w=>w.id).filter(id=>!(saved.order||[]).includes(id))];
 let states=saved.states||{};
 let notesById=saved.notes||{};
 let reviewPageIndex=0;
