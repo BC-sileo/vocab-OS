@@ -226,13 +226,9 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .usage-topline>[data-usage-example]{flex:0 0 auto;margin:0;padding:6px 9px;font-size:12px}
 
 
-/* Structured usage blocks: make grammar patterns visually scannable */
+/* Structured usage blocks: fixed layout and typography in both pattern/example states */
 .usage-block-list{display:grid;grid-template-columns:1fr;gap:9px;margin:10px 0}
-.usage-block{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;padding:13px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
-.usage-block-pattern{font-size:16px;font-weight:800;line-height:1.45;overflow-wrap:anywhere}
-.usage-block-meaning{grid-column:1/-1;margin:0;font-size:13px;line-height:1.6;color:var(--muted)}
-.usage-block-example-button,.usage-block-back{align-self:center;justify-self:end;padding:7px 10px;font-size:12px;white-space:nowrap}
-.usage-block-example{grid-column:1/-1;min-width:0}
-.usage-block-example-en{font-size:16px;font-weight:700;line-height:1.5;margin:0;overflow-wrap:anywhere}
-.usage-block-example-ja{font-size:13px;line-height:1.55;margin:6px 0 0;color:var(--muted)}
-.usage-block-example .usage-block-back{display:block;margin:8px 0 0 auto}
+.usage-block{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:minmax(26px,auto) minmax(40px,auto);align-items:center;column-gap:10px;row-gap:7px;min-height:106px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.usage-block-primary{min-width:0;font-size:16px;font-weight:750;line-height:1.45;overflow-wrap:anywhere}
+.usage-block-action{grid-column:2;grid-row:1;align-self:center;justify-self:end;min-width:46px;padding:7px 9px;font-size:12px;white-space:nowrap}
+.usage-block-secondary{grid-column:1/-1;grid-row:2;align-self:start;margin:0!important;font-size:13px!important;line-height:1.6!important;color:var(--muted)!important;overflow-wrap:anywhere}
