@@ -100,7 +100,7 @@ function renderUsageBlocks(w){
   const secondary=expanded?item.ja:item.meaning;
   const actionLabel=expanded?'構造':'例';
   const actionAttr=expanded?'data-usage-block-back="'+index+'"':'data-usage-block-example="'+index+'"';
-  return '<article class="usage-block"><div class="usage-block-primary">'+escapeHtml(primary)+'</div><button type="button" class="subtle-btn usage-block-action" '+actionAttr+'>'+actionLabel+'</button><p class="usage-block-secondary">'+escapeHtml(secondary)+'</p></article>';
+  return '<article class="usage-block"><div class="usage-block-primary">'+escapeHtml(primary)+'</div><button type="button" class="subtle-btn usage-block-action" '+actionAttr+'>'+actionLabel+'</button><p class="usage-block-secondary'+(expanded?' translation-text':'')+'">'+escapeHtml(secondary)+'</p></article>';
  }).join("")+'</div>';
 }
 function renderUsageFrame(w){
@@ -115,7 +115,7 @@ function renderUsageFrame(w){
   if(p==="__choice__")return '<span class="usage-choice-wrap"><button type="button" class="usage-choice" data-usage-toggle="1" aria-expanded="'+f.open+'">'+escapeHtml(o.label||o.value)+'</button><span class="usage-choice-list'+(f.open?"":" hidden")+'">'+f.options.map(x=>'<button type="button" class="usage-choice-option'+(x.value===f.selected?" is-selected":"")+'" data-usage-value="'+escapeHtml(x.value)+'">'+escapeHtml(x.label||x.value)+'</button>').join("")+'</span></span>';
   return '<span class="usage-part">'+escapeHtml(p)+'</span>';
  }).join('<span class="usage-join"> </span>')+'</div>';
- const example=f.showExample?'<div class="usage-example"><p class="usage-example-en">'+escapeHtml(o.example)+'</p><p class="usage-example-ja">'+escapeHtml(o.ja)+'</p><button type="button" class="subtle-btn usage-example-button" data-usage-back="1">骨格に戻る</button></div>':diagram;
+ const example=f.showExample?'<div class="usage-example"><p class="usage-example-en">'+escapeHtml(o.example)+'</p><p class="usage-example-ja translation-text">'+escapeHtml(o.ja)+'</p><button type="button" class="subtle-btn usage-example-button" data-usage-back="1">骨格に戻る</button></div>':diagram;
  return '<div class="usage-frame"><div class="usage-topline">'+example+(f.showExample?'':'<button type="button" class="subtle-btn usage-example-button" data-usage-example="1">例</button>')+'</div><p class="usage-explanation">'+escapeHtml(o.explanation)+'</p></div>';
 }function noteFor(w){return {...(NOTE_CONTENT[w.id]||{}),...(notesById[w.id]||{})};}
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -126,7 +126,7 @@ function mixedExampleMarkup(n){
  const token=n.mixedToken||"";
  const parts=template.split("{{word}}");
  if(parts.length<2||!token)return escapeHtml(template);
- return escapeHtml(parts[0])+'<button id="mixedWordToken" class="mixed-token" type="button" aria-expanded="false">'+escapeHtml(token)+'</button>'+escapeHtml(parts.slice(1).join("{{word}}"))+'<span id="mixedTarget" class="mixed-target hidden">'+escapeHtml(n.mixedTarget||"")+'</span>';
+ return escapeHtml(parts[0])+'<button id="mixedWordToken" class="mixed-token" type="button" aria-expanded="false">'+escapeHtml(token)+'</button>'+escapeHtml(parts.slice(1).join("{{word}}"))+'<span id="mixedTarget" class="mixed-target translation-text hidden">'+escapeHtml(n.mixedTarget||"")+'</span>';
 }
 function imageCueMarkup(w){
  const url=imageUrl(w);
@@ -144,12 +144,12 @@ function renderNoteList(){
 function openNote(id,autoplay=true){
  if(!$("#notesListPanel").classList.contains("hidden"))noteListScrollY=window.scrollY;
  const w=WORDS.find(x=>x.id===id);if(!w)return;const n=noteFor(w);
- $("#notesListPanel").classList.add("hidden");const d=$("#noteDetailPanel");d.classList.remove("hidden");
- d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button>'+
+ $("#notesListPanel").classList.add("hidden");const d=$("#noteDetailPanel");d.classList.remove("hidden");d.classList.remove("translation-hidden");
+ d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button><div class="translation-toolbar"><span>日本語訳</span><button type="button" class="subtle-btn" id="toggleTranslations" aria-pressed="false">訳を隠す</button></div>'+
  '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(w.pos)+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button></div>'+
  '<p class="note-core">'+escapeHtml(w.coreImage||n.meaning||w.translation)+'</p></div>'+
  '<section class="note-section"><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w)+'</section>'+
- '<section class="note-section">'+renderUsageFrame(w)+(USAGE_BLOCKS[w.id]?'':('<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p>'+(w.id===2?'<p class="hint">before you decide＝「決める前に」。時を表す節で、compare の語法の例外ではない。</p>':'')+'<button class="reveal-translation" id="revealExample">日本語訳を見る</button><p id="exampleJa" class="example-ja hidden">'+escapeHtml(n.ja||"")+'</p>'))+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
+ '<section class="note-section">'+renderUsageFrame(w)+(USAGE_BLOCKS[w.id]?'':('<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p>'+(w.id===2?'<p class="hint">before you decide＝「決める前に」。時を表す節で、compare の語法の例外ではない。</p>':'')+'<p id="exampleJa" class="example-ja translation-text">'+escapeHtml(n.ja||"")+'</p>'))+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
  
  '<section class="note-section"><p class="mixed-sentence">'+mixedExampleMarkup(n)+'</p><p class="hint">英語部分をタップすると、元の日本語表現を表示。</p></section>'+
 
@@ -187,7 +187,7 @@ function openNote(id,autoplay=true){
  });
  $("#playWordAudio").onclick=()=>speakWord(w);
  if(autoplay)speakWord(w);
- const revealExample=$("#revealExample"),exampleJa=$("#exampleJa");if(revealExample&&exampleJa)revealExample.onclick=()=>{exampleJa.classList.toggle("hidden");revealExample.textContent=exampleJa.classList.contains("hidden")?"日本語訳を見る":"日本語訳を隠す";};
+ const translationToggle=$("#toggleTranslations");if(translationToggle)translationToggle.onclick=()=>{const hidden=d.classList.toggle("translation-hidden");translationToggle.textContent=hidden?"訳を表示":"訳を隠す";translationToggle.setAttribute("aria-pressed",String(hidden));};
  const mixedToken=$("#mixedWordToken"),mixedTarget=$("#mixedTarget");
  if(mixedToken&&mixedTarget)mixedToken.onclick=()=>{mixedTarget.classList.toggle("hidden");mixedToken.setAttribute("aria-expanded",String(!mixedTarget.classList.contains("hidden")));};
  $("#saveImageData").onclick=()=>saveImageData(id);
