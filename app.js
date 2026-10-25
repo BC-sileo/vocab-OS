@@ -21,7 +21,7 @@ const WORDS=[
 ["exist","そこに実際に存在している","v","実際にそこにある","exist presence"],
 ["get","何かを得る／ある状態・結果に至る","v","状態や結果に至る","get become understand"],
 ["abandon","人・物・計画などを手放して離れる／続けるのをやめる","v","手放して離れる・続けるのをやめる","abandon leaving something"],
-["with","人・物・状態などを別のものに結びつけて示す前置詞","p","同伴・道具・特徴・対象などの関係を示す","with person scissors blue eyes"]
+["with","〜と一緒に／〜で／〜を持つなど（文脈による）","prep","後ろの名詞句が主語や動作とどう関係するかを示す","with person scissors blue eyes"]
 ].map(([word,translation,pos,coreImage,imageSearch],i)=>({id:i+1,word,translation,pos,coreImage,imageSearch}));
 
 const KEY="vocabOS_v02";
