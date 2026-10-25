@@ -228,7 +228,7 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 
 /* Structured usage blocks: fixed layout and typography in both pattern/example states */
 .usage-block-list{display:grid;grid-template-columns:1fr;gap:9px;margin:10px 0}
-.usage-block{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:minmax(26px,auto) minmax(40px,auto);align-items:center;column-gap:10px;row-gap:7px;min-height:106px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.usage-block{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:minmax(0,1fr) minmax(0,1fr);align-items:center;column-gap:10px;row-gap:7px;height:132px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
 .usage-block-primary{min-width:0;font-size:16px;font-weight:750;line-height:1.45;overflow-wrap:anywhere}
 .usage-block-action{grid-column:2;grid-row:1;align-self:center;justify-self:end;min-width:46px;padding:7px 9px;font-size:12px;white-space:nowrap}
 .usage-block-secondary{grid-column:1/-1;grid-row:2;align-self:start;margin:0!important;font-size:13px!important;line-height:1.6!important;color:var(--muted)!important;overflow-wrap:anywhere}
