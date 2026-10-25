@@ -89,7 +89,7 @@
 - They abandoned the plan after the costs increased.
   - 費用が増えたため、彼らはその計画を断念した。
 - The sailors abandoned the ship.
-  - 船員たちは船を abandon した（船を捨てて離れた）。
+  - 船員たちは船を捨てた。
 - He abandoned himself to despair.
   - 彼は絶望に身を任せた。
 
