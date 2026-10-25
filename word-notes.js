@@ -19,10 +19,13 @@ const NOTE_CONTENT = {
   17: { meaning:"無駄を抑え、少ない資源で望む結果を出す", usage:"an efficient method / efficient use of time。方法・仕組み・仕事の進め方に使う。", decomp:"effect（効果）と同じ語族。efficient は資源や手間の無駄が少ないことに焦点を置く。", example:"This is a more efficient way to study.", ja:"これはより効率的な勉強法だ。", mixed:"この新しい仕組みなら、作業をもっと {{word}} に進められる。", mixedToken:"efficient", mixedTarget:"効率的", caution:"efficient は「無駄が少ない」、effective は「狙った効果がある」。両者は同じではない。" },
   18: { meaning:"重要な部分を強く目立たせる・強調する", usage:"emphasize a point / emphasize that ...。", decomp:"名詞 emphasis（強調）と同じ語族。emphasize は重要な点を明確に示すこと。", example:"The report emphasizes the need for change.", ja:"その報告書は変化の必要性を強調している。", mixed:"発表では、先生がこの点を特に {{word}} した。", mixedToken:"emphasize", mixedTarget:"強調", caution:"emphasize は言葉や説明で強調すること。highlight は視覚的に目立たせる意味でも使う。" },
   19: { meaning:"相手が前へ進めるよう、勇気や支えを与える", usage:"encourage someone to do。人に何かをするよう促す・励ます。", decomp:"courage（勇気）と関連づけ、「勇気を与える」と考えると覚えやすい。", example:"My teacher encouraged me to ask questions.", ja:"先生は私に質問するよう促してくれた。", mixed:"先生は私が挑戦できるように {{word}} してくれた。", mixedToken:"encourage", mixedTarget:"励まして", caution:"encourage は「励ます」だけでなく、行動を促す意味でも使う。" },
-  20: { meaning:"実際にそこにある・存在する", usage:"exist in a place / exist as a problem。通常、存在する対象を目的語には取らない。", decomp:"ラテン語 exsistere（現れる・存在する）に由来し、ex-（外へ）+ sistere（立たせる）と関係する。", example:"Life may exist on other planets.", ja:"ほかの惑星にも生命が存在するかもしれない。", mixed:"この森には、珍しい種類の鳥が {{word}} している。", mixedToken:"exist", mixedTarget:"存在", caution:"exist は自動詞。there is/are と exist を使い分ける。" }
+  20: { meaning:"実際にそこにある・存在する", usage:"exist in a place / exist as a problem。通常、存在する対象を目的語には取らない。", decomp:"ラテン語 exsistere（現れる・存在する）に由来し、ex-（外へ）+ sistere（立たせる）と関係する。", example:"Life may exist on other planets.", ja:"ほかの惑星にも生命が存在するかもしれない。", mixed:"この森には、珍しい種類の鳥が {{word}} している。", mixedToken:"exist", mixedTarget:"存在", caution:"exist は自動詞。there is/are と exist を使い分ける。" },
+  21: { meaning:"何かを得る／ある状態や結果に至る。構文によって「理解する」「人に行動してもらう」などの意味にもなる。", usage:"get + noun（得る・受け取る）／get + adjective（〜の状態になる）／get it（理解する）／get + person + to do（人に〜してもらう）。意味を構文ごとに整理する。", decomp:"意味は一つの語源イメージに無理に押し込まず、頻出構文と意味のつながりを優先する。", example:"It's getting dark.", ja:"暗くなってきている。", mixed:"説明を聞いて、ようやくその意味が {{word}} できた。", mixedToken:"get", mixedTarget:"理解", caution:"「状態・結果に至る」は有用な核だが、get の全用法を一つのイメージだけで説明できるわけではない。構文ごとに確認する。" },
+  22: { meaning:"人・物・場所・計画などを手放して離れる／続けるのをやめる。", usage:"abandon a plan（計画を断念する）／abandon a place（場所を去る・捨てる）／abandon oneself to ...（感情などに身を任せる）。最後の形は独立した構文として扱う。", decomp:"語源情報よりも、目的語と構文による訳の違いを優先する。", example:"They abandoned the plan after the costs increased.", ja:"費用が増えたため、彼らはその計画を断念した。", mixed:"費用が増えたため、彼らはその計画を {{word}} した。", mixedToken:"abandon", mixedTarget:"断念", caution:"abandon oneself to ... は通常の「対象を手放す」と同じ訳にせず、構文ごとに覚える。" },
+  23: { meaning:"人・物・状態などを別のものに結びつけて示す前置詞。意味は関係の種類と文脈によって変わる。", usage:"with + person（同伴）／with + tool（道具）／with + feature（特徴）／happy with + result（感情・評価の対象）。「関係」だけで済ませず、具体的な関係の種類を見分ける。", decomp:"語源情報よりも、同伴・道具・特徴・対象などの用法群を区別することを優先する。", example:"She cut the paper with scissors.", ja:"彼女ははさみで紙を切った。", mixed:"彼女は {{word}} を使って紙を切った。", mixedToken:"with", mixedTarget:"道具・手段", caution:"with を常に「一緒に」と訳さない。後ろの名詞句と文全体の関係から意味を判断する。" }
 };
 const IMAGE_QUERIES = {
-  1:"person making a commitment handshake promise", 2:"two objects side by side comparison", 3:"person complaining customer service", 4:"complex network of connected parts", 5:"person focusing on one task", 6:"checking confirming a document", 7:"person thinking considering options", 8:"container holding water inside", 9:"people signing a contract", 10:"team contributing pieces to a project", 11:"photo cropping frame", 12:"cruel act unfair treatment", 13:"two people debating discussion", 14:"person denying accusation gesture", 15:"person reaching for desired object", 16:"disturbing a quiet room interruption", 17:"efficient workflow organized tools", 18:"highlighting important text", 19:"teacher encouraging student", 20:"plant existing growing in soil"
+  1:"person making a commitment handshake promise", 2:"two objects side by side comparison", 3:"person complaining customer service", 4:"complex network of connected parts", 5:"person focusing on one task", 6:"checking confirming a document", 7:"person thinking considering options", 8:"container holding water inside", 9:"people signing a contract", 10:"team contributing pieces to a project", 11:"photo cropping frame", 12:"cruel act unfair treatment", 13:"two people debating discussion", 14:"person denying accusation gesture", 15:"person reaching for desired object", 16:"disturbing a quiet room interruption", 17:"efficient workflow organized tools", 18:"highlighting important text", 19:"teacher encouraging student", 20:"plant existing growing in soil", 21:"person understanding a concept", 22:"abandoning a plan", 23:"scissors cutting paper with tool"
 };
 const DECOMP_ELEMENTS = {
  "com-":{meaning:"共に・一緒に",kind:"接頭辞"},
@@ -49,18 +52,39 @@ function renderDecompParts(w){
   return '<button type="button" class="decomp-chip" data-part="'+escapeHtml(part)+'"><strong>'+escapeHtml(part)+'</strong><span>'+escapeHtml(meta.meaning)+'</span></button>';
  }).join("")+'</div></div>';
 }
-const USAGE_FRAMES={2:{parts:["compare","A","with","B"],selected:"with",open:false,showExample:false,options:[{value:"with",explanation:"AとBを並べ、共通点や違いを検討する。",example:"I compared the two phones with each other.",ja:"私はその2台のスマートフォンを互いに比較した。"},{value:"to",explanation:"AをBになぞらえ、類似性に注目する傾向がある。使い分けは絶対ではなく、文脈によって重なる。",example:"She compared his voice to the sound of rain.",ja:"彼女は彼の声を雨音にたとえた。"}]}};
+const USAGE_FRAMES={
+  2:{selected:"with",open:false,showExample:false,options:[
+    {value:"with",label:"with",parts:["compare","A","__choice__","B"],explanation:"AとBを並べ、共通点や相違点を検討する。",example:"I compared the two phones with each other.",ja:"私はその2台のスマートフォンを互いに比較した。"},
+    {value:"to",label:"to",parts:["compare","A","__choice__","B"],explanation:"AをBになぞらえ、類似性に注目する傾向がある。with / to の使い分けは絶対ではなく、文脈によって重なる。",example:"She compared his voice to the sound of rain.",ja:"彼女は彼の声を雨音にたとえた。"}
+  ]},
+  21:{selected:"state",open:false,showExample:false,options:[
+    {value:"state",label:"adjective",parts:["get","__choice__"],explanation:"get + 形容詞は「ある状態になる」。主語の状態変化を表す。",example:"It's getting dark.",ja:"暗くなってきている。"},
+    {value:"understand",label:"it",parts:["get","__choice__"],explanation:"get it は「それを得る」ではなく、文脈や意味を理解すること。構文として覚える。",example:"I get it now.",ja:"今はその意味が分かる。"},
+    {value:"persuade",label:"object + to do",parts:["get","__choice__"],explanation:"get + 人 + to do は、頼む・説得するなどして人に行動してもらう型。",example:"I got him to help me.",ja:"彼に手伝ってもらえるよう頼んだ／説得した。"}
+  ]},
+  22:{selected:"object",open:false,showExample:false,options:[
+    {value:"object",label:"object",parts:["abandon","__choice__"],explanation:"人・場所・物・計画などを手放して離れる、または続けるのをやめる。目的語によって自然な訳が変わる。",example:"They abandoned the plan.",ja:"彼らはその計画を断念した。"},
+    {value:"oneself",label:"oneself to + noun",parts:["abandon","__choice__"],explanation:"abandon oneself to ... は「感情などに身を任せる」。通常の他動詞用法と区別して構文ごと覚える。",example:"He abandoned himself to despair.",ja:"彼は絶望に身を任せた。"}
+  ]},
+  23:{selected:"person",open:false,showExample:false,options:[
+    {value:"person",label:"person",parts:["with","__choice__"],explanation:"同伴する人を表す。with は「一緒に」という関係を示す。",example:"I went with my brother.",ja:"私は兄弟と一緒に行った。"},
+    {value:"tool",label:"tool",parts:["with","__choice__"],explanation:"道具・手段を表す。単に「一緒に」と訳すのではなく、何を使って行うかを示す。",example:"She cut the paper with scissors.",ja:"彼女ははさみで紙を切った。"},
+    {value:"feature",label:"feature",parts:["with","__choice__"],explanation:"人や物が持つ特徴・付帯情報を示す。",example:"A girl with blue eyes stood there.",ja:"青い目の少女がそこに立っていた。"},
+    {value:"feeling",label:"feeling / result",parts:["with","__choice__"],explanation:"感情や評価が向けられる対象を示すことがある。",example:"I'm happy with the result.",ja:"私はその結果に満足している。"}
+  ]}
+};
 function renderUsageFrame(w){
  const f=USAGE_FRAMES[w.id];
  if(!f)return "<p>"+escapeHtml(noteFor(w).usage||"使い方メモは未登録です。")+"</p>";
- const o=f.options.find(x=>x.value===f.selected);
- const diagram='<div class="usage-diagram">'+f.parts.map(p=>{
-  if(p==="A"||p==="B")return '<span class="usage-part usage-slot">'+p+'</span>';
-  if(f.options.some(x=>x.value===p))return '<span class="usage-choice-wrap"><button type="button" class="usage-choice" data-usage-toggle="1" aria-expanded="'+f.open+'">'+escapeHtml(f.selected)+'</button><span class="usage-choice-list'+(f.open?"":" hidden")+'">'+f.options.map(x=>'<button type="button" class="usage-choice-option'+(x.value===f.selected?" is-selected":"")+'" data-usage-value="'+x.value+'">'+x.value+'</button>').join("")+'</span></span>';
+ const o=f.options.find(x=>x.value===f.selected)||f.options[0];
+ const parts=o.parts||f.parts||[];
+ const diagram='<div class="usage-diagram">'+parts.map(p=>{
+  if(p==="A"||p==="B")return '<span class="usage-part usage-slot">'+escapeHtml(p)+'</span>';
+  if(p==="__choice__")return '<span class="usage-choice-wrap"><button type="button" class="usage-choice" data-usage-toggle="1" aria-expanded="'+f.open+'">'+escapeHtml(o.label||o.value)+'</button><span class="usage-choice-list'+(f.open?"":" hidden")+'">'+f.options.map(x=>'<button type="button" class="usage-choice-option'+(x.value===f.selected?" is-selected":"")+'" data-usage-value="'+escapeHtml(x.value)+'">'+escapeHtml(x.label||x.value)+'</button>').join("")+'</span></span>';
   return '<span class="usage-part">'+escapeHtml(p)+'</span>';
  }).join('<span class="usage-join"> </span>')+'</div>';
  const example=f.showExample?'<div class="usage-example"><p class="usage-example-en">'+escapeHtml(o.example)+'</p><p class="usage-example-ja">'+escapeHtml(o.ja)+'</p><button type="button" class="subtle-btn usage-example-button" data-usage-back="1">骨格に戻る</button></div>':diagram;
- return '<div class="usage-frame"><div class="usage-topline">'+example+(f.showExample?'':'<button type="button" class="subtle-btn usage-example-button" data-usage-example="1">例</button>')+'</div><p class="usage-explanation">'+o.explanation+'</p></div>';
+ return '<div class="usage-frame"><div class="usage-topline">'+example+(f.showExample?'':'<button type="button" class="subtle-btn usage-example-button" data-usage-example="1">例</button>')+'</div><p class="usage-explanation">'+escapeHtml(o.explanation)+'</p></div>';
 }function noteFor(w){return {...(NOTE_CONTENT[w.id]||{}),...(notesById[w.id]||{})};}
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function visualSearchQuery(w){return IMAGE_QUERIES[w.id]||w.imageSearch||w.word;}
