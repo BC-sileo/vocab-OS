@@ -232,3 +232,12 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .usage-block-primary{min-width:0;font-size:16px;font-weight:750;line-height:1.45;overflow-wrap:anywhere}
 .usage-block-action{grid-column:2;grid-row:1;align-self:center;justify-self:end;min-width:46px;padding:7px 9px;font-size:12px;white-space:nowrap}
 .usage-block-secondary{grid-column:1/-1;grid-row:2;align-self:start;margin:0!important;font-size:13px!important;line-height:1.6!important;color:var(--muted)!important;overflow-wrap:anywhere}
+
+
+/* Global red-sheet mode for Japanese translations in word notes */
+.translation-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 12px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.translation-toolbar span{font-size:12px;color:var(--muted);font-weight:650}
+.translation-toolbar button{padding:7px 11px;font-size:12px}
+.translation-text{transition:color .12s,background-color .12s}
+#noteDetailPanel.translation-hidden .translation-text{color:transparent!important;background:var(--panel)!important;text-shadow:none!important;border-radius:3px;user-select:none;-webkit-user-select:none}
+#noteDetailPanel.translation-hidden .translation-text::selection{color:transparent;background:transparent}
