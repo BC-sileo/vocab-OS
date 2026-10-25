@@ -80,6 +80,15 @@ const USAGE_BLOCKS = {
       { pattern: "confirm + 名詞", meaning: "情報・予定などを照合し、正しい／確定したものにする。", example: "Please confirm your email address.", ja: "メールアドレスを確認してください。" },
       { pattern: "confirm + that + 文", meaning: "「〜ということ」を事実として確かめる。", example: "She confirmed that the meeting was canceled.", ja: "彼女は会議が中止になったことを確認した。" }
     ]
+  },
+  21: {
+    expanded: [],
+    items: [
+      { pattern: "get + 名詞", meaning: "物・情報などを得る、受け取る。", example: "I got an email from the school.", ja: "学校からメールを受け取った。" },
+      { pattern: "get + 形容詞", meaning: "ある状態へ変化する。", example: "It's getting dark.", ja: "暗くなってきている。" },
+      { pattern: "get it", meaning: "文脈や意味を理解する。ひとかたまりの構文として覚える。", example: "I get it now.", ja: "今はその意味が分かる。" },
+      { pattern: "get + 人 + to do", meaning: "人に頼む・働きかけるなどして、何かをしてもらう。", example: "I got him to help me.", ja: "私は彼に手伝ってもらった。" }
+    ]
   }
 };
 function renderUsageBlocks(w){
@@ -87,11 +96,11 @@ function renderUsageBlocks(w){
  if(!data)return "";
  return '<div class="usage-block-list">'+data.items.map((item,index)=>{
   const expanded=data.expanded.includes(index);
-  const content=expanded
-   ? '<div class="usage-block-example"><p class="usage-block-example-en">'+escapeHtml(item.example)+'</p><p class="usage-block-example-ja">'+escapeHtml(item.ja)+'</p><button type="button" class="subtle-btn usage-block-back" data-usage-block-back="'+index+'">構造に戻る</button></div>'
-   : '<div class="usage-block-pattern">'+escapeHtml(item.pattern)+'</div><p class="usage-block-meaning">'+escapeHtml(item.meaning)+'</p>';
-  const action=expanded?'':'<button type="button" class="usage-block-example-button" data-usage-block-example="'+index+'">例</button>';
-  return '<article class="usage-block">'+content+action+'</article>';
+  const primary=expanded?item.example:item.pattern;
+  const secondary=expanded?item.ja:item.meaning;
+  const actionLabel=expanded?'構造':'例';
+  const actionAttr=expanded?'data-usage-block-back="'+index+'"':'data-usage-block-example="'+index+'"';
+  return '<article class="usage-block"><div class="usage-block-primary">'+escapeHtml(primary)+'</div><button type="button" class="subtle-btn usage-block-action" '+actionAttr+'>'+actionLabel+'</button><p class="usage-block-secondary">'+escapeHtml(secondary)+'</p></article>';
  }).join("")+'</div>';
 }
 function renderUsageFrame(w){
@@ -140,7 +149,7 @@ function openNote(id,autoplay=true){
  '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(w.pos)+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button></div>'+
  '<p class="note-core">'+escapeHtml(w.coreImage||n.meaning||w.translation)+'</p></div>'+
  '<section class="note-section"><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w)+'</section>'+
- '<section class="note-section">'+renderUsageFrame(w)+'<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p>'+(w.id===2?'<p class="hint">before you decide＝「決める前に」。時を表す節で、compare の語法の例外ではない。</p>':'')+'<button class="reveal-translation" id="revealExample">日本語訳を見る</button><p id="exampleJa" class="example-ja hidden">'+escapeHtml(n.ja||"")+'</p>'+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
+ '<section class="note-section">'+renderUsageFrame(w)+(USAGE_BLOCKS[w.id]?'':('<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p>'+(w.id===2?'<p class="hint">before you decide＝「決める前に」。時を表す節で、compare の語法の例外ではない。</p>':'')+'<button class="reveal-translation" id="revealExample">日本語訳を見る</button><p id="exampleJa" class="example-ja hidden">'+escapeHtml(n.ja||"")+'</p>'))+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
  
  '<section class="note-section"><p class="mixed-sentence">'+mixedExampleMarkup(n)+'</p><p class="hint">英語部分をタップすると、元の日本語表現を表示。</p></section>'+
 
@@ -178,7 +187,7 @@ function openNote(id,autoplay=true){
  });
  $("#playWordAudio").onclick=()=>speakWord(w);
  if(autoplay)speakWord(w);
- $("#revealExample").onclick=()=>{$("#exampleJa").classList.toggle("hidden");$("#revealExample").textContent=$("#exampleJa").classList.contains("hidden")?"日本語訳を見る":"日本語訳を隠す";};
+ const revealExample=$("#revealExample"),exampleJa=$("#exampleJa");if(revealExample&&exampleJa)revealExample.onclick=()=>{exampleJa.classList.toggle("hidden");revealExample.textContent=exampleJa.classList.contains("hidden")?"日本語訳を見る":"日本語訳を隠す";};
  const mixedToken=$("#mixedWordToken"),mixedTarget=$("#mixedTarget");
  if(mixedToken&&mixedTarget)mixedToken.onclick=()=>{mixedTarget.classList.toggle("hidden");mixedToken.setAttribute("aria-expanded",String(!mixedTarget.classList.contains("hidden")));};
  $("#saveImageData").onclick=()=>saveImageData(id);
