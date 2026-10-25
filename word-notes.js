@@ -73,7 +73,30 @@ const USAGE_FRAMES={
     {value:"feeling",label:"feeling / result",parts:["with","__choice__"],explanation:"感情や評価が向けられる対象を示すことがある。",example:"I'm happy with the result.",ja:"私はその結果に満足している。"}
   ]}
 };
+const USAGE_BLOCKS = {
+  6: {
+    expanded: [],
+    items: [
+      { pattern: "confirm + 名詞", meaning: "情報・予定などを照合し、正しい／確定したものにする。", example: "Please confirm your email address.", ja: "メールアドレスを確認してください。" },
+      { pattern: "confirm + that + 文", meaning: "「〜ということ」を事実として確かめる。", example: "She confirmed that the meeting was canceled.", ja: "彼女は会議が中止になったことを確認した。" }
+    ]
+  }
+};
+function renderUsageBlocks(w){
+ const data=USAGE_BLOCKS[w.id];
+ if(!data)return "";
+ return '<div class="usage-block-list">'+data.items.map((item,index)=>{
+  const expanded=data.expanded.includes(index);
+  const content=expanded
+   ? '<div class="usage-block-example"><p class="usage-block-example-en">'+escapeHtml(item.example)+'</p><p class="usage-block-example-ja">'+escapeHtml(item.ja)+'</p><button type="button" class="subtle-btn usage-block-back" data-usage-block-back="'+index+'">構造に戻る</button></div>'
+   : '<div class="usage-block-pattern">'+escapeHtml(item.pattern)+'</div><p class="usage-block-meaning">'+escapeHtml(item.meaning)+'</p>';
+  const action=expanded?'':'<button type="button" class="usage-block-example-button" data-usage-block-example="'+index+'">例</button>';
+  return '<article class="usage-block">'+content+action+'</article>';
+ }).join("")+'</div>';
+}
 function renderUsageFrame(w){
+ const structured=renderUsageBlocks(w);
+ if(structured)return structured;
  const f=USAGE_FRAMES[w.id];
  if(!f)return "<p>"+escapeHtml(noteFor(w).usage||"使い方メモは未登録です。")+"</p>";
  const o=f.options.find(x=>x.value===f.selected)||f.options[0];
@@ -132,15 +155,24 @@ function openNote(id,autoplay=true){
  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();requestAnimationFrame(()=>window.scrollTo({top:noteListScrollY,behavior:"instant"}));};
  d.querySelectorAll("[data-part]").forEach(btn=>btn.onclick=()=>{activeDecompFilter=btn.dataset.part;d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});});
  d.addEventListener("click",event=>{
-  const target=event.target.closest("[data-usage-toggle],[data-usage-value],[data-usage-example],[data-usage-back]");
+  const target=event.target.closest("[data-usage-toggle],[data-usage-value],[data-usage-example],[data-usage-back],[data-usage-block-example],[data-usage-block-back]");
   if(!target||!d.contains(target))return;
-  const f=USAGE_FRAMES[w.id];if(!f)return;
   const scrollY=window.scrollY;
-  if(target.hasAttribute("data-usage-toggle")){f.open=!f.open;}
-  else if(target.hasAttribute("data-usage-value")){f.selected=target.dataset.usageValue;f.open=false;f.showExample=false;}
-  else if(target.hasAttribute("data-usage-example")){f.showExample=true;f.open=false;}
-  else if(target.hasAttribute("data-usage-back")){f.showExample=false;}
-  const frame=d.querySelector(".usage-frame");
+  const blocks=USAGE_BLOCKS[w.id];
+  if(target.hasAttribute("data-usage-block-example")&&blocks){
+   const index=Number(target.dataset.usageBlockExample);
+   if(!blocks.expanded.includes(index))blocks.expanded.push(index);
+  }else if(target.hasAttribute("data-usage-block-back")&&blocks){
+   const index=Number(target.dataset.usageBlockBack);
+   blocks.expanded=blocks.expanded.filter(x=>x!==index);
+  }else{
+   const f=USAGE_FRAMES[w.id];if(!f)return;
+   if(target.hasAttribute("data-usage-toggle")){f.open=!f.open;}
+   else if(target.hasAttribute("data-usage-value")){f.selected=target.dataset.usageValue;f.open=false;f.showExample=false;}
+   else if(target.hasAttribute("data-usage-example")){f.showExample=true;f.open=false;}
+   else if(target.hasAttribute("data-usage-back")){f.showExample=false;}
+  }
+  const frame=d.querySelector(".usage-frame, .usage-block-list");
   if(frame)frame.outerHTML=renderUsageFrame(w);
   requestAnimationFrame(()=>window.scrollTo({top:scrollY,behavior:"instant"}));
  });
