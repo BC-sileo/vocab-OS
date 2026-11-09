@@ -21,7 +21,11 @@ const WORDS=[
 ["exist","そこに実際に存在している","v","実際にそこにある","exist presence"],
 ["get","何かを得る／ある状態・結果に至る","v","状態や結果に至る","get become understand"],
 ["abandon","人・物・計画などを手放して離れる／続けるのをやめる","v","手放して離れる・続けるのをやめる","abandon leaving something"],
-["with","〜と一緒に／〜で／〜を持つなど（文脈による）","prep","後ろの名詞句が主語や動作とどう関係するかを示す","with person scissors blue eyes"]
+["with","〜と一緒に／〜で／〜を持つなど（文脈による）","prep","後ろの名詞句が主語や動作とどう関係するかを示す","with person scissors blue eyes"],
+["about","〜について／〜の周辺に／およそ。be about to do は「まさに〜しようとしている」","prep/adv/adj/conj","対象・範囲・概数などを表す。be about to do は独立した構文として扱う","about surrounding topic approximate"],
+["arm","肩から手までの腕／機械などの腕・組織の部門。動詞では武装させる","n/v","身体の腕、機械の腕、組織の部門。動詞は武器を装備させる","human arm shoulder hand mechanical arm"],
+["attend","行事・学校などに出席する。attend to は注意を向ける／対処する・世話をする","v","ある場に出る。attend to は対象に注意や対応を向ける構文","attend class meeting take care"],
+["associate","関連づける／仲間・同僚／関連した・共同の。associate professor は准教授","v/n/adj","人・物・考えを結びつける。名詞・形容詞用法も区別する","associate connection colleague related"]
 ].map(([word,translation,pos,coreImage,imageSearch],i)=>({id:i+1,word,translation,pos,coreImage,imageSearch}));
 
 const KEY="vocabOS_v02";
