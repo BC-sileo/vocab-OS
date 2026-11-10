@@ -336,6 +336,10 @@
   function pauseLearning(){
     const session=store.activeSession;
     if(!session)return;
+    if(session.phase==="review" && session.wordIds.every(function(id){return !!sessionStates[id];})){
+      finishReview();
+      return;
+    }
     if(session.phase==="intro")stopIntroTimer(true);
     if(session.phase==="review"){
       session.reviewStates={...sessionStates};
@@ -462,6 +466,13 @@
     if(summary)summary.textContent="今回の "+(session?session.wordIds.length:0)+" 語は、初見学習の完了テストまで終了しました。次回から復習モードの対象になります。";
     view("learningDoneView");
   }
+  window.learningBadgeFor=function(id){
+    const r=recordFor(Number(id));
+    const tags=[];
+    if(r.weak)tags.push("苦手");
+    if(r.completedFirstRun)tags.push("初見済み");
+    return tags.length?" · "+tags.join(" / "):"";
+  };
   function refreshWeakToggles(){
     document.querySelectorAll("[data-weak-toggle]").forEach(function(button){
       const id=Number(button.dataset.weakToggle);
