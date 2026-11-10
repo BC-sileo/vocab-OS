@@ -390,6 +390,7 @@ function seedCoreImageMemos(){
   const current=notesById[w.id]||{};
   const fromMemo=coreImageFromMemo(current.memo);
   if(fromMemo){w.coreImage=fromMemo;return;}
+   if(current.coreImageDisabled){w.coreImage="";return;}
   const core=CORE_IMAGE_DEFAULTS[w.word]||w.coreImage;
   if(!core||w.pending)return;
   const memo=String(current.memo||"");
@@ -400,7 +401,7 @@ function seedCoreImageMemos(){
 }
 seedCoreImageMemos();
 function renderMemoSection(n){return '<section class="note-section memo-section"><div class="memo-heading"><h3>MY MEMO</h3><span class="memo-autosave">自動保存</span></div><textarea id="wordMemo" class="word-memo" rows="5" placeholder="この単語についての気づき・疑問・自分なりの例文などを自由に記録"></textarea><p class="hint memo-format-hint">先頭に <code>_コアイメージ</code> と書くと、最初の空白（半角・全角）までがコアイメージとして単語ノートに反映されます。</p><p id="memoSaveStatus" class="hint memo-save-status" aria-live="polite">入力内容はこの端末に自動保存されます。</p></section>';}
-function bindWordMemo(id,n){const field=$("#wordMemo");if(!field)return;field.value=typeof n.memo==="string"?n.memo:"";field.addEventListener("input",()=>{const previous=notesById[id]||{};const memo=field.value;const coreValue=coreImageFromMemo(memo);const next={...previous,memo};const w=WORDS.find(item=>item.id===id);if(coreValue){next.coreImageFromMemo=true;if(w)w.coreImage=coreValue;}else if(previous.coreImageFromMemo){delete next.coreImageFromMemo;if(w)w.coreImage="";}notesById[id]=next;save();const core=$("#noteCoreImageValue");if(core){const value=effectiveCoreImage(w||{coreImage:""},noteFor(w||{id}));core.textContent=value;core.classList.toggle("hidden",!value);}const status=$("#memoSaveStatus");if(status)status.textContent="保存済み";});}
+function bindWordMemo(id,n){const field=$("#wordMemo");if(!field)return;field.value=typeof n.memo==="string"?n.memo:"";field.addEventListener("input",()=>{const previous=notesById[id]||{};const memo=field.value;const coreValue=coreImageFromMemo(memo);const next={...previous,memo};const w=WORDS.find(item=>item.id===id);if(coreValue){next.coreImageFromMemo=true;delete next.coreImageDisabled;if(w)w.coreImage=coreValue;}else if(previous.coreImageFromMemo){delete next.coreImageFromMemo;next.coreImageDisabled=true;if(w)w.coreImage="";}notesById[id]=next;save();const core=$("#noteCoreImageValue");if(core){const value=effectiveCoreImage(w||{coreImage:""},noteFor(w||{id}));core.textContent=value;core.classList.toggle("hidden",!value);}const status=$("#memoSaveStatus");if(status)status.textContent="保存済み";});}
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function visualSearchQuery(w){return IMAGE_QUERIES[w.id]||w.imageSearch||w.word;}
 function commonsSearchUrl(w){return "https://commons.wikimedia.org/w/index.php?search="+encodeURIComponent(visualSearchQuery(w))+"&title=Special:MediaSearch&type=image";}
