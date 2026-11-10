@@ -35,6 +35,8 @@ let sessionPages=Number(saved.sessionPages)||1;
 let mode=saved.mode==="sheet"||!saved.mode?"swipe":saved.mode;
 let order=[...(saved.order||[]),...WORDS.map(w=>w.id).filter(id=>!(saved.order||[]).includes(id))];
 let states=saved.states||{};
+// 評価履歴(states)と、今回の復習セッション内の評価(sessionStates)を分離する。
+let sessionStates={};
 let notesById=saved.notes||{};
 let reviewPageIndex=0;
 let sessionStartPage=1;
@@ -68,17 +70,18 @@ function startReview(){
   reviewPageIndex=0;
   sessionStartPage=1;
   sessionWordIds=[];
+  sessionStates={};
   showView("reviewView");
   renderReviewPage();
 }
 function currentReviewPage(){return reviewPageIndex+1}
-function allEvaluated(ids){return ids.every(id=>!!states[id])}
+function allEvaluated(ids){return ids.every(id=>!!sessionStates[id])}
 function renderReviewPage(){
   const p=currentReviewPage(), ids=pageIds(p), ws=wordsFor(p);
   sessionWordIds=[...new Set([...sessionWordIds,...ids])];
   list.innerHTML="";
   ws.forEach((w,i)=>{
-    const state=states[w.id]||"";
+    const state=sessionStates[w.id]||"";
     const el=document.createElement("article");
     el.className="word"; el.id="word-"+w.id;
     const img=imageCueMarkup(w);
@@ -116,6 +119,7 @@ function renderReviewPage(){
   window.scrollTo({top:0,behavior:"instant"});
 }
 function setState(id,state){
+  sessionStates[id]=state;
   states[id]=state; save();
   const ids=pageIds(currentReviewPage());
   if(allEvaluated(ids)){
@@ -126,8 +130,8 @@ function setState(id,state){
   }else renderReviewPage();
 }
 function finishReview(){
-  resultIds=sessionWordIds.filter(id=>states[id]&&states[id]!=="即答");
-  resultIds.sort((a,b)=>severity(states[b])-severity(states[a]));
+  resultIds=sessionWordIds.filter(id=>sessionStates[id]&&sessionStates[id]!=="即答");
+  resultIds.sort((a,b)=>severity(sessionStates[b])-severity(sessionStates[a]));
   renderResults();
   showView("resultView");
   window.scrollTo({top:0,behavior:"instant"});
@@ -138,7 +142,7 @@ function renderResults(){
   const weak=resultIds.length;
   $("#resultSummary").textContent=weak?weak+"語が今回の再接触対象です。":"今回はすべて即答でした。";
   $("#resultList").innerHTML=resultIds.length?resultIds.map(id=>{
-    const w=WORDS[id-1],s=states[id];
+    const w=WORDS[id-1],s=sessionStates[id];
     return '<article class="result-card">'+imageCueMarkup(w)+'<div class="result-meta"><div class="result-word">'+w.word+'</div><span class="status">'+s+'</span></div><div class="result-label">コアイメージ</div><div class="result-core">'+w.coreImage+'</div></article>';
   }).join(""):'<section class="card"><strong>苦手語はありません。</strong><p class="hint">今回の接触はここで完了です。</p></section>';
   $("#finishBtn").disabled=true;
