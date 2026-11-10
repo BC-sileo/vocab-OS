@@ -105,7 +105,7 @@
         <input id="learningWordCount" type="number" min="1" max="20" value="5">
       </label>
       <div class="learning-criteria">
-        <div class="label-title">選択基準（複数選択可）</div>
+        <div class="label-title">選択基準（複数選択可）</div><p class="hint">選んだ基準への適合数が多い単語を優先します。同じ評価の単語は無作為に選びます。何も選ばない場合は全候補から無作為に選びます。</p>
         <label class="learning-criterion"><input type="checkbox" data-learning-criterion="ven"><span><strong>VEN度</strong><small>収録教材数が多い単語を優先</small></span></label>
         <label class="learning-criterion"><input type="checkbox" data-learning-criterion="etymology"><span><strong>語源・分解</strong><small>語源・分解情報がある単語を優先</small></span></label>
         <label class="learning-criterion"><input type="checkbox" data-learning-criterion="collocation"><span><strong>コロケーション</strong><small>用法パターンが登録された単語を優先</small></span></label>
@@ -167,8 +167,8 @@
   </aside>
 
   <script src="app.js"></script>
-  <script src="word-notes.js?v=20261110-learning2"></script>
-  <script src="learning.js?v=20261110-learning2"></script>
+  <script src="word-notes.js?v=20261110-learning3"></script>
+  <script src="learning.js?v=20261110-learning3"></script>
   <script src="theme.js"></script>
 </body>
 </html>
