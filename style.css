@@ -291,3 +291,8 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .mixed-sentence-section h3{display:block;margin:0 0 8px;font-size:11px;letter-spacing:.09em;color:var(--muted);font-weight:800}
 
 .ven-sort-caption{padding:6px 4px 10px;color:var(--muted);font-size:12px;font-weight:750;letter-spacing:.03em}
+
+.ven-detail{display:inline-flex;align-items:center;padding:5px 9px;border-radius:8px;background:var(--panel2);color:var(--accent);font-size:12px;font-weight:800;white-space:nowrap}
+.ven-pending-card{margin-top:16px;padding:15px;border:1px dashed var(--line);border-radius:12px;background:var(--panel)}
+.ven-pending-card strong{font-size:14px}
+.ven-pending-card p{margin:7px 0 0;color:var(--muted);font-size:13px;line-height:1.7}
