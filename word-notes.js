@@ -224,6 +224,10 @@ const USAGE_COMPONENTS = {
       {value:"feature",label:"特徴",explanation:"人や物が持つ特徴・付帯情報を示す。",example:"A girl with blue eyes stood there.",ja:"青い目の少女がそこに立っていた。"},
       {value:"feeling",label:"感情・評価の対象",explanation:"感情や評価が向けられる対象を示すことがある。",example:"I'm happy with the result.",ja:"私はその結果に満足している。"}
     ]}
+  ]},
+  26: { items: [
+    {id:"attend-event",parts:["attend","行事 / 授業"],explanation:"会議・授業・行事などに出席する。目的語を直接続ける。",example:"She attends every lecture.",ja:"彼女はすべての講義に出席する。"},
+    {id:"attend-to",parts:["attend to","対象"],explanation:"attend to をひとかたまりの群動詞として扱う。対象に注意を向け、必要に応じて対応・世話をする。",example:"The nurse attended to the patient.",ja:"看護師は患者の世話をした。"}
   ]}
 };
 
