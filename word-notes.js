@@ -385,6 +385,13 @@ function openNote(id,autoplay=true){
  if(!$("#notesListPanel").classList.contains("hidden"))noteListScrollY=window.scrollY;
  const w=WORDS.find(x=>x.id===id);if(!w)return;const n=noteFor(w);
  $("#notesListPanel").classList.add("hidden");const d=$("#noteDetailPanel");d.classList.remove("hidden");d.classList.remove("translation-hidden");
+ if(w.pending){
+  d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button><div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">未登録</span></div><span class="ven-detail">VEN度 '+escapeHtml(w.ven)+'</span><button id="playWordAudio" class="audio-btn" type="button">🔊 発音</button></div><section class="ven-pending-card"><strong>単語登録済み・内容作成待ち</strong><p>現在は綴りとVEN度だけを登録している。語義・品詞・コアイメージ・語法などを確認してから学習カードに追加する。</p></section>';
+  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();requestAnimationFrame(()=>window.scrollTo({top:noteListScrollY,behavior:"instant"}));};
+  $("#playWordAudio").onclick=()=>speakWord(w);
+  if(autoplay)speakWord(w);
+  return;
+ }
  d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button><div class="translation-toolbar"><span>日本語訳</span><button type="button" id="toggleTranslations" class="subtle-btn translation-toggle-visible" aria-pressed="false">訳を隠す</button></div>'+
  '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(w.pos)+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button></div>'+
  '<p class="note-core">'+escapeHtml(w.coreImage||n.meaning||w.translation)+'</p></div>'+
