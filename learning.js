@@ -204,7 +204,7 @@
     if(Object.keys(sessionStates).length){
       sessionWordIds=session.wordIds.filter(function(id){return !!sessionStates[id];});
     }
-    save();
+    saveLearning();
     view("reviewView");
     const pause=document.getElementById("learningReviewPause");
     if(pause)pause.classList.remove("hidden");
@@ -425,8 +425,10 @@
     renderTestWord();
   }
   function submitTestForWord(){
-    const session=store.activeSession,id=session.wordIds[session.index],w=byId(id);
-    if(!session || !w)return;
+    const session=store.activeSession;
+    if(!session)return;
+    const id=session.wordIds[session.index],w=byId(id);
+    if(!w)return;
     const items=testItemsFor(w);
     const response=session.answers[id]||{drafts:{},grades:{}};
     const missing=items.filter(function(item){return !response.grades||!response.grades[item.key];});
