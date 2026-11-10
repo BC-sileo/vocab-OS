@@ -256,3 +256,19 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .usage-item .usage-explanation{margin:0}
 .usage-item .usage-diagram{justify-content:center}
 .usage-item .usage-choice-list{z-index:5}
+
+
+/* Semantic Map and independent Meaning share one data-driven note layout. */
+.semantic-map-section h3,.meaning-section h3{display:block;margin:0 0 10px;font-size:12px;letter-spacing:.09em;color:var(--muted);font-weight:800}
+.semantic-map-nodes{display:grid;grid-template-columns:1fr;gap:8px}
+.semantic-node,.meaning-item{min-width:0;padding:12px;border:1px solid var(--line);border-radius:11px;background:var(--panel)}
+.semantic-node-kind{display:block;margin-bottom:5px;font-size:11px;color:var(--muted);font-weight:700}
+.semantic-node strong,.meaning-item strong{display:block;font-size:15px;line-height:1.5}
+.semantic-node p,.meaning-item p{margin:5px 0 0;font-size:14px;line-height:1.65}
+.semantic-map-edges{display:grid;gap:8px;margin-top:10px;padding-left:10px;border-left:2px solid var(--line)}
+.semantic-edge{min-width:0;padding:9px 11px;border-radius:9px;background:var(--panel2)}
+.semantic-edge-route{display:flex;align-items:center;flex-wrap:wrap;gap:7px;font-size:13px;font-weight:750;line-height:1.5}
+.semantic-edge-arrow{color:var(--accent);font-size:17px}
+.semantic-edge-kind{display:inline-block;margin-top:5px;font-size:11px;font-weight:750;color:var(--muted)}
+.semantic-edge p{margin:4px 0 0;font-size:13px;line-height:1.6}
+.meaning-list{display:grid;gap:8px}
