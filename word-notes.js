@@ -411,7 +411,6 @@ function openNote(id,autoplay=true){
  $("#notesListPanel").classList.add("hidden");const d=$("#noteDetailPanel");d.classList.remove("hidden");d.classList.remove("translation-hidden");
  if(w.pending){
   d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button><div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">未登録</span></div><span class="ven-detail">VEN度 '+escapeHtml(w.ven)+'</span><button id="playWordAudio" class="audio-btn" type="button">🔊 発音</button></div><section class="ven-pending-card"><strong>単語登録済み・内容作成待ち</strong><p>現在は綴りとVEN度だけを登録している。語義・品詞・コアイメージ・語法などを確認してから学習カードに追加する。</p></section>'+renderMemoSection(n);
-  const memoInput=$("#wordMemo");if(memoInput){memoInput.value=n.memo||"";memoInput.addEventListener("input",()=>{notesById[id]={...(notesById[id]||{}),memo:memoInput.value};save();$("#memoSaveStatus").textContent="保存済み";});}
  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();requestAnimationFrame(()=>window.scrollTo({top:noteListScrollY,behavior:"instant"}));};
   $("#playWordAudio").onclick=()=>speakWord(w);
   const pendingMemo=$("#wordMemo");if(pendingMemo)pendingMemo.value=n.memo||"";if(pendingMemo)pendingMemo.addEventListener("input",()=>{notesById[id]={...(notesById[id]||{}),memo:pendingMemo.value};save();$("#memoSaveStatus").textContent="保存済み";});
@@ -435,6 +434,7 @@ function openNote(id,autoplay=true){
  '<div class="image-meta-grid"><label>作者・権利者<input id="noteImageCreator" placeholder="作者名／不明" value="'+escapeHtml(n.imageCreator||"")+'"></label><label>ライセンス<input id="noteImageLicense" placeholder="例：CC BY-SA 4.0" value="'+escapeHtml(n.imageLicense||"")+'"></label></div>'+
  '<button id="saveImageData" class="primary-btn">画像情報を保存</button><p id="imageSaveStatus" class="hint" aria-live="polite"></p>'+
  '<p class="hint">端末から選んだ画像は縮小してこのブラウザ内に保存します。URL画像と同じく、出典・作者・ライセンスは必要に応じて記録してください。別端末への同期はありません。</p></div></details>';
+ const memoInput=$("#wordMemo");if(memoInput){memoInput.value=n.memo||"";memoInput.addEventListener("input",()=>{notesById[id]={...(notesById[id]||{}),memo:memoInput.value};save();$("#memoSaveStatus").textContent="保存済み";});}
  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();requestAnimationFrame(()=>window.scrollTo({top:noteListScrollY,behavior:"instant"}));};
  d.querySelectorAll("[data-part]").forEach(btn=>btn.onclick=()=>{activeDecompFilter=btn.dataset.part;d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});});
  d.addEventListener("click",event=>{
