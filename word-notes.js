@@ -228,7 +228,7 @@ const USAGE_COMPONENTS = {
   26: { items: [
     {id:"attend-event",parts:["attend","行事 / 授業"],explanation:"会議・授業・行事などに出席する。目的語を直接続ける。",example:"She attends every lecture.",ja:"彼女はすべての講義に出席する。"},
     {id:"attend-to",parts:["attend to","対象"],explanation:"attend to をひとかたまりの群動詞として扱う。対象に注意を向け、必要に応じて対応・世話をする。",example:"The nurse attended to the patient.",ja:"看護師は患者の世話をした。"}
-  ]}
+  ]},
   1: { items: [
     {id:"auto-1-1",parts:["commit","to","名詞 / 動名詞"],explanation:"commit to は計画・約束などに自分を結びつけ、責任を持って取り組む。to は前置詞。",example:"She committed to learning English.",ja:"彼女は英語を学ぶことに本腰を入れた。"},
     {id:"auto-1-2",parts:["commit","犯罪・過ちなど"],explanation:"commit + 名詞で犯罪・過ちなどを実行する。",example:"He committed a serious crime.",ja:"彼は重大な犯罪を犯した。"}
