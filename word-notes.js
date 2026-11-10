@@ -102,7 +102,7 @@ const SEMANTIC_MAPS = {
       {from:"accompaniment",to:"feature",type:"対象に伴う性質",description:"対象に付随している特徴を、その対象と一緒にある情報として示す。"},
       {from:"accompaniment",to:"target",type:"関係の抽象化",description:"人・物との結びつきを、感情や評価が向けられる対象との関係に広げる。"}
     ]
-  ,
+  },
   24: {
     nodes: [
       {id:"around-place",kind:"基本義",label:"〜の周辺に・〜を取り巻いて",description:"場所や範囲の周囲にあることを表す。"},
