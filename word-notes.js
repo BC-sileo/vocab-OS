@@ -56,72 +56,63 @@ function renderDecompParts(w){
   return '<button type="button" class="decomp-chip" data-part="'+escapeHtml(part)+'"><strong>'+escapeHtml(part)+'</strong><span>'+escapeHtml(meta.meaning)+'</span></button>';
  }).join("")+'</div></div>';
 }
-const USAGE_FRAMES={
-  2:{selected:"with",open:false,showExample:false,options:[
-    {value:"with",label:"with",parts:["compare","A","__choice__","B"],explanation:"AとBを並べ、共通点や相違点を検討する。",example:"I compared the two phones with each other.",ja:"私はその2台のスマートフォンを互いに比較した。"},
-    {value:"to",label:"to",parts:["compare","A","__choice__","B"],explanation:"AをBになぞらえ、類似性に注目する傾向がある。with / to の使い分けは絶対ではなく、文脈によって重なる。",example:"She compared his voice to the sound of rain.",ja:"彼女は彼の声を雨音にたとえた。"}
+// Every word uses the same usage-component schema.
+// Differences between words live in data (items, selectable variants and examples), not in custom renderers.
+const USAGE_COMPONENTS = {
+  2: { items: [
+    { id:"comparison", parts:["compare","A",{choice:true},"B"], selected:"with", open:false, expanded:false, options:[
+      {value:"with",label:"with",explanation:"AとBを並べ、共通点や相違点を検討する。",example:"I compared the two phones with each other.",ja:"私はその2台のスマートフォンを互いに比較した。"},
+      {value:"to",label:"to",explanation:"AをBになぞらえ、類似性に注目する傾向がある。with / to の使い分けは絶対ではなく、文脈によって重なる。",example:"She compared his voice to the sound of rain.",ja:"彼女は彼の声を雨音にたとえた。"}
+    ]}
   ]},
-  21:{selected:"state",open:false,showExample:false,options:[
-    {value:"state",label:"adjective",parts:["get","__choice__"],explanation:"get + 形容詞は「ある状態になる」。主語の状態変化を表す。",example:"It's getting dark.",ja:"暗くなってきている。"},
-    {value:"understand",label:"it",parts:["get","__choice__"],explanation:"get it は「それを得る」ではなく、文脈や意味を理解すること。構文として覚える。",example:"I get it now.",ja:"今はその意味が分かる。"},
-    {value:"persuade",label:"object + to do",parts:["get","__choice__"],explanation:"get + 人 + to do は、頼む・説得するなどして人に行動してもらう型。",example:"I got him to help me.",ja:"彼に手伝ってもらえるよう頼んだ／説得した。"}
+  6: { items: [
+    {id:"confirm-noun",parts:["confirm","名詞"],explanation:"情報・予定などを照合し、正しい／確定したものにする。",example:"Please confirm your email address.",ja:"メールアドレスを確認してください。",expanded:false},
+    {id:"confirm-that",parts:["confirm","that + 文"],explanation:"「〜ということ」を事実として確かめる。",example:"She confirmed that the meeting was canceled.",ja:"彼女は会議が中止になったことを確認した。",expanded:false}
   ]},
-  22:{selected:"object",open:false,showExample:false,options:[
-    {value:"object",label:"object",parts:["abandon","__choice__"],explanation:"人・場所・物・計画などを手放して離れる、または続けるのをやめる。目的語によって自然な訳が変わる。",example:"They abandoned the plan.",ja:"彼らはその計画を断念した。"},
-    {value:"oneself",label:"oneself to + noun",parts:["abandon","__choice__"],explanation:"abandon oneself to ... は「感情などに身を任せる」。通常の他動詞用法と区別して構文ごと覚える。",example:"He abandoned himself to despair.",ja:"彼は絶望に身を任せた。"}
+  21: { items: [
+    {id:"get-noun",parts:["get","名詞"],explanation:"物・情報などを得る、受け取る。",example:"I got an email from the school.",ja:"学校からメールを受け取った。",expanded:false},
+    {id:"get-adjective",parts:["get","形容詞"],explanation:"ある状態へ変化する。",example:"It's getting dark.",ja:"暗くなってきている。",expanded:false},
+    {id:"get-it",parts:["get","it"],explanation:"文脈や意味を理解する。ひとかたまりの構文として覚える。",example:"I get it now.",ja:"今はその意味が分かる。",expanded:false},
+    {id:"get-person",parts:["get","人","to do"],explanation:"人に頼む・働きかけるなどして、何かをしてもらう。",example:"I got him to help me.",ja:"私は彼に手伝ってもらった。",expanded:false}
   ]},
-  23:{selected:"person",open:false,showExample:false,options:[
-    {value:"person",label:"person",parts:["with","__choice__"],explanation:"同伴する人を表す。with は「一緒に」という関係を示す。",example:"I went with my brother.",ja:"私は兄弟と一緒に行った。"},
-    {value:"tool",label:"tool",parts:["with","__choice__"],explanation:"道具・手段を表す。単に「一緒に」と訳すのではなく、何を使って行うかを示す。",example:"She cut the paper with scissors.",ja:"彼女ははさみで紙を切った。"},
-    {value:"feature",label:"feature",parts:["with","__choice__"],explanation:"人や物が持つ特徴・付帯情報を示す。",example:"A girl with blue eyes stood there.",ja:"青い目の少女がそこに立っていた。"},
-    {value:"feeling",label:"feeling / result",parts:["with","__choice__"],explanation:"感情や評価が向けられる対象を示すことがある。",example:"I'm happy with the result.",ja:"私はその結果に満足している。"}
+  22: { items: [
+    {id:"abandon-object",parts:["abandon",{choice:true}],selected:"object",open:false,expanded:false,options:[
+      {value:"object",label:"object",explanation:"人・場所・物・計画などを手放して離れる、または続けるのをやめる。目的語によって自然な訳が変わる。",example:"They abandoned the plan.",ja:"彼らはその計画を断念した。"},
+      {value:"oneself",label:"oneself to + 名詞",explanation:"abandon oneself to ... は「感情などに身を任せる」。通常の他動詞用法と区別して構文ごと覚える。",example:"He abandoned himself to despair.",ja:"彼は絶望に身を任せた。"}
+    ]}
+  ]},
+  23: { items: [
+    {id:"with-relations",parts:["with",{choice:true}],selected:"person",open:false,expanded:false,options:[
+      {value:"person",label:"人",explanation:"同伴する人を表す。with は「一緒に」という関係を示す。",example:"I went with my brother.",ja:"私は兄弟と一緒に行った。"},
+      {value:"tool",label:"道具・手段",explanation:"道具・手段を表す。単に「一緒に」と訳すのではなく、何を使って行うかを示す。",example:"She cut the paper with scissors.",ja:"彼女ははさみで紙を切った。"},
+      {value:"feature",label:"特徴",explanation:"人や物が持つ特徴・付帯情報を示す。",example:"A girl with blue eyes stood there.",ja:"青い目の少女がそこに立っていた。"},
+      {value:"feeling",label:"感情・評価の対象",explanation:"感情や評価が向けられる対象を示すことがある。",example:"I'm happy with the result.",ja:"私はその結果に満足している。"}
+    ]}
   ]}
 };
-const USAGE_BLOCKS = {
-  6: {
-    expanded: [],
-    items: [
-      { pattern: "confirm + 名詞", meaning: "情報・予定などを照合し、正しい／確定したものにする。", example: "Please confirm your email address.", ja: "メールアドレスを確認してください。" },
-      { pattern: "confirm + that + 文", meaning: "「〜ということ」を事実として確かめる。", example: "She confirmed that the meeting was canceled.", ja: "彼女は会議が中止になったことを確認した。" }
-    ]
-  },
-  21: {
-    expanded: [],
-    items: [
-      { pattern: "get + 名詞", meaning: "物・情報などを得る、受け取る。", example: "I got an email from the school.", ja: "学校からメールを受け取った。" },
-      { pattern: "get + 形容詞", meaning: "ある状態へ変化する。", example: "It's getting dark.", ja: "暗くなってきている。" },
-      { pattern: "get it", meaning: "文脈や意味を理解する。ひとかたまりの構文として覚える。", example: "I get it now.", ja: "今はその意味が分かる。" },
-      { pattern: "get + 人 + to do", meaning: "人に頼む・働きかけるなどして、何かをしてもらう。", example: "I got him to help me.", ja: "私は彼に手伝ってもらった。" }
-    ]
-  }
-};
-function renderUsageBlocks(w){
- const data=USAGE_BLOCKS[w.id];
- if(!data)return "";
- return '<div class="usage-block-list">'+data.items.map((item,index)=>{
-  const expanded=data.expanded.includes(index);
-  const primary=expanded?item.example:item.pattern;
-  const secondary=expanded?item.ja:item.meaning;
-  const actionLabel=expanded?'構造':'例';
-  const actionAttr=expanded?'data-usage-block-back="'+index+'"':'data-usage-block-example="'+index+'"';
-  return '<article class="usage-block"><div class="usage-block-primary">'+escapeHtml(primary)+'</div><button type="button" class="subtle-btn usage-block-action" '+actionAttr+'>'+actionLabel+'</button><p class="usage-block-secondary'+(expanded?' translation-text':'')+'">'+escapeHtml(secondary)+'</p></article>';
+
+function renderUsageFrame(w){
+ const data=USAGE_COMPONENTS[w.id];
+ if(!data||!data.items||!data.items.length)return "<p>"+escapeHtml(noteFor(w).usage||"使い方メモは未登録です。")+"</p>";
+ return '<div class="usage-component-list">'+data.items.map(item=>{
+  const selected=(item.options||[]).find(option=>option.value===item.selected)||(item.options||[])[0];
+  const detail=selected||item;
+  const parts=item.parts||[];
+  const diagram='<div class="usage-diagram">'+parts.map(part=>{
+   if(part&&typeof part==="object"&&part.choice){
+    const options=item.options||[];
+    return '<span class="usage-choice-wrap"><button type="button" class="usage-choice" data-usage-action="toggle" data-usage-item="'+escapeHtml(item.id)+'" aria-expanded="'+Boolean(item.open)+'">'+escapeHtml(detail.label||detail.value||"選択")+'</button><span class="usage-choice-list'+(item.open?"":" hidden")+'">'+options.map(option=>'<button type="button" class="usage-choice-option'+(option.value===item.selected?" is-selected":"")+'" data-usage-select="'+escapeHtml(option.value)+'" data-usage-item="'+escapeHtml(item.id)+'">'+escapeHtml(option.label||option.value)+'</button>').join("")+'</span></span>';
+   }
+   return '<span class="usage-part'+(part==="A"||part==="B"||part==="名詞"||part==="形容詞"||part==="人"?" usage-slot":"")+'">'+escapeHtml(part)+'</span>';
+  }).join('<span class="usage-join"> </span>')+'</div>';
+  const shown=item.expanded
+   ? '<div class="usage-example"><p class="usage-example-en">'+escapeHtml(detail.example||"例文は未登録です。")+'</p><p class="usage-example-ja translation-text">'+escapeHtml(detail.ja||"")+'</p><button type="button" class="subtle-btn usage-example-button" data-usage-action="back" data-usage-item="'+escapeHtml(item.id)+'">骨格に戻る</button></div>'
+   : diagram;
+  const action=item.expanded?"":"<button type=\"button\" class=\"subtle-btn usage-example-button\" data-usage-action=\"example\" data-usage-item=\""+escapeHtml(item.id)+"\">例</button>";
+  return '<article class="usage-item"><div class="usage-item-top">'+shown+action+'</div><p class="usage-explanation">'+escapeHtml(detail.explanation||detail.meaning||"")+'</p></article>';
  }).join("")+'</div>';
 }
-function renderUsageFrame(w){
- const structured=renderUsageBlocks(w);
- if(structured)return structured;
- const f=USAGE_FRAMES[w.id];
- if(!f)return "<p>"+escapeHtml(noteFor(w).usage||"使い方メモは未登録です。")+"</p>";
- const o=f.options.find(x=>x.value===f.selected)||f.options[0];
- const parts=o.parts||f.parts||[];
- const diagram='<div class="usage-diagram">'+parts.map(p=>{
-  if(p==="A"||p==="B")return '<span class="usage-part usage-slot">'+escapeHtml(p)+'</span>';
-  if(p==="__choice__")return '<span class="usage-choice-wrap"><button type="button" class="usage-choice" data-usage-toggle="1" aria-expanded="'+f.open+'">'+escapeHtml(o.label||o.value)+'</button><span class="usage-choice-list'+(f.open?"":" hidden")+'">'+f.options.map(x=>'<button type="button" class="usage-choice-option'+(x.value===f.selected?" is-selected":"")+'" data-usage-value="'+escapeHtml(x.value)+'">'+escapeHtml(x.label||x.value)+'</button>').join("")+'</span></span>';
-  return '<span class="usage-part">'+escapeHtml(p)+'</span>';
- }).join('<span class="usage-join"> </span>')+'</div>';
- const example=f.showExample?'<div class="usage-example"><p class="usage-example-en">'+escapeHtml(o.example)+'</p><p class="usage-example-ja translation-text">'+escapeHtml(o.ja)+'</p><button type="button" class="subtle-btn usage-example-button" data-usage-back="1">骨格に戻る</button></div>':diagram;
- return '<div class="usage-frame"><div class="usage-topline">'+example+(f.showExample?'':'<button type="button" class="subtle-btn usage-example-button" data-usage-example="1">例</button>')+'</div><p class="usage-explanation">'+escapeHtml(o.explanation)+'</p></div>';
-}function noteFor(w){return {...(NOTE_CONTENT[w.id]||{}),...(notesById[w.id]||{})};}
+function noteFor(w){return {...(NOTE_CONTENT[w.id]||{}),...(notesById[w.id]||{})};}
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function visualSearchQuery(w){return IMAGE_QUERIES[w.id]||w.imageSearch||w.word;}
 function commonsSearchUrl(w){return "https://commons.wikimedia.org/w/index.php?search="+encodeURIComponent(visualSearchQuery(w))+"&title=Special:MediaSearch&type=image";}
@@ -168,24 +159,23 @@ function openNote(id,autoplay=true){
  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();requestAnimationFrame(()=>window.scrollTo({top:noteListScrollY,behavior:"instant"}));};
  d.querySelectorAll("[data-part]").forEach(btn=>btn.onclick=()=>{activeDecompFilter=btn.dataset.part;d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});});
  d.addEventListener("click",event=>{
-  const target=event.target.closest("[data-usage-toggle],[data-usage-value],[data-usage-example],[data-usage-back],[data-usage-block-example],[data-usage-block-back]");
+  const target=event.target.closest("[data-usage-action],[data-usage-select]");
   if(!target||!d.contains(target))return;
   const scrollY=window.scrollY;
-  const blocks=USAGE_BLOCKS[w.id];
-  if(target.hasAttribute("data-usage-block-example")&&blocks){
-   const index=Number(target.dataset.usageBlockExample);
-   if(!blocks.expanded.includes(index))blocks.expanded.push(index);
-  }else if(target.hasAttribute("data-usage-block-back")&&blocks){
-   const index=Number(target.dataset.usageBlockBack);
-   blocks.expanded=blocks.expanded.filter(x=>x!==index);
+  const itemId=target.dataset.usageItem;
+  const component=(USAGE_COMPONENTS[w.id]||{items:[]}).items.find(item=>item.id===itemId);
+  if(!component)return;
+  if(target.hasAttribute("data-usage-select")){
+   component.selected=target.dataset.usageSelect;
+   component.open=false;
+   component.expanded=false;
   }else{
-   const f=USAGE_FRAMES[w.id];if(!f)return;
-   if(target.hasAttribute("data-usage-toggle")){f.open=!f.open;}
-   else if(target.hasAttribute("data-usage-value")){f.selected=target.dataset.usageValue;f.open=false;f.showExample=false;}
-   else if(target.hasAttribute("data-usage-example")){f.showExample=true;f.open=false;}
-   else if(target.hasAttribute("data-usage-back")){f.showExample=false;}
+   const action=target.dataset.usageAction;
+   if(action==="toggle")component.open=!component.open;
+   if(action==="example"){component.expanded=true;component.open=false;}
+   if(action==="back")component.expanded=false;
   }
-  const frame=d.querySelector(".usage-frame, .usage-block-list");
+  const frame=d.querySelector(".usage-component-list");
   if(frame)frame.outerHTML=renderUsageFrame(w);
   requestAnimationFrame(()=>window.scrollTo({top:scrollY,behavior:"instant"}));
  });
