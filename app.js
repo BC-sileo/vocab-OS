@@ -2,7 +2,7 @@ const WORDS=[
 ["commit","自分をある行動・状態に送り込み、確定させる","v","決めた行動へ自分を送り込む","commit action decision"],
 ["compare","複数のものを並べ、違い・共通点を見比べる","v","横に並べて違いを見る","compare two things"],
 ["complain","不満を外へ訴える","v","不満を外へ押し出す","complain complaint"],
-["complex","多くの要素が絡み合い、単純ではない","adj","要素が絡み合っている","complex system"],
+["complex","多くの要素が絡み合い、単純ではない","a","要素が絡み合っている","complex system"],
 ["concentrate","注意や力を一点へ集める","v","散った力を一点に集める","concentrate focus"],
 ["confirm","不確かなものを照合し、確かだとする","v","照合して確定する","confirm check"],
 ["consider","対象を頭の中に置き、判断材料として扱う","v","頭の中に置いて考える","consider think"],
@@ -10,22 +10,22 @@ const WORDS=[
 ["contract","条件を定め、複数者を結びつける","n/v","条件で人や物を結びつける","contract agreement"],
 ["contribute","全体に対して自分の一部を差し出す","v","全体へ自分の一部を足す","contribute teamwork"],
 ["crop","全体から一部分を切り取る","n/v","全体から一部を切り出す","crop photograph"],
-["cruel","相手の苦痛を顧みず傷つける","adj","苦痛を顧みない","cruel behavior"],
+["cruel","相手の苦痛を顧みず傷つける","a","苦痛を顧みない","cruel behavior"],
 ["debate","異なる主張をぶつけ合って論じる","n/v","主張をぶつけて論じる","debate discussion"],
 ["deny","そうではないと認めることを拒む","v","認めることを拒む","deny refusal"],
 ["desire","欲しいものへ強く心が向く","n/v","欲しいものへ心が向く","desire want"],
 ["disturb","平常の状態を乱す・邪魔する","v","平常を乱す","disturb interruption"],
-["efficient","無駄を減らし、少ない資源で結果を出す","adj","少ない資源で結果を出す","efficient work"],
+["efficient","無駄を減らし、少ない資源で結果を出す","a","少ない資源で結果を出す","efficient work"],
 ["emphasize","重要な部分を目立たせる","v","重要部分を強く目立たせる","emphasize highlight"],
 ["encourage","相手が進めるよう後押しする","v","進めるよう背中を押す","encourage support"],
 ["exist","そこに実際に存在している","v","実際にそこにある","exist presence"],
 ["get","何かを得る／ある状態・結果に至る","v","状態や結果に至る","get become understand"],
 ["abandon","人・物・計画などを手放して離れる／続けるのをやめる","v","手放して離れる・続けるのをやめる","abandon leaving something"],
 ["with","〜と一緒に／〜で／〜を持つなど（文脈による）","prep","後ろの名詞句が主語や動作とどう関係するかを示す","with person scissors blue eyes"],
-["about","〜について／〜の周辺に／およそ。be about to do は「まさに〜しようとしている」","prep/adv/adj/conj","対象・範囲・概数などを表す。be about to do は独立した構文として扱う","about surrounding topic approximate"],
+["about","〜について／〜の周辺に／およそ。be about to do は「まさに〜しようとしている」","prep/ad/a/conj","対象・範囲・概数などを表す。be about to do は独立した構文として扱う","about surrounding topic approximate"],
 ["arm","肩から手までの腕／機械などの腕・組織の部門。動詞では武装させる","n/v","身体の腕、機械の腕、組織の部門。動詞は武器を装備させる","human arm shoulder hand mechanical arm"],
 ["attend","行事・学校などに出席する。attend to は注意を向ける／対処する・世話をする","v","ある場に出る。attend to は対象に注意や対応を向ける構文","attend class meeting take care"],
-["associate","関連づける／仲間・同僚／関連した・共同の。associate professor は准教授","v/n/adj","人・物・考えを結びつける。名詞・形容詞用法も区別する","associate connection colleague related"]
+["associate","関連づける／仲間・同僚／関連した・共同の。associate professor は准教授","v/n/a","人・物・考えを結びつける。名詞・形容詞用法も区別する","associate connection colleague related"]
 ].map(([word,translation,pos,coreImage,imageSearch],i)=>({id:i+1,word,translation,pos,coreImage,imageSearch}));
 
 const KEY="vocabOS_v02";
