@@ -366,8 +366,9 @@ function renderUsageFrame(w){
    }
    const token=part&&typeof part==="object"?(part.text||""):part;
    const tokenKind=part&&typeof part==="object"?part.kind:"";
+   const isRelation=tokenKind==="relation"||/^(for|to|of|with|on|about|from|in|at|by|into|over|against|as|than)$/i.test(token);
    const isSlot=tokenKind==="slot"||token==="A"||token==="B"||token==="名詞"||token==="形容詞"||token==="人"||/名詞|形容詞|動名詞|to do|do$|対象|テーマ|論点|仕事|活動|作物|資源|時間|数値|人・|場所|範囲|症状|状態|環境|条件|性質|行動|価値|感覚|様式|知識|理解|計画|目的|用途|課題|問題|分野|原因|目標|目的語|人$|物$|^A$|^B$/.test(token);
-   return '<span class="usage-part'+(isSlot?" usage-slot":"")+(tokenKind==="relation"?" usage-relation":"")+'">'+escapeHtml(token)+'</span>';
+   return '<span class="usage-part'+(isSlot?" usage-slot":"")+(isRelation?" usage-relation":"")+'">'+escapeHtml(token)+'</span>';
   }).join('<span class="usage-join"> </span>')+'</div>';
   const shown=item.expanded
    ? '<div class="usage-example"><p class="usage-example-en">'+escapeHtml(detail.example||"例文は未登録です。")+'</p><p class="usage-example-ja translation-text">'+escapeHtml(detail.ja||"")+'</p><button type="button" class="subtle-btn usage-example-button" data-usage-action="back" data-usage-item="'+escapeHtml(item.id)+'">骨格に戻る</button></div>'
