@@ -186,11 +186,20 @@ function renderIndependentMeanings(w,n){
  else if(Array.isArray(SEMANTIC_MAPS[w.id]?.independentMeanings))meanings=SEMANTIC_MAPS[w.id].independentMeanings;
  else if(n.semanticMap||SEMANTIC_MAPS[w.id])meanings=[];
  else meanings=n.meaning?[{label:"基本義",description:n.meaning}]:[];
- if(!meanings.length)return "";
- return '<section class="note-section meaning-section"><h3>MEANING</h3>'+(n.meaning?'<p class="meaning-overview">'+escapeHtml(n.meaning)+'</p>':"")+'<div class="meaning-list">'+meanings.map(item=>{
+ if(!meanings.length&&!n.caution)return "";
+ const posMap={"名詞":"n","動詞":"v","形容詞":"a","副詞":"ad"};
+ const cards=meanings.map(item=>{
   const entry=typeof item==="string"?{label:"独立した語義",description:item}:item;
-  return '<article class="meaning-item">'+(entry.label?'<strong>'+escapeHtml(entry.label)+'</strong>':"")+'<p>'+escapeHtml(entry.description||entry.meaning||"")+'</p></article>';
- }).join("")+'</div></section>';
+  const raw=entry.label||"";
+  const match=raw.match(/^(名詞|動詞|形容詞|副詞)\s*[：:]\s*(.*)$/);
+  const pos=entry.pos||(match?posMap[match[1]]:"");
+  const label=match?match[2]:raw;
+  const example=entry.example||entry.examples?.[0];
+  const sentence=typeof example==="string"?example:example?.en||"";
+  const ja=typeof example==="object"?(example.ja||""):"";
+  return '<details class="meaning-item meaning-fold"><summary>'+(pos?'<span class="meaning-pos">'+escapeHtml(pos)+'</span>':"")+'<strong>'+escapeHtml(label||"語義")+'</strong><span class="meaning-open-mark" aria-hidden="true"></span></summary><div class="meaning-detail"><p>'+escapeHtml(entry.description||entry.meaning||"")+'</p>'+(sentence?'<div class="meaning-example"><span class="meaning-example-label">例</span><p>'+escapeHtml(sentence)+'</p>'+(ja?'<p class="translation-text">'+escapeHtml(ja)+'</p>':"")+'</div>':"")+'</div></details>';
+ }).join("");
+ return '<section class="note-section meaning-section"><h3>MEANING</h3><div class="meaning-list">'+cards+'</div>'+(n.caution?'<div class="meaning-warning"><span class="meaning-warning-icon" aria-label="注意">⚠</span><span>'+escapeHtml(n.caution)+'</span></div>':"")+'</section>';
 }
 // Every word uses the same usage-component schema.
 // Differences between words live in data (items, selectable variants and examples), not in custom renderers.
@@ -461,11 +470,12 @@ function openNote(id,autoplay=true){
   return;
  }
  d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button><div class="translation-toolbar"><span>日本語訳</span><button type="button" id="toggleTranslations" class="subtle-btn translation-toggle-visible" aria-pressed="false">訳を隠す</button></div>'+
- '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(w.pos)+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button><button type="button" class="weak-toggle" data-weak-toggle="'+w.id+'">苦手にする</button></div>'+
+ '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(String(w.pos||"").split("/").map(p=>({"noun":"n","verb":"v","adj":"a","adjective":"a","adv":"ad","adverb":"ad","名詞":"n","動詞":"v","形容詞":"a","副詞":"ad"}[p.trim().toLowerCase()]||p.trim())).join("/"))+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button><button type="button" class="weak-toggle" data-weak-toggle="'+w.id+'">苦手にする</button></div>'+
  (effectiveCoreImage(w,n)?'<p id="noteCoreImageValue" class="note-core">'+escapeHtml(effectiveCoreImage(w,n))+'</p>':'<p id="noteCoreImageValue" class="note-core hidden"></p>')+'</div>'+
- renderSemanticMap(w,n)+renderIndependentMeanings(w,n)+renderMixedSentence(n)+renderDomainExamples(n)+renderMemoSection(n)+
- '<section class="note-section"><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w)+'</section>'+
- '<section class="note-section">'+renderUsageFrame(w)+(USAGE_COMPONENTS[w.id]?'':('<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p>'+(w.id===2?'<p class="hint">before you decide＝「決める前に」。時を表す節で、compare の語法の例外ではない。</p>':'')+'<p id="exampleJa" class="example-ja translation-text">'+escapeHtml(n.ja||"")+'</p>'))+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
+ renderSemanticMap(w,n)+
+ '<section class="note-section etymology-section"><h3>ETYMOLOGY</h3><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w)+'</section>'+
+ renderIndependentMeanings(w,n)+renderMixedSentence(n)+renderDomainExamples(n)+renderMemoSection(n)+
+ '<section class="note-section">'+renderUsageFrame(w)+(USAGE_COMPONENTS[w.id]?'':('<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p>'+(w.id===2?'<p class="hint">before you decide＝「決める前に」。時を表す節で、compare の語法の例外ではない。</p>':'')+'<p id="exampleJa" class="example-ja translation-text">'+escapeHtml(n.ja||"")+'</p>'))+'</section>'+
  
  
 
