@@ -408,3 +408,23 @@
 - 未登録時も空欄にせず、用例が未登録である旨を表示。今後は単語ごとのデータ追加だけで表示可能。
 - 用例情報を単語検索の対象に追加。
 - 今回は共通構造と表示機能の実装であり、各単語の専門用例データ自体はまだ追加していない。
+
+## 2026-11-10 — 高VEN語彙の意味データ初回バッチ
+
+### 登録内容
+- appropriate, appreciate, aspect, atmosphere, attempt, available, account, adapt, admire, admit, advance, aesthetic, affect, affluence, afford, aim, ancestor, apply, approach, argue の20語に語義データを追加。
+- それぞれに品詞、短い全体説明、品詞・語義別の意味項目、用法の注意、英文例と和訳、MIX SENTANCEを登録。
+- Oxford LearnerとCambridgeの辞書参照URLを `sources` に保持。
+- 同じ20語に主要構文の視覚的Usage図を追加。account for は一つの群動詞チャンクにした。
+- 復習対象から外れていた pending 状態を解除し、品詞と簡潔な訳を語彙マスターへ反映。
+- 新規語のコアイメージは空欄とし、ユーザーによる決定を妨げない。
+
+### 検証
+- app.js / word-notes.js のJavaScript構文チェックを通過。
+- 20語すべてにアプリ用メタデータ・語義データ・Usage図が対応することを確認。
+- 既存27語のIDを保持。新規20語はID 28〜47。
+- 実機ブラウザでのレイアウト・タップ確認は未実施。
+
+### 未完了
+- 今回の20語は主要語義を中心とする初稿であり、全語義の網羅・最終校正を完了したわけではない。
+- FIELD CONNECTIONS / 語源 / 分解 / 追加の語法対比は、今後必要な語から追加する。
