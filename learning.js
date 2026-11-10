@@ -69,14 +69,16 @@
     const n=noteFor(w);
     const items=usageItems(w);
     if(!items.length)return String(n.usage||"").trim();
-    return items.map(function(item){
-      const selected=(item.options||[]).find(function(option){return option.value===item.selected;})||(item.options||[])[0]||item;
-      const parts=(item.parts||[]).map(function(part){
-        if(part && typeof part==="object" && part.choice)return selected.label||selected.value||"選択";
-        return String(part);
+    return items.flatMap(function(item){
+      const options=(item.options&&item.options.length)?item.options:[item];
+      return options.map(function(option){
+        const parts=(item.parts||[]).map(function(part){
+          if(part && typeof part==="object" && part.choice)return option.label||option.value||"選択";
+          return String(part);
+        });
+        const explanation=option.explanation||option.meaning||item.explanation||"";
+        return parts.join(" ") + (explanation ? " — "+explanation : "");
       });
-      const explanation=selected.explanation||selected.meaning||item.explanation||"";
-      return parts.join(" ") + (explanation ? " — "+explanation : "");
     }).join("\n");
   }
   function exampleReference(w){
