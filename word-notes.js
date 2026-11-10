@@ -187,7 +187,7 @@ function renderIndependentMeanings(w,n){
  else if(n.semanticMap||SEMANTIC_MAPS[w.id])meanings=[];
  else meanings=n.meaning?[{label:"基本義",description:n.meaning}]:[];
  if(!meanings.length)return "";
- return '<section class="note-section meaning-section"><h3>MEANING</h3><div class="meaning-list">'+meanings.map(item=>{
+ return '<section class="note-section meaning-section"><h3>MEANING</h3>'+(n.meaning?'<p class="meaning-overview">'+escapeHtml(n.meaning)+'</p>':"")+'<div class="meaning-list">'+meanings.map(item=>{
   const entry=typeof item==="string"?{label:"独立した語義",description:item}:item;
   return '<article class="meaning-item">'+(entry.label?'<strong>'+escapeHtml(entry.label)+'</strong>':"")+'<p>'+escapeHtml(entry.description||entry.meaning||"")+'</p></article>';
  }).join("")+'</div></section>';
@@ -360,7 +360,7 @@ function renderUsageFrame(w){
     const options=item.options||[];
     return '<span class="usage-choice-wrap"><button type="button" class="usage-choice" data-usage-action="toggle" data-usage-item="'+escapeHtml(item.id)+'" aria-expanded="'+Boolean(item.open)+'">'+escapeHtml(detail.label||detail.value||"選択")+'</button><span class="usage-choice-list'+(item.open?"":" hidden")+'">'+options.map(option=>'<button type="button" class="usage-choice-option'+(option.value===item.selected?" is-selected":"")+'" data-usage-select="'+escapeHtml(option.value)+'" data-usage-item="'+escapeHtml(item.id)+'">'+escapeHtml(option.label||option.value)+'</button>').join("")+'</span></span>';
    }
-   return '<span class="usage-part'+(part==="A"||part==="B"||part==="名詞"||part==="形容詞"||part==="人"||/名詞|形容詞|動名詞|to do|do$|対象|テーマ|論点|仕事|活動|作物|資源|時間|数値|武器|人・|場所|範囲|症状|状態/.test(part)?" usage-slot":"")+'">'+escapeHtml(part)+'</span>';
+   return '<span class="usage-part'+(part==="A"||part==="B"||part==="名詞"||part==="形容詞"||part==="人"||/名詞|形容詞|動名詞|to do|do$|対象|テーマ|論点|仕事|活動|作物|資源|時間|数値|人・|場所|範囲|症状|状態|環境|条件|性質|行動|価値|感覚|様式|知識|理解|計画|目的|用途|課題|問題|分野|原因|目標|目的語|人$|物$|^A$|^B$/.test(part)?" usage-slot":"")+'">'+escapeHtml(part)+'</span>';
   }).join('<span class="usage-join"> </span>')+'</div>';
   const shown=item.expanded
    ? '<div class="usage-example"><p class="usage-example-en">'+escapeHtml(detail.example||"例文は未登録です。")+'</p><p class="usage-example-ja translation-text">'+escapeHtml(detail.ja||"")+'</p><button type="button" class="subtle-btn usage-example-button" data-usage-action="back" data-usage-item="'+escapeHtml(item.id)+'">骨格に戻る</button></div>'
