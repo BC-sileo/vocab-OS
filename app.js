@@ -27,13 +27,42 @@ const WORDS=[
 ["attend","行事・学校などに出席する。attend to は注意を向ける／対処する・世話をする","v","ある場に出る。attend to は対象に注意や対応を向ける構文","attend class meeting take care"],
 ["associate","関連づける／仲間・同僚／関連した・共同の。associate professor は准教授","v/n/a","人・物・考えを結びつける。名詞・形容詞用法も区別する","associate connection colleague related"]
 ].map(([word,translation,pos,coreImage,imageSearch],i)=>({id:i+1,word,translation,pos,coreImage,imageSearch}));
+// VEN度 metadata. The original 27 note IDs remain unchanged.
+const HIGH_VEN_WORDS = [{"word":"appropriate","ven":20},{"word":"appreciate","ven":19},{"word":"aspect","ven":19},{"word":"atmosphere","ven":19},{"word":"attempt","ven":19},{"word":"available","ven":19},{"word":"abandon","ven":18},{"word":"account","ven":18},{"word":"adapt","ven":18},{"word":"admire","ven":18},{"word":"admit","ven":18},{"word":"advance","ven":18},{"word":"aesthetic","ven":18},{"word":"affect","ven":18},{"word":"affluence","ven":18},{"word":"afford","ven":18},{"word":"aim","ven":18},{"word":"ancestor","ven":18},{"word":"apply","ven":18},{"word":"approach","ven":18},{"word":"argue","ven":18},{"word":"arrest","ven":18},{"word":"associate","ven":18},{"word":"assume","ven":18},{"word":"attach","ven":18},{"word":"attitude","ven":18},{"word":"avoid","ven":18},{"word":"awful","ven":18},{"word":"absorb","ven":17},{"word":"abstract","ven":17},{"word":"accurate","ven":17},{"word":"achieve","ven":17},{"word":"adequate","ven":17},{"word":"adjust","ven":17},{"word":"adopt","ven":17},{"word":"aggressive","ven":17},{"word":"allow","ven":17},{"word":"amount","ven":17},{"word":"annual","ven":17},{"word":"apologize","ven":17},{"word":"arise","ven":17},{"word":"article","ven":17},{"word":"artificial","ven":17},{"word":"ashamed","ven":17},{"word":"authority","ven":17},{"word":"award","ven":17},{"word":"abundant","ven":16},{"word":"abuse","ven":16},{"word":"accept","ven":16},{"word":"access","ven":16},{"word":"accompany","ven":16},{"word":"accomplish","ven":16},{"word":"accuse","ven":16},{"word":"acquaintance","ven":16},{"word":"acquire","ven":16},{"word":"add","ven":16},{"word":"administration","ven":16},{"word":"advantage","ven":16},{"word":"agriculture","ven":16},{"word":"alternative","ven":16},{"word":"annoy","ven":16},{"word":"anxious","ven":16},{"word":"appeal","ven":16},{"word":"appetite","ven":16},{"word":"attend","ven":16},{"word":"attribute","ven":16},{"word":"author","ven":16},{"word":"aware","ven":16},{"word":"abolish","ven":15},{"word":"absurd","ven":15},{"word":"accumulate","ven":15},{"word":"acknowledge","ven":15},{"word":"advertise","ven":15},{"word":"agree","ven":15},{"word":"alter","ven":15},{"word":"announce","ven":15},{"word":"architecture","ven":15},{"word":"assign","ven":15},{"word":"audience","ven":15},{"word":"average","ven":15},{"word":"awkward","ven":15},{"word":"address","ven":14},{"word":"amaze","ven":14},{"word":"ambiguous","ven":14},{"word":"ancient","ven":14},{"word":"anticipate","ven":14},{"word":"approve","ven":14},{"word":"arrange","ven":14},{"word":"assemble","ven":14},{"word":"assert","ven":14},{"word":"astronomy","ven":14},{"word":"attain","ven":14},{"word":"attract","ven":14},{"word":"aid","ven":13},{"word":"alarm","ven":13},{"word":"alert","ven":13},{"word":"alien","ven":13},{"word":"amuse","ven":13},{"word":"anniversary","ven":13},{"word":"appear","ven":13},{"word":"assess","ven":13},{"word":"assure","ven":13},{"word":"astonish","ven":13},{"word":"academic","ven":12},{"word":"active","ven":12},{"word":"acute","ven":12},{"word":"agent","ven":12},{"word":"alike","ven":12},{"word":"ape","ven":12},{"word":"apparent","ven":12},{"word":"appointment","ven":12},{"word":"acid","ven":11},{"word":"actually","ven":11},{"word":"ally","ven":11},{"word":"ambassador","ven":11},{"word":"ambulance","ven":11},{"word":"analysis","ven":11},{"word":"analyze","ven":11},{"word":"appoint","ven":11},{"word":"approximately","ven":11},{"word":"apt","ven":11},{"word":"assault","ven":11},{"word":"awake","ven":11},{"word":"absolutely","ven":10},{"word":"accommodate","ven":10},{"word":"adviser","ven":10},{"word":"affluent","ven":10},{"word":"altitude","ven":10},{"word":"ambition","ven":10},{"word":"ample","ven":10},{"word":"arctic","ven":10},{"word":"arrogant","ven":10},{"word":"asset","ven":10},{"word":"assist","ven":10},{"word":"athlete","ven":10}];
+for (const entry of HIGH_VEN_WORDS) {
+  const existing = WORDS.find(w => w.word.toLowerCase() === entry.word.toLowerCase());
+  if (existing) { existing.ven = entry.ven; continue; }
+  WORDS.push({
+    id: WORDS.length + 1,
+    word: entry.word,
+    translation: "意味データ登録待ち",
+    pos: "未登録",
+    coreImage: "語義・コアイメージ登録待ち",
+    imageSearch: entry.word,
+    ven: entry.ven,
+    pending: true
+  });
+}
+for (const [word, ven] of Object.entries({"abandon":18,"associate":18,"attend":16,"about":3,"arm":3})) {
+  const existing = WORDS.find(w => w.word.toLowerCase() === word);
+  if (existing) existing.ven = ven;
+}
+function compareByVEN(a,b) {
+  const av = Number.isFinite(a.ven) ? a.ven : -1;
+  const bv = Number.isFinite(b.ven) ? b.ven : -1;
+  return bv - av || a.word.localeCompare(b.word);
+}
+function sortedReviewWords() {
+  return WORDS.filter(w => !w.pending).slice().sort(compareByVEN);
+}
+
 
 const KEY="vocabOS_v02";
 const saved=JSON.parse(localStorage.getItem(KEY)||"{}");
 let pageSize=Number(saved.pageSize)||10;
 let sessionPages=Number(saved.sessionPages)||1;
 let mode=saved.mode==="sheet"||!saved.mode?"swipe":saved.mode;
-let order=[...(saved.order||[]),...WORDS.map(w=>w.id).filter(id=>!(saved.order||[]).includes(id))];
+let order=sortedReviewWords().map(w=>w.id);
 let states=saved.states||{};
 // 評価履歴(states)と、今回の復習セッション内の評価(sessionStates)を分離する。
 let sessionStates={};
@@ -66,7 +95,7 @@ function openSetup(){
 function startReview(){
   pageSize=Number(pageSizeEl.value);
   sessionPages=Number(sessionPagesEl.value);
-  order=WORDS.map(w=>w.id);
+  order=sortedReviewWords().map(w=>w.id);
   reviewPageIndex=0;
   sessionStartPage=1;
   sessionWordIds=[];
