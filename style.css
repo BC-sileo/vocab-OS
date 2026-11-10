@@ -298,3 +298,11 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .ven-pending-card p{margin:7px 0 0;color:var(--muted);font-size:13px;line-height:1.7}
 
 .meaning-overview{margin:0 0 10px;font-size:14px;line-height:1.7;font-weight:650;color:var(--text)}
+
+/* Per-word personal memo */
+.memo-section{padding-bottom:18px}
+.memo-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.memo-heading h3{margin:0}
+.memo-autosave{font-size:10px;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:3px 8px}
+.word-memo{display:block;width:100%;min-height:120px;resize:vertical;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;font-size:14px;line-height:1.7;outline-color:var(--accent)}
+.memo-save-status{margin-top:6px!important}
