@@ -202,9 +202,16 @@ function imageCueMarkup(w){
 }
 let noteListScrollY=0;
 function openNotes(){activeDecompFilter="";noteListScrollY=0;showView("notesView");$("#notesListPanel").classList.remove("hidden");$("#noteDetailPanel").classList.add("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});}
+function noteSearchText(w,n){
+ const map=n.semanticMap||SEMANTIC_MAPS[w.id];
+ const mapText=map&&Array.isArray(map.nodes)?map.nodes.map(node=>[node.label,node.description,node.kind].join(" ")).join(" "):"";
+ const independent=n.independentMeanings||map?.independentMeanings||[];
+ const independentText=Array.isArray(independent)?independent.map(item=>typeof item==="string"?item:[item.label,item.description,item.meaning].join(" ")).join(" "):"";
+ return [w.word,w.translation,w.coreImage,n.meaning,n.usage,mapText,independentText].join(" ").toLowerCase();
+}
 function renderNoteList(){
  const q=$("#noteSearch").value.trim().toLowerCase();
- const rows=WORDS.filter(w=>{const n=noteFor(w),text=[w.word,w.translation,w.coreImage,n.meaning,n.usage].join(" ").toLowerCase();return text.includes(q)&&(!activeDecompFilter||(NOTE_PARTS[w.id]||[]).includes(activeDecompFilter));});
+ const rows=WORDS.filter(w=>{const n=noteFor(w),text=noteSearchText(w,n);return text.includes(q)&&(!activeDecompFilter||(NOTE_PARTS[w.id]||[]).includes(activeDecompFilter));});
  $("#notesListPanel").innerHTML=(activeDecompFilter?'<button class="subtle-btn" id="clearDecompFilter">← 全単語に戻る：'+escapeHtml(activeDecompFilter)+'</button>':"")+rows.map(w=>{const n=noteFor(w);return '<button class="note-list-item" data-id="'+w.id+'"><span class="note-list-word">'+escapeHtml(w.word)+'</span><span class="note-list-core">'+escapeHtml(n.meaning||w.translation)+'</span><span class="note-list-meta">'+escapeHtml(w.pos)+' · '+(imageUrl(w)?'画像あり':'画像未設定')+'</span></button>';}).join("")||'<div class="card">該当する単語がありません。</div>';
  const clear=$("#clearDecompFilter");if(clear)clear.onclick=()=>{activeDecompFilter="";renderNoteList();};
  $("#notesListPanel").querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openNote(Number(b.dataset.id)));
