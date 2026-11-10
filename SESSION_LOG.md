@@ -376,3 +376,26 @@
 ### 未確認
 - GitHub上のファイル更新は完了。ブラウザ・スマートフォン実機での表示、検索、レビュー、既存データとの互換性は未確認。
 - 4語の語義・例文の辞書照合は初期校正段階。必要に応じて追加修正する。
+
+## 2026-11-10 — Semantic Map と Meaning の共通表示
+
+### 実装したこと
+- `SEMANTIC_MAPS` に語義ノードと意味関係を登録し、単語ごとの専用レンダラーを増やさず共通描画する仕組みを追加。
+- compare / get / abandon / with / about / arm / attend / associate の8語に初期Semantic Mapを登録。
+- Semantic Mapに含まれない語義は `independentMeanings` に保持し、該当データがない場合はMeaningセクション自体を非表示にする。
+- get / about / arm / associate の独立語義をMeaningへ分離。
+- Semantic MapをMeaningより先に表示し、語義ノード・関係・説明を表示。
+- 単語検索にSemantic Mapと独立語義の内容を含める。
+- 既存のNOTE_CONTENT、Usage UI、語源・分解、混合例文、画像設定の処理は保持。
+- WORD_NOTE_SPEC.md にデータ形式・表示順・移行範囲を追記。
+
+### 未確認・注意
+- JavaScriptの構文チェックは通過。
+- ブラウザ実機でのレイアウト・タップ・長文表示は未確認。
+- 8語のSemantic Mapは初期案。意味関係の妥当性・語義の網羅性は校正が必要。
+- Semantic Map未登録の語は、移行中の互換性として従来の `meaning` をMeaning欄に表示する。全27語の意味分類が完了したわけではない。
+
+### 次の一手
+1. 実機で8語のSemantic MapとMeaningの表示・折りたたみ・検索を確認。
+2. Semantic Map未登録語について、語義間に意味的な関係がある場合だけ段階的に移行。
+3. 8語のノード・エッジが辞書的な語義と一致するか校正し、無理な意味連結を削る。
