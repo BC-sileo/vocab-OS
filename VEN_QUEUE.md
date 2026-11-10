@@ -4,6 +4,7 @@
 - 件数：257語
 - 並び順：VEN度の高い順。各グループ内はアルファベット順
 - 今回登録したVEN度10以上135語とは分離
+- `about` と `arm` はアプリに既存登録済み。次回の一括追加では重複登録しない
 
 ## VEN度 9（13語）
 
@@ -155,7 +156,7 @@
 ## VEN度 3（52語）
 
 - aboard
-- about
+- about（既存登録済み。VEN度3を付与済み）
 - accessible
 - according
 - accustom
@@ -186,7 +187,7 @@
 - archaeology
 - archive
 - aristocrat
-- arm
+- arm（既存登録済み。VEN度3を付与済み）
 - armed
 - arrogance
 - artifact
