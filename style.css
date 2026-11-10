@@ -289,3 +289,5 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 #toggleTranslations.translation-toggle-visible{background:#2e7d55!important;border-color:#2e7d55!important;color:#fff!important}
 #toggleTranslations.translation-toggle-hidden{background:#c62838!important;border-color:#c62838!important;color:#fff!important}
 .mixed-sentence-section h3{display:block;margin:0 0 8px;font-size:11px;letter-spacing:.09em;color:var(--muted);font-weight:800}
+
+.ven-sort-caption{padding:6px 4px 10px;color:var(--muted);font-size:12px;font-weight:750;letter-spacing:.03em}
