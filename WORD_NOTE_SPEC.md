@@ -247,3 +247,13 @@ compareなど一部の単語だけに作り込んだUIを、別の単語にも�
 - 未登録の単語でもセクション自体は表示し、用例が未登録であることを示す。これにより、後から用例データを追加するだけで全単語に反映できる。
 - 各用例は「分野」「英語表現」「日本語の意味」「短い説明」を同じレイアウトで表示する。
 - 他分野での用例も単語検索の対象に含める。
+
+
+## Usage pattern diagrams (standard rule)
+
+- Collocations, verb patterns, and grammatical constructions are displayed as visual token diagrams, not buried in prose.
+- Each pattern is represented by ordered `parts`: lexical chunks are solid tokens, replaceable slots (e.g. A, B, noun, person, to do) are dashed tokens, and spaces/relations are shown by the shared renderer.
+- A selectable token is used only when a meaningful contrast exists (for example, compare A with B / compare A to B).
+- The example control reveals a concrete example and translation without replacing the pattern structure permanently.
+- Multiword verbs whose meaning and grammar are learned as a unit are one token/chunk. In particular, `attend to` is represented as one phrasal-verb unit, followed by its target.
+- This is the default data model for all word notes. Avoid storing core collocations only as prose in `usage`.
