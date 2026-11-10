@@ -407,3 +407,6 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .meaning-example-fold[open]>summary,.meaning-info-fold[open]>summary{border-color:var(--accent);color:var(--accent)}
 .meaning-example-fold .meaning-example{margin-top:8px}
 .meaning-info-fold>p{padding:8px 4px;font-size:12px;line-height:1.6;color:var(--muted)}
+
+.meaning-structure-row+.meaning-structure-row{margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+.meaning-structure-token.is-flow{border:0;background:transparent;padding:4px;color:var(--accent);font-size:18px}
