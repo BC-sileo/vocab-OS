@@ -372,3 +372,23 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .usage-detail[open] .usage-explanation{margin-top:7px;font-size:12px;line-height:1.55}
 .usage-contrast{display:flex;align-items:center;justify-content:center;gap:7px;padding:7px 9px;border-radius:8px;background:var(--panel2);font-size:11px;line-height:1.45;color:var(--muted);text-align:center}
 .usage-contrast-mark{font-size:17px;color:var(--accent);font-weight:800}
+
+
+/* Meaning cards: POS-first, tap to reveal detail and example */
+.meaning-list{display:grid;gap:7px}
+.meaning-fold{padding:0;overflow:hidden}
+.meaning-fold>summary{display:flex;align-items:center;gap:10px;min-height:54px;padding:11px 13px;cursor:pointer;list-style:none}
+.meaning-fold>summary::-webkit-details-marker{display:none}
+.meaning-fold>summary strong{flex:1;min-width:0;font-size:15px;line-height:1.4}
+.meaning-pos{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:30px;padding:0 8px;border-radius:8px;background:var(--accent);color:var(--panel);font-size:13px;font-weight:850;letter-spacing:.02em}
+.meaning-open-mark{width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .16s ease;flex:0 0 auto;margin:0 4px 4px}
+.meaning-fold[open] .meaning-open-mark{transform:rotate(225deg);margin-bottom:0}
+.meaning-detail{padding:0 13px 13px 57px}
+.meaning-detail>p{font-size:13px;line-height:1.65;color:var(--muted)}
+.meaning-example{margin-top:10px;padding:10px;border-radius:9px;background:var(--panel2)}
+.meaning-example-label{display:inline-block;margin-bottom:5px;font-size:10px;font-weight:850;letter-spacing:.08em;color:var(--accent)}
+.meaning-example p{font-size:13px;line-height:1.55}
+.meaning-example .translation-text{margin-top:5px;color:var(--muted)}
+.meaning-warning{display:flex;align-items:flex-start;gap:9px;margin-top:10px;padding:11px 12px;border:1px solid #d49b45;border-radius:10px;background:color-mix(in srgb,#d49b45 9%,var(--panel));font-size:12px;line-height:1.6}
+.meaning-warning-icon{flex:0 0 auto;font-size:17px;font-weight:900;color:#b7791f}
+.etymology-section{order:0}
