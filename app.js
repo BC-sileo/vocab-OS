@@ -47,6 +47,11 @@ for (const [word, ven] of Object.entries({"abandon":18,"associate":18,"attend":1
   const existing = WORDS.find(w => w.word.toLowerCase() === word);
   if (existing) existing.ven = ven;
 }
+const MEANING_READY_WORD_META = {"appropriate":["適切な；（目的に）割り当てる／自分の用途に取り込む","a/v"],"appreciate":["高く評価する；ありがたく思う；十分に理解する；（価値が）上がる","v"],"aspect":["側面；局面；観点","n"],"atmosphere":["大気；空気；雰囲気","n"],"attempt":["試みる；試み","v/n"],"available":["利用できる；入手できる；手が空いている","a"],"account":["口座；説明・報告；考慮；説明する","n/v"],"adapt":["適応する；適合させる；改作する","v"],"admire":["尊敬する；感心して眺める","v"],"admit":["認める；入場を許す；受け入れる","v"],"advance":["前進する；進歩させる；進歩；前払い","v/n"],"aesthetic":["美的な；美学；美的様式","a/n"],"affect":["影響を与える；（態度などを）装う","v"],"affluence":["富裕；物質的な豊かさ","n"],"afford":["（余裕があって）できる・買える；与える","v"],"aim":["目指す；方向を向ける；目的","v/n"],"ancestor":["祖先；共通祖先；前身","n"],"apply":["申し込む；当てはまる；適用する；塗る","v"],"approach":["近づく；取り組む；接近；方法","v/n"],"argue":["口論する；理由を挙げて論じる","v"]};
+for (const [word, meta] of Object.entries(MEANING_READY_WORD_META)) {
+ const entry=WORDS.find(w=>w.word===word); if(!entry) continue;
+ entry.translation=meta[0]; entry.pos=meta[1]; entry.coreImage=""; entry.pending=false; entry.meaningReady=true;
+}
 function compareByVEN(a,b) {
   const av = Number.isFinite(a.ven) ? a.ven : -1;
   const bv = Number.isFinite(b.ven) ? b.ven : -1;
