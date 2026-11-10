@@ -31,6 +31,7 @@
   let timerId = null;
   let timerEndAt = 0;
   let timerRemaining = 10000;
+  let reviewFinishHandled = false;
 
   function saveLearning(){
     try { localStorage.setItem(STORAGE_KEY,JSON.stringify(store)); }
@@ -194,6 +195,7 @@
     const session=store.activeSession;
     if(!session)return;
     session.phase="review";
+    reviewFinishHandled=false;
     order=session.wordIds.slice();
     pageSize=Math.max(1,session.wordIds.length);
     sessionPages=1;
@@ -494,18 +496,25 @@
   };
   const baseFinishReview=finishReview;
   finishReview=function(){
-    if(store.activeSession && store.activeSession.phase==="review" && store.activeSession.kind==="first"){
-      resultIds=sessionWordIds.filter(function(id){return sessionStates[id]&&sessionStates[id]!=="即答";});
-      store.activeSession.reviewStates={...sessionStates};
-      startBrowsePhase();
-      return;
+    if(reviewFinishHandled)return;
+    const session=store.activeSession;
+    if(session && session.phase==="review"){
+      reviewFinishHandled=true;
+      if(session.kind==="first"){
+        resultIds=sessionWordIds.filter(function(id){return sessionStates[id]&&sessionStates[id]!=="即答";});
+        session.reviewStates={...sessionStates};
+        startBrowsePhase();
+        return;
+      }
+      if(session.kind==="review"){
+        store.activeSession=null;
+        saveLearning();
+        baseFinishReview();
+        return;
+      }
     }
-    if(store.activeSession && store.activeSession.phase==="review" && store.activeSession.kind==="review"){
-      store.activeSession=null;
-      saveLearning();
-      baseFinishReview();
-      return;
-    }
+    if(session && (session.phase==="browse" || session.phase==="test"))return;
+    reviewFinishHandled=true;
     baseFinishReview();
   };
 
