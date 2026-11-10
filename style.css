@@ -354,3 +354,6 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
  .learning-nav-actions button{min-width:75px;padding:9px 8px;font-size:12px}
  .weak-toggle{padding:5px 7px}
 }
+
+.note-title-row{flex-wrap:wrap;align-items:center}
+.note-title-row .weak-toggle{margin-left:auto}
