@@ -392,3 +392,18 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .meaning-warning{display:flex;align-items:flex-start;gap:9px;margin-top:10px;padding:11px 12px;border:1px solid #d49b45;border-radius:10px;background:color-mix(in srgb,#d49b45 9%,var(--panel));font-size:12px;line-height:1.6}
 .meaning-warning-icon{flex:0 0 auto;font-size:17px;font-weight:900;color:#b7791f}
 .etymology-section{order:0}
+
+/* Semantic meaning cards: structure is the primary explanation */
+.meaning-structure{margin:4px 0 12px;padding:13px 10px;border-radius:12px;background:var(--panel2)}
+.meaning-structure-diagram{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:7px}
+.meaning-structure-token{display:inline-flex;align-items:center;justify-content:center;min-height:39px;padding:8px 11px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:13px;font-weight:750;text-align:center}
+.meaning-structure-token.is-relation{background:var(--accent);border-color:var(--accent);color:var(--panel);min-width:48px}
+.meaning-structure-token.is-slot{border-style:dashed;color:var(--muted);font-weight:650}
+.meaning-structure-arrow{color:var(--accent);font-weight:900}
+.meaning-structure-label{text-align:center;margin-top:9px;font-size:11px;font-weight:800;color:var(--accent)}
+.meaning-example-fold,.meaning-info-fold{margin-top:8px}
+.meaning-example-fold>summary,.meaning-info-fold>summary{display:flex;align-items:center;justify-content:center;min-height:36px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--muted);cursor:pointer;list-style:none}
+.meaning-example-fold>summary::-webkit-details-marker,.meaning-info-fold>summary::-webkit-details-marker{display:none}
+.meaning-example-fold[open]>summary,.meaning-info-fold[open]>summary{border-color:var(--accent);color:var(--accent)}
+.meaning-example-fold .meaning-example{margin-top:8px}
+.meaning-info-fold>p{padding:8px 4px;font-size:12px;line-height:1.6;color:var(--muted)}
