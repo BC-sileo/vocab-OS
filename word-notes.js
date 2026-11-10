@@ -442,6 +442,7 @@ function openNote(id,autoplay=true){
  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();requestAnimationFrame(()=>window.scrollTo({top:noteListScrollY,behavior:"instant"}));};
   $("#playWordAudio").onclick=()=>speakWord(w);
   bindWordMemo(id,n);
+  if(typeof window.syncWeakToggleButtons==="function")window.syncWeakToggleButtons();
   if(autoplay)speakWord(w);
   return;
  }
@@ -463,6 +464,7 @@ function openNote(id,autoplay=true){
  '<button id="saveImageData" class="primary-btn">画像情報を保存</button><p id="imageSaveStatus" class="hint" aria-live="polite"></p>'+
  '<p class="hint">端末から選んだ画像は縮小してこのブラウザ内に保存します。URL画像と同じく、出典・作者・ライセンスは必要に応じて記録してください。別端末への同期はありません。</p></div></details>';
  bindWordMemo(id,n);
+ if(typeof window.syncWeakToggleButtons==="function")window.syncWeakToggleButtons();
  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();requestAnimationFrame(()=>window.scrollTo({top:noteListScrollY,behavior:"instant"}));};
  d.querySelectorAll("[data-part]").forEach(btn=>btn.onclick=()=>{activeDecompFilter=btn.dataset.part;d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});});
  d.addEventListener("click",event=>{
