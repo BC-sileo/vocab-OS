@@ -241,3 +241,18 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .translation-text{transition:color .12s,background-color .12s}
 #noteDetailPanel.translation-hidden .translation-text{color:transparent!important;background:var(--panel)!important;text-shadow:none!important;border-radius:3px;user-select:none;-webkit-user-select:none}
 #noteDetailPanel.translation-hidden .translation-text::selection{color:transparent;background:transparent}
+
+
+/* Unified usage component: every word shares the same renderer and interaction model. */
+.usage-component-list{display:grid;grid-template-columns:1fr;gap:9px;margin:10px 0}
+.usage-item{display:grid;gap:9px;min-width:0;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.usage-item-top{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;min-width:0}
+.usage-item-top>.usage-diagram,.usage-item-top>.usage-example{flex:1;min-width:0}
+.usage-item-top>.usage-example{padding:2px 0}
+.usage-item-top .usage-example-en{font-size:15px}
+.usage-item-top .usage-example-ja{font-size:12px}
+.usage-item-top .usage-example-button{margin:0;padding:6px 8px;font-size:12px}
+.usage-item-top>[data-usage-action="example"]{flex:0 0 auto;margin:0;padding:6px 9px;font-size:12px}
+.usage-item .usage-explanation{margin:0}
+.usage-item .usage-diagram{justify-content:center}
+.usage-item .usage-choice-list{z-index:5}
