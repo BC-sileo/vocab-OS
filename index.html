@@ -18,11 +18,13 @@
 
   <main id="homeView">
     <section class="hero card">
-      <p class="eyebrow">REVIEW</p>
-      <h2>今日は、どこまでやる？</h2>
-      <p>語数・ページ数・想起方法を開始前に決めて、終わったページから次へ進みます。</p>
-      <button id="notesBtn" class="primary-btn">単語ノートを開く</button>
+      <p class="eyebrow">LEARNING</p>
+      <h2>単語を選び、段階的に学ぶ。</h2>
+      <p>初見モードでは新しい単語を学び、完了後は復習モードで再び選べます。</p>
+      <button id="firstModeBtn" class="primary-btn">初見モード</button>
       <button id="reviewBtn" class="secondary-wide-btn">復習モード</button>
+      <button id="resumeLearningBtn" class="secondary-wide-btn hidden">学習を再開</button>
+      <button id="notesBtn" class="subtle-btn">単語ノートを開く</button>
     </section>
     <section class="card home-theme-card">
       <p class="eyebrow">APPEARANCE</p>
@@ -88,6 +90,35 @@
     </section>
   </main>
 
+  <main id="learningSetupView" class="hidden">
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">WORD SELECTION</p>
+          <h2 id="learningSetupTitle">初見モード</h2>
+        </div>
+        <button id="learningSetupBack" class="subtle-btn">戻る</button>
+      </div>
+      <p id="learningSetupDescription" class="hint"></p>
+      <p id="learningEligibility" class="learning-eligibility"></p>
+      <label class="learning-count-label">選ぶ単語数
+        <input id="learningWordCount" type="number" min="1" max="20" value="5">
+      </label>
+      <div class="learning-criteria">
+        <div class="label-title">選択基準（複数選択可）</div>
+        <label class="learning-criterion"><input type="checkbox" data-learning-criterion="ven"><span><strong>VEN度</strong><small>収録教材数が多い単語を優先</small></span></label>
+        <label class="learning-criterion"><input type="checkbox" data-learning-criterion="etymology"><span><strong>語源・分解</strong><small>語源・分解情報がある単語を優先</small></span></label>
+        <label class="learning-criterion"><input type="checkbox" data-learning-criterion="collocation"><span><strong>コロケーション</strong><small>用法パターンが登録された単語を優先</small></span></label>
+        <label class="learning-criterion"><input type="checkbox" data-learning-criterion="memory"><span><strong>記憶度</strong><small>完了テストで想起が不安定だった単語を優先</small></span></label>
+        <label class="learning-criterion"><input type="checkbox" data-learning-criterion="weak"><span><strong>苦手マーク</strong><small>自分で苦手に設定した単語を優先</small></span></label>
+        <label class="learning-criterion"><input type="checkbox" data-learning-criterion="random"><span><strong>無作為</strong><small>同じ評価の単語の中からランダムに選ぶ</small></span></label>
+      </div>
+      <button id="chooseLearningWords" class="secondary-wide-btn">この条件で候補を選ぶ</button>
+      <section id="learningSelectionPreview" class="learning-selection-preview" aria-live="polite"></section>
+      <button id="startLearningSelection" class="primary-btn" disabled>学習を開始</button>
+    </section>
+  </main>
+
   <main id="reviewView" class="hidden">
     <section class="session card">
       <div class="session-top">
@@ -96,6 +127,7 @@
       </div>
       <div class="progress"><div id="progressBar"></div></div>
       <p id="modeHint" class="hint"></p>
+      <button id="learningReviewPause" class="subtle-btn hidden">中断してホームへ</button>
     </section>
     <section id="wordList" class="word-list" aria-live="polite"></section>
   </main>
@@ -114,6 +146,19 @@
     </section>
   </main>
 
+  <main id="learningTestView" class="hidden">
+    <section id="learningTestContent"></section>
+  </main>
+
+  <main id="learningDoneView" class="hidden">
+    <section class="card learning-done-card">
+      <p class="eyebrow">COMPLETED</p>
+      <h2 id="learningDoneTitle">学習を完了しました</h2>
+      <p id="learningDoneSummary"></p>
+      <button id="learningDoneHome" class="primary-btn">ホームへ戻る</button>
+    </section>
+  </main>
+
   <aside id="toc" class="toc" aria-hidden="true">
     <div class="toc-panel">
       <div class="toc-head"><strong>このページ</strong><button id="tocClose" class="icon-btn">×</button></div>
@@ -122,7 +167,8 @@
   </aside>
 
   <script src="app.js"></script>
-  <script src="word-notes.js?v=20261110-memo2"></script>
+  <script src="word-notes.js?v=20261110-learning1"></script>
+  <script src="learning.js?v=20261110-learning1"></script>
   <script src="theme.js"></script>
 </body>
 </html>
