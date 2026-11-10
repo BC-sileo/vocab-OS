@@ -229,6 +229,102 @@ const USAGE_COMPONENTS = {
     {id:"attend-event",parts:["attend","行事 / 授業"],explanation:"会議・授業・行事などに出席する。目的語を直接続ける。",example:"She attends every lecture.",ja:"彼女はすべての講義に出席する。"},
     {id:"attend-to",parts:["attend to","対象"],explanation:"attend to をひとかたまりの群動詞として扱う。対象に注意を向け、必要に応じて対応・世話をする。",example:"The nurse attended to the patient.",ja:"看護師は患者の世話をした。"}
   ]}
+  1: { items: [
+    {id:"auto-1-1",parts:["commit","to","名詞 / 動名詞"],explanation:"commit to は計画・約束などに自分を結びつけ、責任を持って取り組む。to は前置詞。",example:"She committed to learning English.",ja:"彼女は英語を学ぶことに本腰を入れた。"},
+    {id:"auto-1-2",parts:["commit","犯罪・過ちなど"],explanation:"commit + 名詞で犯罪・過ちなどを実行する。",example:"He committed a serious crime.",ja:"彼は重大な犯罪を犯した。"}
+  ]},
+  3: { items: [
+    {id:"auto-3-1",parts:["complain","about","対象"],explanation:"何について不満を述べるかを示す。",example:"They complained about the noise.",ja:"彼らは騒音について苦情を言った。"},
+    {id:"auto-3-2",parts:["complain","to","人"],explanation:"誰に苦情を伝えるかを示す。",example:"I complained to the manager.",ja:"私は店長に苦情を伝えた。"},
+    {id:"auto-3-3",parts:["complain","of","症状"],explanation:"病気・痛みなどの症状を訴える、やや改まった表現。",example:"The patient complained of a headache.",ja:"患者は頭痛を訴えた。"}
+  ]},
+  4: { items: [
+    {id:"auto-4-1",parts:["a","complex","problem / system"],explanation:"複数の要素や関係が絡み合った問題・体系。",example:"Climate change is a complex problem.",ja:"気候変動は複雑な問題だ。"},
+    {id:"auto-4-2",parts:["a","complex","of","建物・施設など"],explanation:"関連する複数の建物・施設などから成る複合体。",example:"The hospital complex includes several buildings.",ja:"その病院複合施設はいくつかの建物から成る。"}
+  ]},
+  5: { items: [
+    {id:"auto-5-1",parts:["concentrate","on","対象 / 動名詞"],explanation:"注意・努力などを何に向けて集中させるかを示す。",example:"She concentrated on solving the problem.",ja:"彼女はその問題を解くことに集中した。"},
+    {id:"auto-5-2",parts:["concentrate","資源・力など"],explanation:"何かを一か所・一方向に集める。",example:"The company concentrated its resources on research.",ja:"その会社は研究に資源を集中させた。"}
+  ]},
+  7: { items: [
+    {id:"auto-7-1",parts:["consider","動名詞"],explanation:"〜することを検討する。consider の後ろに to do は通常置かない。",example:"We're considering moving to Kyoto.",ja:"私たちは京都へ引っ越すことを検討している。"},
+    {id:"auto-7-2",parts:["consider","名詞"],explanation:"対象を考慮する・よく考える。",example:"You should consider the risks.",ja:"その危険性を考慮すべきだ。"},
+    {id:"auto-7-3",parts:["consider","A","(to be)","B"],explanation:"AをBだと見なす。",example:"Many people consider him a genius.",ja:"多くの人が彼を天才だと考えている。"}
+  ]},
+  8: { items: [
+    {id:"auto-8-1",parts:["contain","名詞"],explanation:"容器・文書・集合などが何かを内部に含む。",example:"This bottle contains water.",ja:"この瓶には水が入っている。"},
+    {id:"auto-8-2",parts:["be contained","in","場所・範囲"],explanation:"何かがある範囲の中に含まれている。",example:"The details are contained in the report.",ja:"詳細はその報告書に記載されている。"}
+  ]},
+  9: { items: [
+    {id:"auto-9-1",parts:["contract","with","相手"],explanation:"相手と契約を結ぶ。",example:"The company contracted with a local supplier.",ja:"その会社は地元の供給業者と契約した。"},
+    {id:"auto-9-2",parts:["contract","for","仕事・サービス"],explanation:"特定の仕事・サービスを対象とする契約。",example:"They won a contract for the construction work.",ja:"彼らは建設工事の契約を獲得した。"},
+    {id:"auto-9-3",parts:["contract","病気"],explanation:"病気にかかる。名詞「契約」とは異なる動詞用法。",example:"He contracted the disease abroad.",ja:"彼は海外でその病気にかかった。"}
+  ]},
+  10: { items: [
+    {id:"auto-10-1",parts:["contribute","to","名詞 / 動名詞"],explanation:"全体・結果・目的に何かを加え、貢献する。to は前置詞。",example:"Everyone contributed to the project.",ja:"全員がそのプロジェクトに貢献した。"},
+    {id:"auto-10-2",parts:["contribute","金銭・時間・知識など"],explanation:"寄付・提供するものを直接目的語に置く。",example:"She contributed money to the fund.",ja:"彼女はその基金にお金を寄付した。"}
+  ]},
+  11: { items: [
+    {id:"auto-11-1",parts:["crop","画像・写真など"],explanation:"画像の周辺を切り取り、必要な範囲を残す。",example:"I cropped the photo before posting it.",ja:"投稿する前に写真をトリミングした。"},
+    {id:"auto-11-2",parts:["a","crop","of","作物"],explanation:"農作物・収穫物を表す名詞用法。",example:"Rice is an important crop in Japan.",ja:"米は日本の重要な作物だ。"}
+  ]},
+  12: { items: [
+    {id:"auto-12-1",parts:["be cruel","to","人・動物"],explanation:"人や動物に対して残酷である。",example:"It is cruel to animals.",ja:"それは動物に対して残酷だ。"},
+    {id:"auto-12-2",parts:["cruel","treatment / punishment"],explanation:"残酷な扱い・処罰。",example:"The law prohibits cruel treatment.",ja:"その法律は残酷な扱いを禁じている。"}
+  ]},
+  13: { items: [
+    {id:"auto-13-1",parts:["debate","論点・問題"],explanation:"ある論点について討論する。目的語を直接続けられる。",example:"They debated the proposal.",ja:"彼らはその提案について討論した。"},
+    {id:"auto-13-2",parts:["debate","with","人"],explanation:"誰と討論するかを示す。",example:"She debated with her classmates.",ja:"彼女はクラスメートたちと討論した。"},
+    {id:"auto-13-3",parts:["a debate","about / over","テーマ"],explanation:"テーマをめぐる討論・論争。",example:"There is a debate over the new policy.",ja:"新しい政策をめぐって議論がある。"}
+  ]},
+  14: { items: [
+    {id:"auto-14-1",parts:["deny","名詞"],explanation:"要求・主張・事実などを認めない。",example:"He denied the accusation.",ja:"彼はその आरोपを否定した。"},
+    {id:"auto-14-2",parts:["deny","動名詞"],explanation:"〜したことを否定する。",example:"She denied taking the money.",ja:"彼女はそのお金を取ったことを否定した。"},
+    {id:"auto-14-3",parts:["deny","that + 文"],explanation:"〜ということを否定する。",example:"They denied that the report was accurate.",ja:"彼らはその報告が正確だということを否定した。"}
+  ]},
+  15: { items: [
+    {id:"auto-15-1",parts:["desire","名詞"],explanation:"何かを強く望む。名詞では「欲求・願望」。",example:"She desires success.",ja:"彼女は成功を強く望んでいる。"},
+    {id:"auto-15-2",parts:["desire","to do"],explanation:"〜したいと望む。改まった表現。",example:"He desires to learn more.",ja:"彼はもっと学びたいと望んでいる。"},
+    {id:"auto-15-3",parts:["a desire","for","名詞"],explanation:"何かに対する願望・欲求。",example:"The desire for knowledge is powerful.",ja:"知識を求める欲求は強い。"}
+  ]},
+  16: { items: [
+    {id:"auto-16-1",parts:["disturb","人"],explanation:"人の平穏・集中・休息などを妨げる。",example:"Sorry to disturb you.",ja:"お邪魔してすみません。"},
+    {id:"auto-16-2",parts:["disturb","平穏・均衡・秩序など"],explanation:"保たれている状態を乱す。",example:"The noise disturbed the peace of the town.",ja:"その騒音は町の平穏を乱した。"},
+    {id:"auto-16-3",parts:["Do not disturb"],explanation:"「邪魔をしないでください」という定型表現。",example:"The sign said, “Do not disturb.”",ja:"その表示には「起こさないでください」と書かれていた。"}
+  ]},
+  17: { items: [
+    {id:"auto-17-1",parts:["be efficient","at","仕事・活動"],explanation:"特定の仕事・活動を効率よくこなす。",example:"She is efficient at managing projects.",ja:"彼女はプロジェクト管理を効率よくこなす。"},
+    {id:"auto-17-2",parts:["an efficient use","of","資源・時間など"],explanation:"資源や時間を無駄なく使うこと。",example:"We need a more efficient use of energy.",ja:"エネルギーをもっと効率よく使う必要がある。"}
+  ]},
+  18: { items: [
+    {id:"auto-18-1",parts:["emphasize","点・重要性など"],explanation:"重要な点を強調する。",example:"The report emphasizes the need for change.",ja:"その報告書は変化の必要性を強調している。"},
+    {id:"auto-18-2",parts:["emphasize","that + 文"],explanation:"〜ということを強く述べる。",example:"She emphasized that accuracy matters.",ja:"彼女は正確さが重要だと強調した。"}
+  ]},
+  19: { items: [
+    {id:"auto-19-1",parts:["encourage","人","to do"],explanation:"人を励ましたり促したりして、何かをするよう働きかける。",example:"My teacher encouraged me to ask questions.",ja:"先生は私に質問するよう促してくれた。"},
+    {id:"auto-19-2",parts:["encourage","名詞"],explanation:"活動・考え・成長などを促進する。",example:"The program encourages creativity.",ja:"そのプログラムは創造性を促す。"}
+  ]},
+  20: { items: [
+    {id:"auto-20-1",parts:["exist","in","場所・状況"],explanation:"ある場所・状況に存在する。",example:"Many species exist in this region.",ja:"この地域には多くの種が生息している。"},
+    {id:"auto-20-2",parts:["There","exists","名詞"],explanation:"〜が存在する、という存在構文。",example:"There exists a better solution.",ja:"もっとよい解決策が存在する。"},
+    {id:"auto-20-3",parts:["exist","as","役割・形態"],explanation:"〜として存在する。",example:"The tradition still exists as a local custom.",ja:"その伝統は今も地域の慣習として残っている。"}
+  ]},
+  24: { items: [
+    {id:"auto-24-1",parts:["be","about","テーマ"],explanation:"話題・内容が何についてのものかを示す。",example:"The book is about space.",ja:"その本は宇宙についての本だ。"},
+    {id:"auto-24-2",parts:["about","数値"],explanation:"数値の前で「およそ・約」を表す。",example:"The trip takes about two hours.",ja:"その旅行には約2時間かかる。"},
+    {id:"auto-24-3",parts:["be","about to","do"],explanation:"まさに〜しようとしている。about to を一まとまりの構文として扱う。",example:"I was about to call you.",ja:"ちょうどあなたに電話しようとしていた。"}
+  ]},
+  25: { items: [
+    {id:"auto-25-1",parts:["arm","人・集団","with","武器"],explanation:"人や集団に武器を装備させる。",example:"The group was armed with rifles.",ja:"その集団はライフルで武装していた。"},
+    {id:"auto-25-2",parts:["arm oneself","with","知識・情報など"],explanation:"知識・情報などを身につけ、備える比喩的用法。",example:"Arm yourself with the facts.",ja:"事実を身につけて備えなさい。"},
+    {id:"auto-25-3",parts:["arms"],explanation:"複数形 arms は「武器・兵器」を表す名詞。",example:"The country reduced its arms imports.",ja:"その国は武器の輸入を減らした。"}
+  ]},
+  27: { items: [
+    {id:"auto-27-1",parts:["associate","A","with","B"],explanation:"AをBと関連づける。",example:"People often associate red with danger.",ja:"人々は赤を危険と結びつけることが多い。"},
+    {id:"auto-27-2",parts:["be associated","with","対象"],explanation:"〜と関連している。",example:"The disease is associated with smoking.",ja:"その病気は喫煙と関連している。"},
+    {id:"auto-27-3",parts:["associate","with","人"],explanation:"人と交際する・付き合う。",example:"He associates with artists.",ja:"彼は芸術家たちと付き合っている。"}
+  ]},
+
 };
 
 function renderUsageFrame(w){
@@ -243,7 +339,7 @@ function renderUsageFrame(w){
     const options=item.options||[];
     return '<span class="usage-choice-wrap"><button type="button" class="usage-choice" data-usage-action="toggle" data-usage-item="'+escapeHtml(item.id)+'" aria-expanded="'+Boolean(item.open)+'">'+escapeHtml(detail.label||detail.value||"選択")+'</button><span class="usage-choice-list'+(item.open?"":" hidden")+'">'+options.map(option=>'<button type="button" class="usage-choice-option'+(option.value===item.selected?" is-selected":"")+'" data-usage-select="'+escapeHtml(option.value)+'" data-usage-item="'+escapeHtml(item.id)+'">'+escapeHtml(option.label||option.value)+'</button>').join("")+'</span></span>';
    }
-   return '<span class="usage-part'+(part==="A"||part==="B"||part==="名詞"||part==="形容詞"||part==="人"?" usage-slot":"")+'">'+escapeHtml(part)+'</span>';
+   return '<span class="usage-part'+(part==="A"||part==="B"||part==="名詞"||part==="形容詞"||part==="人"||/名詞|形容詞|動名詞|to do|do$|対象|テーマ|論点|仕事|活動|作物|資源|時間|数値|武器|人・|場所|範囲|症状|状態/.test(part)?" usage-slot":"")+'">'+escapeHtml(part)+'</span>';
   }).join('<span class="usage-join"> </span>')+'</div>';
   const shown=item.expanded
    ? '<div class="usage-example"><p class="usage-example-en">'+escapeHtml(detail.example||"例文は未登録です。")+'</p><p class="usage-example-ja translation-text">'+escapeHtml(detail.ja||"")+'</p><button type="button" class="subtle-btn usage-example-button" data-usage-action="back" data-usage-item="'+escapeHtml(item.id)+'">骨格に戻る</button></div>'
@@ -263,6 +359,7 @@ function mixedExampleMarkup(n){
  if(parts.length<2||!token)return escapeHtml(template);
  return escapeHtml(parts[0])+'<button id="mixedWordToken" class="mixed-token" type="button" aria-expanded="false">'+escapeHtml(token)+'</button>'+escapeHtml(parts.slice(1).join("{{word}}"))+'<span id="mixedTarget" class="mixed-target translation-text hidden">'+escapeHtml(n.mixedTarget||"")+'</span>';
 }
+function renderMixedSentence(n){return '<section class="note-section mixed-sentence-section"><h3>MIX SENTANCE</h3><p class="mixed-sentence">'+mixedExampleMarkup(n)+'</p><p class="hint">英語部分をタップすると、元の日本語表現を表示。</p></section>';}
 function imageCueMarkup(w){
  const url=imageUrl(w);
  return url ? '<img class="image-cue" loading="lazy" src="'+escapeHtml(url)+'" alt="'+escapeHtml(w.word)+'の画像" onerror="this.remove()">' : "";
@@ -288,14 +385,14 @@ function openNote(id,autoplay=true){
  if(!$("#notesListPanel").classList.contains("hidden"))noteListScrollY=window.scrollY;
  const w=WORDS.find(x=>x.id===id);if(!w)return;const n=noteFor(w);
  $("#notesListPanel").classList.add("hidden");const d=$("#noteDetailPanel");d.classList.remove("hidden");d.classList.remove("translation-hidden");
- d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button><div class="translation-toolbar"><span>日本語訳</span><button type="button" class="subtle-btn" id="toggleTranslations" aria-pressed="false">訳を隠す</button></div>'+
+ d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button><div class="translation-toolbar"><span>日本語訳</span><button type="button" class="subtle-btn" id="toggleTranslations" class="subtle-btn translation-toggle-visible" aria-pressed="false">訳を隠す</button></div>'+
  '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(w.pos)+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button></div>'+
  '<p class="note-core">'+escapeHtml(w.coreImage||n.meaning||w.translation)+'</p></div>'+
- renderSemanticMap(w,n)+renderIndependentMeanings(w,n)+renderDomainExamples(n)+
+ renderSemanticMap(w,n)+renderIndependentMeanings(w,n)+renderMixedSentence(n)+renderDomainExamples(n)+
  '<section class="note-section"><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w)+'</section>'+
  '<section class="note-section">'+renderUsageFrame(w)+(USAGE_COMPONENTS[w.id]?'':('<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p>'+(w.id===2?'<p class="hint">before you decide＝「決める前に」。時を表す節で、compare の語法の例外ではない。</p>':'')+'<p id="exampleJa" class="example-ja translation-text">'+escapeHtml(n.ja||"")+'</p>'))+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
  
- '<section class="note-section"><p class="mixed-sentence">'+mixedExampleMarkup(n)+'</p><p class="hint">英語部分をタップすると、元の日本語表現を表示。</p></section>'+
+ 
 
  '<details class="note-fold"><summary>画像の設定・出典情報</summary><div class="image-workflow"><p>画像を端末から選ぶか、画像検索で候補を探して登録できます。</p>'+
  '<div class="image-pick-row"><button id="chooseLocalImage" class="secondary-wide-btn" type="button">📁 端末から画像を選ぶ</button><input id="noteImageFile" type="file" accept="image/*" hidden></div>'+
@@ -330,7 +427,7 @@ function openNote(id,autoplay=true){
  });
  $("#playWordAudio").onclick=()=>speakWord(w);
  if(autoplay)speakWord(w);
- const translationToggle=$("#toggleTranslations");if(translationToggle)translationToggle.onclick=()=>{const hidden=d.classList.toggle("translation-hidden");translationToggle.textContent=hidden?"訳を表示":"訳を隠す";translationToggle.setAttribute("aria-pressed",String(hidden));};
+ const translationToggle=$("#toggleTranslations");if(translationToggle)translationToggle.onclick=()=>{const hidden=d.classList.toggle("translation-hidden");translationToggle.textContent=hidden?"訳を表示":"訳を隠す";translationToggle.classList.toggle("translation-toggle-hidden",hidden);translationToggle.classList.toggle("translation-toggle-visible",!hidden);translationToggle.setAttribute("aria-pressed",String(hidden));};
  const mixedToken=$("#mixedWordToken"),mixedTarget=$("#mixedTarget");
  if(mixedToken&&mixedTarget)mixedToken.onclick=()=>{mixedTarget.classList.toggle("hidden");mixedToken.setAttribute("aria-expanded",String(!mixedTarget.classList.contains("hidden")));};
  $("#saveImageData").onclick=()=>saveImageData(id);
