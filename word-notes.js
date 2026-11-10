@@ -468,7 +468,7 @@ function openNote(id,autoplay=true){
  if(typeof window.syncWeakToggleButtons==="function")window.syncWeakToggleButtons();
  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();requestAnimationFrame(()=>window.scrollTo({top:noteListScrollY,behavior:"instant"}));};
  d.querySelectorAll("[data-part]").forEach(btn=>btn.onclick=()=>{activeDecompFilter=btn.dataset.part;d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});});
- d.addEventListener("click",event=>{
+ d.onclick=event=>{
   const target=event.target.closest("[data-usage-action],[data-usage-select]");
   if(!target||!d.contains(target))return;
   const scrollY=window.scrollY;
@@ -488,7 +488,7 @@ function openNote(id,autoplay=true){
   const frame=d.querySelector(".usage-component-list");
   if(frame)frame.outerHTML=renderUsageFrame(w);
   requestAnimationFrame(()=>window.scrollTo({top:scrollY,behavior:"instant"}));
- });
+ };
  $("#playWordAudio").onclick=()=>speakWord(w);
  if(autoplay)speakWord(w);
  const translationToggle=$("#toggleTranslations");if(translationToggle)translationToggle.onclick=()=>{const hidden=d.classList.toggle("translation-hidden");translationToggle.textContent=hidden?"訳を表示":"訳を隠す";translationToggle.classList.toggle("translation-toggle-hidden",hidden);translationToggle.classList.toggle("translation-toggle-visible",!hidden);translationToggle.setAttribute("aria-pressed",String(hidden));};
