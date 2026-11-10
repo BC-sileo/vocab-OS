@@ -325,6 +325,27 @@ const USAGE_COMPONENTS = {
     {id:"auto-27-3",parts:["associate","with","人"],explanation:"人と交際する・付き合う。",example:"He associates with artists.",ja:"彼は芸術家たちと付き合っている。"}
   ]},
 
+  28: {items:[{id:"lex-28",parts:["be appropriate","for","名詞"],explanation:"特定の相手・状況・目的にふさわしい。",example:"This course is appropriate for beginners.",ja:"この講座は初学者に適している。"}]},
+  29: {items:[{id:"lex-29",parts:["appreciate","名詞 / 動名詞"],explanation:"価値を認める、ありがたく思う。",example:"I appreciate your help.",ja:"あなたの助けに感謝します。"}]},
+  30: {items:[{id:"lex-30",parts:["an aspect","of","名詞"],explanation:"ある物事の一側面・特徴を示す。",example:"We discussed an important aspect of the issue.",ja:"私たちはその問題の重要な側面を議論した。"}]},
+  31: {items:[{id:"lex-31",parts:["an atmosphere","of","名詞"],explanation:"どのような雰囲気かを示す。",example:"The room had an atmosphere of trust.",ja:"その部屋には信頼の雰囲気があった。"}]},
+  32: {items:[{id:"lex-32",parts:["attempt","to do"],explanation:"何かをしようと試みる。",example:"They attempted to solve the problem.",ja:"彼らはその問題を解決しようと試みた。"}]},
+  33: {items:[{id:"lex-33",parts:["be available","to","人"],explanation:"人が利用できる状態にある。",example:"The service is available to all members.",ja:"そのサービスは全会員が利用できる。"}]},
+  34: {items:[{id:"lex-34",parts:["account for","名詞"],explanation:"原因を説明する、または全体の中の割合を占める。account for を一まとまりの群動詞として扱う。",example:"This factor accounts for the difference.",ja:"この要因がその違いを説明する。"}]},
+  35: {items:[{id:"lex-35",parts:["adapt","to","環境・条件"],explanation:"新しい環境や条件に自分が適応する。",example:"Children adapt quickly to new environments.",ja:"子どもは新しい環境にすぐ適応する。"}]},
+  36: {items:[{id:"lex-36",parts:["admire","人","for","性質・行動"],explanation:"人を、その性質や行動を理由に尊敬する。",example:"I admire her for her honesty.",ja:"私は彼女の誠実さを尊敬している。"}]},
+  37: {items:[{id:"lex-37",parts:["admit","that + 文"],explanation:"～という事実を認める。",example:"He admitted that he was wrong.",ja:"彼は自分が間違っていたことを認めた。"}]},
+  38: {items:[{id:"lex-38",parts:["advance","知識・理解・計画など"],explanation:"知識や物事をより進んだ段階へ進める。",example:"The discovery advanced medical research.",ja:"その発見は医学研究を前進させた。"}]},
+  39: {items:[{id:"lex-39",parts:["aesthetic","価値・感覚・様式"],explanation:"美や芸術に関する性質を表す。",example:"The design has strong aesthetic appeal.",ja:"そのデザインには強い美的魅力がある。"}]},
+  40: {items:[{id:"lex-40",parts:["affect","名詞"],explanation:"人・物事に作用し、変化をもたらす。",example:"Weather can affect our mood.",ja:"天候は私たちの気分に影響することがある。"}]},
+  41: {items:[{id:"lex-41",parts:["a level / society","of","affluence"],explanation:"豊かさの程度や、豊かな社会を表す。",example:"The area is known for its affluence.",ja:"その地域は豊かさで知られている。"}]},
+  42: {items:[{id:"lex-42",parts:["can afford","to do"],explanation:"金銭・時間などの余裕があって何かができる。",example:"We can afford to wait.",ja:"私たちには待つ余裕がある。"}]},
+  43: {items:[{id:"lex-43",parts:["aim","to do"],explanation:"何かを達成することを目指す。",example:"The project aims to reduce waste.",ja:"その計画は廃棄物の削減を目指している。"}]},
+  44: {items:[{id:"lex-44",parts:["a common ancestor","of","名詞"],explanation:"共通の祖先を表す。",example:"The two species share a common ancestor.",ja:"その2種は共通の祖先を持つ。"}]},
+  45: {items:[{id:"lex-45",parts:["apply A","to","B"],explanation:"知識・原理・規則などを具体的な対象に適用する。",example:"Apply this rule to the next question.",ja:"この規則を次の問題に適用しなさい。"}]},
+  46: {items:[{id:"lex-46",parts:["an approach","to","名詞"],explanation:"問題や課題に取り組むための方法。",example:"We need a new approach to education.",ja:"教育への新しい取り組み方が必要だ。"}]},
+  47: {items:[{id:"lex-47",parts:["argue","that + 文"],explanation:"根拠を示しながら～だと論じる。",example:"The researchers argue that more evidence is needed.",ja:"研究者たちは、さらに証拠が必要だと論じている。"}]},
+
 };
 
 function renderUsageFrame(w){
@@ -396,7 +417,7 @@ function openNote(id,autoplay=true){
  }
  d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button><div class="translation-toolbar"><span>日本語訳</span><button type="button" id="toggleTranslations" class="subtle-btn translation-toggle-visible" aria-pressed="false">訳を隠す</button></div>'+
  '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(w.pos)+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button></div>'+
- '<p class="note-core">'+escapeHtml(w.coreImage||n.meaning||w.translation)+'</p></div>'+
+ (w.coreImage?'<p class="note-core">'+escapeHtml(w.coreImage)+'</p>':'')+'</div>'+
  renderSemanticMap(w,n)+renderIndependentMeanings(w,n)+renderMixedSentence(n)+renderDomainExamples(n)+
  '<section class="note-section"><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w)+'</section>'+
  '<section class="note-section">'+renderUsageFrame(w)+(USAGE_COMPONENTS[w.id]?'':('<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p>'+(w.id===2?'<p class="hint">before you decide＝「決める前に」。時を表す節で、compare の語法の例外ではない。</p>':'')+'<p id="exampleJa" class="example-ja translation-text">'+escapeHtml(n.ja||"")+'</p>'))+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
