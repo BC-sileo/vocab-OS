@@ -75,6 +75,10 @@ const SEMANTIC_MAPS = {
     ],
     edges: [
       {from:"obtain",to:"understand",type:"抽象化",description:"物を得る意味から、情報・意味を受け取って理解する意味へ広がる。"}
+    ],
+    independentMeanings: [
+      {label:"状態変化",description:"get + 形容詞で、ある状態・性質へ変化する。例：get tired（疲れる）。"},
+      {label:"人への働きかけ",description:"get + 人 + to do で、人に働きかけて何かをしてもらう。説得・依頼・手配など、文脈によって具体的な関わり方が変わる。"}
     ]
   },
   22: {
@@ -116,6 +120,7 @@ function renderSemanticMap(w,n){
 function renderIndependentMeanings(w,n){
  let meanings;
  if(Array.isArray(n.independentMeanings))meanings=n.independentMeanings;
+ else if(Array.isArray(SEMANTIC_MAPS[w.id]?.independentMeanings))meanings=SEMANTIC_MAPS[w.id].independentMeanings;
  else if(n.semanticMap||SEMANTIC_MAPS[w.id])meanings=[];
  else meanings=n.meaning?[{label:"基本義",description:n.meaning}]:[];
  if(!meanings.length)return "";
