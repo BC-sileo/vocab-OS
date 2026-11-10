@@ -278,7 +278,7 @@ const USAGE_COMPONENTS = {
     {id:"auto-13-3",parts:["a debate","about / over","テーマ"],explanation:"テーマをめぐる討論・論争。",example:"There is a debate over the new policy.",ja:"新しい政策をめぐって議論がある。"}
   ]},
   14: { items: [
-    {id:"auto-14-1",parts:["deny","名詞"],explanation:"要求・主張・事実などを認めない。",example:"He denied the accusation.",ja:"彼はその आरोपを否定した。"},
+    {id:"auto-14-1",parts:["deny","名詞"],explanation:"要求・主張・事実などを認めない。",example:"He denied the accusation.",ja:"彼はその告発を否定した。"},
     {id:"auto-14-2",parts:["deny","動名詞"],explanation:"〜したことを否定する。",example:"She denied taking the money.",ja:"彼女はそのお金を取ったことを否定した。"},
     {id:"auto-14-3",parts:["deny","that + 文"],explanation:"〜ということを否定する。",example:"They denied that the report was accurate.",ja:"彼らはその報告が正確だということを否定した。"}
   ]},
