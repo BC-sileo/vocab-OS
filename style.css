@@ -306,3 +306,51 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .memo-autosave{font-size:10px;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:3px 8px}
 .word-memo{display:block;width:100%;min-height:120px;resize:vertical;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;font-size:14px;line-height:1.7;outline-color:var(--accent)}
 .memo-save-status{margin-top:6px!important}
+
+
+/* Learning flow: selection, first exposure, free browsing and self-graded recall. */
+.learning-eligibility{margin:12px 0;padding:10px 12px;border-radius:9px;background:var(--panel2);font-size:13px;font-weight:700;color:var(--text)}
+.learning-count-label{margin:14px 0;font-size:13px}
+.learning-count-label input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--text);font:inherit}
+.learning-criteria{display:grid;gap:7px;margin:18px 0}
+.learning-criterion{display:flex;align-items:center;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);cursor:pointer}
+.learning-criterion input{width:18px;height:18px;accent-color:var(--accent);flex:0 0 auto}
+.learning-criterion span{display:grid;gap:3px}
+.learning-criterion strong{font-size:13px;color:var(--text)}
+.learning-criterion small{font-size:11px;line-height:1.4;color:var(--muted)}
+.learning-selection-preview{margin:14px 0}
+.learning-preview-title{font-weight:750;font-size:14px;margin:0 0 8px}
+.learning-preview-list{margin:0;padding-left:24px;display:grid;gap:7px}
+.learning-preview-list li{padding-left:2px}
+.learning-preview-list strong{font-size:14px}
+.learning-preview-list small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.learning-empty{padding:12px;border:1px dashed var(--line);border-radius:9px;color:var(--muted);font-size:13px}
+.learning-nav{margin:0 0 14px;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.learning-nav-top{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px}
+.learning-timer{height:5px;margin:10px 0;background:var(--panel2);border-radius:99px;overflow:hidden}
+#learningTimerFill{height:100%;width:100%;background:var(--accent);transition:width .1s linear}
+.learning-nav-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:10px}
+.learning-nav-actions button{flex:1;min-width:90px}
+.learning-nav-actions .primary-btn{width:auto}
+.learning-test-entry{margin-top:10px}
+.weak-toggle{padding:6px 9px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--muted);font-size:11px;white-space:nowrap}
+.weak-toggle.is-weak{background:color-mix(in srgb,var(--red) 14%,var(--panel));border-color:var(--red);color:var(--red);font-weight:800}
+.memo-format-hint{margin-top:7px!important}
+.learning-test-head h2{margin:14px 0 7px;font-size:30px}
+.learning-test-item{margin:0 0 12px;padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.learning-test-item h3{margin:0 0 8px;font-size:16px}
+.learning-test-prompt{margin:0 0 10px;font-size:14px;line-height:1.65;font-weight:650;overflow-wrap:anywhere}
+.learning-answer{display:block;width:100%;min-height:88px;resize:vertical;padding:11px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--text);font:inherit;font-size:14px;line-height:1.6}
+.learning-reference{margin-top:10px;border-top:1px solid var(--line);padding-top:9px}
+.learning-reference summary{cursor:pointer;font-size:12px;color:var(--accent);font-weight:750}
+.learning-reference pre{white-space:pre-wrap;overflow-wrap:anywhere;font-family:inherit;font-size:13px;line-height:1.65;color:var(--text);margin:9px 0 0}
+.learning-grade-label{margin-top:12px;font-size:12px}
+.learning-grade-label select{padding:9px 10px}
+.learning-test-next{margin:4px 0 18px}
+.learning-done-card{margin-top:26px}
+.learning-done-card h2{margin:0 0 10px}
+.learning-done-card p:not(.eyebrow){font-size:14px;line-height:1.7;margin:0 0 18px;color:var(--muted)}
+@media(max-width:420px){
+ .learning-nav-actions button{min-width:75px;padding:9px 8px;font-size:12px}
+ .weak-toggle{padding:5px 7px}
+}
