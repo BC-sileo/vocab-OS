@@ -279,3 +279,10 @@ compareなど一部の単語だけに作り込んだUIを、別の単語にも�
 - VEN度10以上の135語を語彙カタログに追加。既存27語のうち `abandon` / `associate` / `attend` は既存レコードへVEN度を付与し、重複登録しない。
 - 新規追加語は綴りとVEN度を登録し、語義・品詞・コアイメージの確認が済むまで `pending` とする。pending語はノート一覧で検索・閲覧できるが、未完成の訳を復習カードとして出さない。
 - VEN度9以下257語は `VEN_QUEUE.md` にVEN度降順・同値内アルファベット順で保持。既存の `about` / `arm` は次回の重複登録対象から除外する。
+
+## 20. 高VEN語彙・意味データ初回バッチ（2026-11-10）
+- 新規20語へ品詞、中心的な意味説明、主要語義の区別、用法メモ、自然な例文・和訳、MIX SENTANCEを登録：appropriate / appreciate / aspect / atmosphere / attempt / available / account / adapt / admire / admit / advance / aesthetic / affect / affluence / afford / aim / ancestor / apply / approach / argue。
+- 各語にOxford Learner辞書またはCambridge辞書の参照URLを `sources` として保持。辞書の説明をそのまま転載せず、日本語で意味構造を再構成する。
+- 共通Usage図レンダラーに上記20語の主要構文を追加。`account for` は一つの群動詞トークン。
+- これら20語は意味データ登録済みとして復習対象に追加。コアイメージはユーザーが決めるため空欄のまま。
+- これは主要語義を中心にした初稿であり、全語義の網羅や最終校正を意味しない。FIELD CONNECTIONS、語源、画像などの欄は必要に応じて後続作業。
