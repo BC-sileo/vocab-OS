@@ -374,7 +374,7 @@ const WORD_MEANINGS_BY_WORD_2 = {"advance":{"meaning":"前へ進むこと、ま�
 function noteFor(w){return {...(NOTE_CONTENT[w.id]||{}),...(WORD_MEANINGS_BY_WORD[w.word]||{}),...(WORD_MEANINGS_BY_WORD_2[w.word]||{}),...(notesById[w.id]||{})};}
 function coreImageFromMemo(memo){const value=String(memo||"");if(value[0]!=="_")return "";const stops=[" ","　","\t","\n","\r"].map(function(separator){return value.indexOf(separator);}).filter(function(index){return index>0;});const end=stops.length?Math.min.apply(null,stops):-1;return value.slice(1,end<0?undefined:end);}
 function hasPersonalMemo(n){const memo=String(n.memo||"");const core=coreImageFromMemo(memo);return core?memo.slice(core.length+1).trim().length>0:!!memo.trim();}
-function effectiveCoreImage(w,n=noteFor(w)){return coreImageFromMemo(n.memo)||n.coreImage||w.coreImage||"";}
+function effectiveCoreImage(w,n=noteFor(w)){if(n.coreImageDisabled)return "";return coreImageFromMemo(n.memo)||n.coreImage||w.coreImage||"";}
 const CORE_IMAGE_DEFAULTS = {
  appropriate:"状況・目的にぴたりと合う",appreciate:"価値を認め、その重みを感じ取る",aspect:"全体から切り出して見る一面",
  atmosphere:"その場全体を包み込む空気",attempt:"目標へ向けて実際に手を伸ばす",available:"必要なときに使える状態にある",
