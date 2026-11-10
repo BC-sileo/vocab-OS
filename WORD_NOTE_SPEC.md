@@ -257,3 +257,18 @@ compareなど一部の単語だけに作り込んだUIを、別の単語にも�
 - The example control reveals a concrete example and translation without replacing the pattern structure permanently.
 - Multiword verbs whose meaning and grammar are learned as a unit are one token/chunk. In particular, `attend to` is represented as one phrasal-verb unit, followed by its target.
 - This is the default data model for all word notes. Avoid storing core collocations only as prose in `usage`.
+
+## MIX SENTANCE（共通セクション）
+- 表示名は指定どおり MIX SENTANCE。
+- 日本語文中の対象語トークンをタップすると、対応する日本語表現を表示する。
+- Semantic Map / Meaning の後、FIELD CONNECTIONS（他分野での用例）の前に置く。
+
+## 日本語訳表示状態の色分け
+- 日本語訳が通常表示されている状態は緑。
+- 赤シート機能がONで日本語訳を隠している状態は赤。
+- ボタンの色・文言・aria-pressedを同期させる。
+
+## Usage構文図の全単語展開（2026-11-10）
+- 現在登録されている27語すべてに共通のUsage構文図データを用意する。
+- 語ごとに必要な構文・連語を複数登録できる。水増しはしない。
+- attend to のように一まとまりで習得する群動詞は一つのトークンとして扱う。
