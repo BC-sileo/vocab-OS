@@ -272,3 +272,16 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .semantic-edge-kind{display:inline-block;margin-top:5px;font-size:11px;font-weight:750;color:var(--muted)}
 .semantic-edge p{margin:4px 0 0;font-size:13px;line-height:1.6}
 .meaning-list{display:grid;gap:8px}
+
+
+/* Cross-disciplinary examples are a standard section in every word note. */
+.domain-examples-section h3{display:block;margin:0 0 4px;font-size:11px;letter-spacing:.09em;color:var(--muted);font-weight:800}
+.domain-examples-heading{margin:0 0 9px;font-size:14px;font-weight:750}
+.domain-example-list{display:grid;grid-template-columns:1fr;gap:8px}
+.domain-example{min-width:0;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:var(--panel)}
+.domain-example-top{display:flex;align-items:baseline;flex-wrap:wrap;gap:7px}
+.domain-example-domain{display:inline-block;padding:3px 7px;border-radius:6px;background:var(--panel2);color:var(--muted);font-size:11px;font-weight:750}
+.domain-example-top strong{font-size:15px;line-height:1.5;overflow-wrap:anywhere}
+.domain-example-meaning{margin:5px 0 0;font-size:13px;font-weight:650;line-height:1.5}
+.domain-example-explanation{margin:4px 0 0;font-size:13px;line-height:1.65;color:var(--muted)}
+.domain-example-empty{margin:0;padding:11px 12px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:13px;line-height:1.6}
