@@ -482,6 +482,7 @@
       button.setAttribute("aria-pressed",String(weak));
     });
   }
+  window.syncWeakToggleButtons=refreshWeakToggles;
 
   const baseSetState=setState;
   setState=function(id,state){
