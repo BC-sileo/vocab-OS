@@ -102,6 +102,62 @@ const SEMANTIC_MAPS = {
       {from:"accompaniment",to:"feature",type:"対象に伴う性質",description:"対象に付随している特徴を、その対象と一緒にある情報として示す。"},
       {from:"accompaniment",to:"target",type:"関係の抽象化",description:"人・物との結びつきを、感情や評価が向けられる対象との関係に広げる。"}
     ]
+  ,
+  24: {
+    nodes: [
+      {id:"around-place",kind:"基本義",label:"〜の周辺に・〜を取り巻いて",description:"場所や範囲の周囲にあることを表す。"},
+      {id:"around-topic",kind:"抽象的な展開",label:"〜について",description:"話題・問題などを取り巻く内容、つまり何について扱うかを示す。"},
+      {id:"approximate",kind:"抽象的な展開",label:"およそ・約",description:"数量や時刻の近く・周辺を表し、厳密な一点ではない概数を示す。"}
+    ],
+    edges: [
+      {from:"around-place",to:"around-topic",type:"抽象化",description:"空間的に何かの周囲にある関係から、話題の周辺にある内容＝「〜について」へ広がる。"},
+      {from:"around-place",to:"approximate",type:"範囲の拡張",description:"一点に限定せず、その近辺・周辺を表すことから概数を示す。"}
+    ],
+    independentMeanings: [
+      {label:"be about to do",description:"「まさに〜しようとしている」。近い未来を表す構文で、about の「周辺・およそ」とは別に構文として覚える。"}
+    ]
+  },
+  25: {
+    nodes: [
+      {id:"body-arm",kind:"基本義",label:"身体の腕",description:"肩から手までの上肢を指す。"},
+      {id:"mechanical-arm",kind:"形状・機能の類似",label:"機械などの腕",description:"人の腕に似た形や働きを持つ機械の部位を指す。"},
+      {id:"organizational-arm",kind:"比喩的な展開",label:"組織の部門・一部門",description:"大きな組織の一部として働く部門・支部を指す。"}
+    ],
+    edges: [
+      {from:"body-arm",to:"mechanical-arm",type:"形状・機能の類似",description:"身体の腕に似た形や、物をつかむ・動かす働きから機械の部位を指す。"},
+      {from:"mechanical-arm",to:"organizational-arm",type:"比喩的な拡張",description:"全体の一部として外へ伸び、特定の働きを担う部分という比喩で組織の部門を指す。"}
+    ],
+    independentMeanings: [
+      {label:"武装させる（動詞）",description:"arm A with B で、AにBを装備させる。身体の腕から直接導ける意味ではない。"},
+      {label:"武器（arms）",description:"arms は複数形で「武器」を表すことがある。身体の腕とは別の語義として扱う。"}
+    ]
+  },
+  26: {
+    nodes: [
+      {id:"attend-event",kind:"基本義",label:"行事・学校などに出席する",description:"会議・授業・学校などの場に出て、その場にいる。"},
+      {id:"attend-attention",kind:"構文による展開",label:"注意を向ける",description:"attend to ... で、人・話・問題などに意識を向ける。"},
+      {id:"attend-care",kind:"意味の展開",label:"対応する・世話をする",description:"attend to ... で、対象に注意を向け、必要な対応や世話をする。"}
+    ],
+    edges: [
+      {from:"attend-event",to:"attend-attention",type:"注意の方向づけ",description:"ある場に出て関わることから、対象に意識を向けて関わる用法へつながる。"},
+      {from:"attend-attention",to:"attend-care",type:"具体的な対応",description:"対象に注意を向けることが、問題への対処や人の世話という行動になる。"}
+    ]
+  },
+  27: {
+    nodes: [
+      {id:"associate-link",kind:"基本義",label:"AをBと関連づける",description:"人・物・考えなどを互いに結びつけて捉える。"},
+      {id:"associate-social",kind:"意味の展開",label:"人と交際する・付き合う",description:"associate with someone で、その人と関係を持ち、交際する。"},
+      {id:"associate-person",kind:"名詞への展開",label:"仲間・同僚",description:"同じ組織・仕事・活動などで関係を持つ人を指す。"},
+      {id:"associate-adj",kind:"形容詞用法",label:"関連した・共同の",description:"名詞を修飾し、関係・共同などのつながりを表す。"}
+    ],
+    edges: [
+      {from:"associate-link",to:"associate-social",type:"人間関係への展開",description:"物事を結びつける意味から、人と人との関係・交際を表す。"},
+      {from:"associate-social",to:"associate-person",type:"関係する人",description:"関係を持つ相手を、その関係にある仲間・同僚として名詞で表す。"},
+      {from:"associate-link",to:"associate-adj",type:"関係の状態",description:"何かと結びついている状態を、形容詞として表す。"}
+    ],
+    independentMeanings: [
+      {label:"associate professor",description:"大学の職位名で「准教授」。associate の一般的な「関連した」という意味だけから訳を作らず、肩書きとして覚える。"}
+    ]
   }
 };
 
