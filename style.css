@@ -357,3 +357,18 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 
 .note-title-row{flex-wrap:wrap;align-items:center}
 .note-title-row .weak-toggle{margin-left:auto}
+
+
+/* Structural-first usage diagrams: lexical chunks, relations and argument slots */
+.usage-part{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 12px;font-size:14px}
+.usage-part.usage-relation{border-color:var(--accent);background:var(--accent);color:var(--panel);min-width:44px;font-weight:850}
+.usage-part.usage-slot{border-style:dashed;background:var(--panel);color:var(--muted);font-weight:650}
+.usage-relation-label{display:flex;align-items:center;justify-content:center;gap:6px;color:var(--accent);font-size:11px;font-weight:800;letter-spacing:.02em}
+.usage-relation-label:before,.usage-relation-label:after{content:"";height:1px;flex:1;max-width:42px;background:var(--line)}
+.usage-detail{margin-top:2px;text-align:center}
+.usage-detail summary{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:11px;cursor:pointer;list-style:none}
+.usage-detail summary::-webkit-details-marker{display:none}
+.usage-detail summary:before{content:"ⓘ";font-size:12px}
+.usage-detail[open] .usage-explanation{margin-top:7px;font-size:12px;line-height:1.55}
+.usage-contrast{display:flex;align-items:center;justify-content:center;gap:7px;padding:7px 9px;border-radius:8px;background:var(--panel2);font-size:11px;line-height:1.45;color:var(--muted);text-align:center}
+.usage-contrast-mark{font-size:17px;color:var(--accent);font-weight:800}
