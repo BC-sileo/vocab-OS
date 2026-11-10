@@ -56,6 +56,74 @@ function renderDecompParts(w){
   return '<button type="button" class="decomp-chip" data-part="'+escapeHtml(part)+'"><strong>'+escapeHtml(part)+'</strong><span>'+escapeHtml(meta.meaning)+'</span></button>';
  }).join("")+'</div></div>';
 }
+// Lexical sense relations are separate from grammatical constructions.
+// The central image remains user-authored; this map records only meanings and their relations.
+const SEMANTIC_MAPS = {
+  2: {
+    nodes: [
+      {id:"examine",kind:"基本義",label:"共通点・相違点を見比べる",description:"複数の対象を並べ、どこが同じでどこが異なるかを検討する。"},
+      {id:"liken",kind:"意味の展開",label:"AをBになぞらえる",description:"二つの対象を比べ、特に類似性に注目してAをBにたとえる。"}
+    ],
+    edges: [
+      {from:"examine",to:"liken",type:"類似性への注目",description:"比較のうち、共通点・似ている点を前面に出すと「AをBになぞらえる」という意味になる。"}
+    ]
+  },
+  21: {
+    nodes: [
+      {id:"obtain",kind:"基本義",label:"得る・受け取る",description:"物・情報・機会などを自分の側に得る、または受け取る。"},
+      {id:"understand",kind:"抽象的な展開",label:"理解する",description:"情報や意味を受け取り、頭の中でつかむ。get it などに現れる。"}
+    ],
+    edges: [
+      {from:"obtain",to:"understand",type:"抽象化",description:"物を得る意味から、情報・意味を受け取って理解する意味へ広がる。"}
+    ]
+  },
+  22: {
+    nodes: [
+      {id:"leave",kind:"基本義",label:"手放す・見捨てる・断念する",description:"人・場所・物・計画などから離れ、見捨てたり、続けることをやめたりする。"},
+      {id:"surrender",kind:"構文による意味の展開",label:"身を委ねる",description:"abandon oneself to ... では、自分自身を目的語にして、感情・行動などに身を任せる。"}
+    ],
+    edges: [
+      {from:"leave",to:"surrender",type:"再帰構文での展開",description:"「自分を手放す」という形を取ることで、自分を何かに委ねる意味になる。通常の abandon + 目的語とは構文を区別する。"}
+    ]
+  },
+  23: {
+    nodes: [
+      {id:"accompaniment",kind:"基本的な関係",label:"同伴・共在",description:"人や物が、別の人・物・出来事と一緒にある関係を示す。"},
+      {id:"means",kind:"関係の拡張",label:"道具・手段",description:"動作に伴って使われる道具や手段を示す。"},
+      {id:"feature",kind:"関係の拡張",label:"特徴・付帯情報",description:"人や物に伴っている特徴・性質を示す。"},
+      {id:"target",kind:"関係の拡張",label:"感情・評価の対象",description:"満足・不満などの感情や評価が結びつく対象を示す。"}
+    ],
+    edges: [
+      {from:"accompaniment",to:"means",type:"動作に伴うもの",description:"人や物が一緒にある関係から、動作に伴って用いられる手段・道具を示す。"},
+      {from:"accompaniment",to:"feature",type:"対象に伴う性質",description:"対象に付随している特徴を、その対象と一緒にある情報として示す。"},
+      {from:"accompaniment",to:"target",type:"関係の抽象化",description:"人・物との結びつきを、感情や評価が向けられる対象との関係に広げる。"}
+    ]
+  }
+};
+
+function renderSemanticMap(w,n){
+ const map=n.semanticMap||SEMANTIC_MAPS[w.id];
+ if(!map||!Array.isArray(map.nodes)||map.nodes.length<2||!Array.isArray(map.edges)||!map.edges.length)return "";
+ const byId=Object.fromEntries(map.nodes.map(node=>[node.id,node]));
+ const nodes=map.nodes.map(node=>'<article class="semantic-node"><span class="semantic-node-kind">'+escapeHtml(node.kind||"語義")+'</span><strong>'+escapeHtml(node.label)+'</strong><p>'+escapeHtml(node.description||"")+'</p></article>').join("");
+ const edges=map.edges.map(edge=>{
+  const from=byId[edge.from],to=byId[edge.to];
+  if(!from||!to)return "";
+  return '<article class="semantic-edge"><div class="semantic-edge-route"><span>'+escapeHtml(from.label)+'</span><span class="semantic-edge-arrow">→</span><span>'+escapeHtml(to.label)+'</span></div><span class="semantic-edge-kind">'+escapeHtml(edge.type||"意味の関係")+'</span><p>'+escapeHtml(edge.description||"")+'</p></article>';
+ }).join("");
+ return '<section class="note-section semantic-map-section"><h3>SEMANTIC MAP</h3><div class="semantic-map-nodes">'+nodes+'</div><div class="semantic-map-edges">'+edges+'</div></section>';
+}
+function renderIndependentMeanings(w,n){
+ let meanings;
+ if(Array.isArray(n.independentMeanings))meanings=n.independentMeanings;
+ else if(n.semanticMap||SEMANTIC_MAPS[w.id])meanings=[];
+ else meanings=n.meaning?[{label:"基本義",description:n.meaning}]:[];
+ if(!meanings.length)return "";
+ return '<section class="note-section meaning-section"><h3>MEANING</h3><div class="meaning-list">'+meanings.map(item=>{
+  const entry=typeof item==="string"?{label:"独立した語義",description:item}:item;
+  return '<article class="meaning-item">'+(entry.label?'<strong>'+escapeHtml(entry.label)+'</strong>':"")+'<p>'+escapeHtml(entry.description||entry.meaning||"")+'</p></article>';
+ }).join("")+'</div></section>';
+}
 // Every word uses the same usage-component schema.
 // Differences between words live in data (items, selectable variants and examples), not in custom renderers.
 const USAGE_COMPONENTS = {
@@ -143,6 +211,7 @@ function openNote(id,autoplay=true){
  d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button><div class="translation-toolbar"><span>日本語訳</span><button type="button" class="subtle-btn" id="toggleTranslations" aria-pressed="false">訳を隠す</button></div>'+
  '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(w.pos)+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button></div>'+
  '<p class="note-core">'+escapeHtml(w.coreImage||n.meaning||w.translation)+'</p></div>'+
+ renderSemanticMap(w,n)+renderIndependentMeanings(w,n)+
  '<section class="note-section"><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w)+'</section>'+
  '<section class="note-section">'+renderUsageFrame(w)+(USAGE_COMPONENTS[w.id]?'':('<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p>'+(w.id===2?'<p class="hint">before you decide＝「決める前に」。時を表す節で、compare の語法の例外ではない。</p>':'')+'<p id="exampleJa" class="example-ja translation-text">'+escapeHtml(n.ja||"")+'</p>'))+(n.caution?'<p class="usage-warning">⚠️ '+escapeHtml(n.caution)+'</p>':'')+'</section>'+
  
