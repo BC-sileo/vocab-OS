@@ -372,12 +372,12 @@ function noteSearchText(w,n){
  const independent=n.independentMeanings||map?.independentMeanings||[];
  const independentText=Array.isArray(independent)?independent.map(item=>typeof item==="string"?item:[item.label,item.description,item.meaning].join(" ")).join(" "):"";
  const domainText=Array.isArray(n.domainExamples)?n.domainExamples.map(item=>[item.domain,item.expression,item.meaning,item.explanation].join(" ")).join(" "):"";
- return [w.word,w.translation,w.coreImage,n.meaning,n.usage,mapText,independentText,domainText].join(" ").toLowerCase();
+ return [w.word,w.translation,w.coreImage,w.ven??"",n.meaning,n.usage,mapText,independentText,domainText].join(" ").toLowerCase();
 }
 function renderNoteList(){
  const q=$("#noteSearch").value.trim().toLowerCase();
- const rows=WORDS.filter(w=>{const n=noteFor(w),text=noteSearchText(w,n);return text.includes(q)&&(!activeDecompFilter||(NOTE_PARTS[w.id]||[]).includes(activeDecompFilter));});
- $("#notesListPanel").innerHTML=(activeDecompFilter?'<button class="subtle-btn" id="clearDecompFilter">← 全単語に戻る：'+escapeHtml(activeDecompFilter)+'</button>':"")+rows.map(w=>{const n=noteFor(w);return '<button class="note-list-item" data-id="'+w.id+'"><span class="note-list-word">'+escapeHtml(w.word)+'</span><span class="note-list-core">'+escapeHtml(n.meaning||w.translation)+'</span><span class="note-list-meta">'+escapeHtml(w.pos)+' · '+(imageUrl(w)?'画像あり':'画像未設定')+'</span></button>';}).join("")||'<div class="card">該当する単語がありません。</div>';
+ const rows=WORDS.slice().sort((a,b)=>{const av=Number.isFinite(a.ven)?a.ven:-1,bv=Number.isFinite(b.ven)?b.ven:-1;return bv-av||a.word.localeCompare(b.word);}).filter(w=>{const n=noteFor(w),text=noteSearchText(w,n);return text.includes(q)&&(!activeDecompFilter||(NOTE_PARTS[w.id]||[]).includes(activeDecompFilter));});
+ $("#notesListPanel").innerHTML='<div class="ven-sort-caption">VEN度順（高い順）</div>'+(activeDecompFilter?'<button class="subtle-btn" id="clearDecompFilter">← 全単語に戻る：'+escapeHtml(activeDecompFilter)+'</button>':"")+rows.map(w=>{const n=noteFor(w);return '<button class="note-list-item" data-id="'+w.id+'"><span class="note-list-word">'+escapeHtml(w.word)+'</span><span class="note-list-core">'+escapeHtml(n.meaning||w.translation)+'</span><span class="note-list-meta">'+escapeHtml(w.pos)+' · '+(Number.isFinite(w.ven)?'VEN度 '+w.ven:'VEN度未設定')+(w.pending?' · 内容登録待ち':'')+' · '+(imageUrl(w)?'画像あり':'画像未設定')+'</span></button>';}).join("")||'<div class="card">該当する単語がありません。</div>';
  const clear=$("#clearDecompFilter");if(clear)clear.onclick=()=>{activeDecompFilter="";renderNoteList();};
  $("#notesListPanel").querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openNote(Number(b.dataset.id)));
 }
