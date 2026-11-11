@@ -77,6 +77,8 @@ const NOTE_PARTS = {
  1:["com-","mittere"],2:["com-"],3:["com-"],4:["com-"],5:["con-"],6:["con-","firm"],8:["con-","tenere"],9:["con-","trahere"],10:["con-"],14:["de-"],16:["dis-"],19:["en-"],20:["ex-"]
 };
 let activeDecompFilter="";
+let noteSortKey="ven";
+let noteSortDirection="desc";
 function renderDecompParts(w){
  const parts=NOTE_PARTS[w.id]||[];
  if(!parts.length)return "";
@@ -488,14 +490,25 @@ function noteSearchText(w,n){
 }
 function renderNoteList(){
  const q=$("#noteSearch").value.trim().toLowerCase();
- const rows=WORDS.slice().sort((a,b)=>{const av=Number.isFinite(a.ven)?a.ven:-1,bv=Number.isFinite(b.ven)?b.ven:-1;return bv-av||a.word.localeCompare(b.word);}).filter(w=>{const n=noteFor(w),text=noteSearchText(w,n);return text.includes(q)&&(!activeDecompFilter||(NOTE_PARTS[w.id]||[]).includes(activeDecompFilter));});
- $("#notesListPanel").innerHTML='<div class="ven-sort-caption">VEN度順（高い順）</div>'+(activeDecompFilter?'<button class="subtle-btn" id="clearDecompFilter">← 全単語に戻る：'+escapeHtml(activeDecompFilter)+'</button>':"")+rows.map(w=>{const n=noteFor(w);return '<button class="note-list-item" data-id="'+w.id+'"><span class="note-list-word">'+escapeHtml(w.word)+'</span><span class="note-list-core">'+escapeHtml(n.meaning||w.translation)+'</span><span class="note-list-meta">'+escapeHtml(w.pos)+' · '+(Number.isFinite(w.ven)?'VEN度 '+w.ven:'VEN度未設定')+(w.pending?' · 内容登録待ち':'')+(hasPersonalMemo(n)?' · メモあり':'')+(typeof window.learningBadgeFor==="function"?window.learningBadgeFor(w.id):"")+' · '+(imageUrl(w)?'画像あり':'画像未設定')+'</span></button>';}).join("")||'<div class="card">該当する単語がありません。</div>';
+ const sortValue=w=>noteSortKey==="views"?(Number(notesById[w.id]?.viewCount)||0):noteSortKey==="word"?w.word:(Number.isFinite(w.ven)?w.ven:-1);
+ const rows=WORDS.slice().sort((a,b)=>{
+  const av=sortValue(a),bv=sortValue(b);
+  let cmp=typeof av==="string"?av.localeCompare(bv):av-bv;
+  if(noteSortDirection==="desc")cmp=-cmp;
+  return cmp||a.word.localeCompare(b.word);
+ }).filter(w=>{const n=noteFor(w),text=noteSearchText(w,n);return text.includes(q)&&(!activeDecompFilter||(NOTE_PARTS[w.id]||[]).includes(activeDecompFilter));});
+ const sortLabel=noteSortKey==="ven"?"VEN度":noteSortKey==="views"?"閲覧回数":"単語";
+ $("#notesListPanel").innerHTML='<div class="note-sort-toolbar"><label>並び順<select id="noteSortKey"><option value="ven">VEN度</option><option value="views">閲覧回数</option><option value="word">単語</option></select></label><label>順序<select id="noteSortDirection"><option value="desc">降順</option><option value="asc">昇順</option></select></label></div><div class="ven-sort-caption">'+escapeHtml(sortLabel)+'・'+(noteSortDirection==="desc"?"降順":"昇順")+'</div>'+(activeDecompFilter?'<button class="subtle-btn" id="clearDecompFilter">← 全単語に戻る：'+escapeHtml(activeDecompFilter)+'</button>':"")+rows.map(w=>{const n=noteFor(w);const views=Number(notesById[w.id]?.viewCount)||0;return '<button class="note-list-item" data-id="'+w.id+'"><span class="note-list-word">'+escapeHtml(w.word)+'</span><span class="note-list-core">'+escapeHtml(n.meaning||w.translation)+'</span><span class="note-list-meta">'+escapeHtml(w.pos)+' · '+(Number.isFinite(w.ven)?'VEN度 '+w.ven:'VEN度未設定')+' · 閲覧 '+views+'回'+(w.pending?' · 内容登録待ち':'')+(hasPersonalMemo(n)?' · メモあり':'')+(typeof window.learningBadgeFor==="function"?window.learningBadgeFor(w.id):"")+' · '+(imageUrl(w)?'画像あり':'画像未設定')+'</span></button>';}).join("")||'<div class="card">該当する単語がありません。</div>';
+ const key=$("#noteSortKey"),direction=$("#noteSortDirection");
+ key.value=noteSortKey;direction.value=noteSortDirection;
+ key.onchange=()=>{noteSortKey=key.value;renderNoteList();};
+ direction.onchange=()=>{noteSortDirection=direction.value;renderNoteList();};
  const clear=$("#clearDecompFilter");if(clear)clear.onclick=()=>{activeDecompFilter="";renderNoteList();};
  $("#notesListPanel").querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openNote(Number(b.dataset.id)));
 }
 function openNote(id,autoplay=true){
  if(!$("#notesListPanel").classList.contains("hidden"))noteListScrollY=window.scrollY;
- const w=WORDS.find(x=>x.id===id);if(!w)return;const n=noteFor(w);
+ const w=WORDS.find(x=>x.id===id);if(!w)return;const previous=notesById[id]||{};notesById[id]={...previous,viewCount:(Number(previous.viewCount)||0)+1};save();const n=noteFor(w);
  $("#notesListPanel").classList.add("hidden");const d=$("#noteDetailPanel");d.classList.remove("hidden");d.classList.remove("translation-hidden");
  if(w.pending){
   d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button><div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">未登録</span></div><span class="ven-detail">VEN度 '+escapeHtml(w.ven)+'</span><button type="button" class="weak-toggle" data-weak-toggle="'+w.id+'">苦手にする</button><button id="playWordAudio" class="audio-btn" type="button">🔊 発音</button></div><section class="ven-pending-card"><strong>単語登録済み・内容作成待ち</strong><p>現在は綴りとVEN度だけを登録している。語義・品詞・コアイメージ・語法などを確認してから学習カードに追加する。</p></section>'+renderMemoSection(n);
