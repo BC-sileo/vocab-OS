@@ -44,6 +44,35 @@ const DECOMP_ELEMENTS = {
  "firm":{meaning:"堅い・確かな",kind:"語根に関係"},
  "ness":{meaning:"性質・状態を表す",kind:"接尾辞"}
 };
+const ETYMOLOGY_MAPS = {
+  28:{components:[["ad-","〜へ・〜に"],["proprius","自分自身の・自分固有の"],["-ate","ラテン語由来の語形要素"]],path:[["ad + proprius","自分のものにする方向へ"],["appropriare","自分のものにする（後期ラテン語）"],["appropriate","英語へ。動詞「自分のものにする」／形容詞「その場に固有の」"]],note:"ad- は後続音に同化して ap- の形。-ate を現代英語の自由な接尾辞として単純に切り分けるのではなく、ラテン語の過去分詞形を経た語として見る。",source:"https://www.etymonline.com/word/appropriate"},
+  29:{components:[["ad-","〜へ・〜に"],["pretium","価格・価値"],["-ate","動詞を作るラテン語系の語尾"]],path:[["ad + pretium","価値を定める方向へ"],["appretiare","価格をつける・価値を評価する（後期ラテン語）"],["appreciate","価値を認める・高く評価する"]],note:"ad- は p の前で ap- に同化。語源上の出発点は「価格をつける」。",source:"https://www.etymonline.com/word/appreciate"},
+  30:{components:[["ad-","〜へ・〜に"],["specere","見る・観察する"]],path:[["ad + specere","〜に目を向ける"],["aspicere / aspectus","見る・眺める／見ること・外観（ラテン語）"],["aspect","見方・外観・側面"]],note:"英語 aspect をそのまま ad- + spect に分解したものではない。ラテン語 aspicere の過去分詞語幹 aspect- を経た歴史的なつながり。",source:"https://www.etymonline.com/word/aspect"},
+  31:{components:[["atmós","蒸気・水蒸気（ギリシャ語）"],["sphaîra","球・球体（ギリシャ語）"]],path:[["atmós + sphaîra","蒸気 + 球体"],["atmosphaera","地球を包む気体の球（近代ラテン語）"],["atmosphere","大気 → 周囲を取り巻く雰囲気"]],note:"二つのギリシャ語要素を組み合わせた近代科学用語。",source:"https://www.etymonline.com/word/atmosphere"},
+  32:{components:[["ad-","〜へ・〜に"],["temptare","試す・試みる"]],path:[["ad + temptare","〜に向けて試みる"],["attemptare","試す・試みる（ラテン語）"],["atempter → attempt","古フランス語を経て英語へ"]],note:"ad- は t の前で at- の形になった。",source:"https://www.etymonline.com/word/attempt"},
+  33:{components:[["avail","役に立つ・有効である"],["-able","〜できる・〜に適した"]],path:[["a- + valoir","価値がある・役に立つ（古フランス語系）"],["avail","役立つ・効力がある"],["available","役立てられる → 利用できる"]],note:"available は avail + -able。avail のさらに古い由来はラテン語 valere「強い・価値がある」。",source:"https://www.etymonline.com/word/available"},
+  34:{components:[["com-","共に・一緒に"],["putare","数える・計算する"]],path:[["com + putare","合わせて計算する"],["computare → computus","合計する・計算（ラテン語）"],["acont → account","古フランス語を経て英語へ。計算 → 勘定・説明・口座"]],note:"account は現代英語の a- + count としてできた語ではない。古フランス語・ラテン語の歴史を経て綴りが定着した。",source:"https://www.etymonline.com/word/account"},
+  35:{components:[["ad-","〜へ・〜に"],["aptus / aptare","適合した／適合させる"]],path:[["ad + aptare","〜に合うようにする"],["adaptare","調整する・適合させる（ラテン語）"],["adapter → adapt","古フランス語を経て英語へ"]],note:"apt は「適した」。adapt は何かを目的・条件に合うように整える語。",source:"https://www.etymonline.com/word/adapt"},
+  36:{components:[["ad-","〜に・〜に向かって"],["mirari","驚く・不思議に思う"]],path:[["ad + mirari","〜を見て驚く"],["admirari","驚嘆する（ラテン語）"],["admirer → admire","驚嘆する → 感心する・称賛する"]],note:"もとは「驚嘆する」。現在の「尊敬する・感心する」へ意味が移った。",source:"https://www.etymonline.com/word/admire"},
+  37:{components:[["ad-","〜へ・〜の中へ"],["mittere","送る・行かせる"]],path:[["ad + mittere","中へ送り込む"],["admittere","入れる・立ち入りを許す（ラテン語）"],["admit","入れる → 事実・主張を認める"]],note:"「中へ入れる」が、主張や事実を受け入れる「認める」へ広がった。",source:"https://www.etymonline.com/word/admit"},
+  38:{components:[["ab-","〜から・前方へ離れて"],["ante","前・前方"]],path:[["ab + ante","前方から・前に"],["abante → avancir","前へ進める（俗ラテン語・古フランス語系）"],["advance","前進させる・進歩させる"]],note:"重要：advance の d は16世紀に ad- と誤解されて挿入されたもの。ad- + vance と分解するのは誤り。",source:"https://www.etymonline.com/word/advance"},
+  39:{components:[["aisthanesthai","感覚で感じ取る・知覚する（ギリシャ語）"],["-ikos / -ic","〜に関する・〜の性質をもつ"]],path:[["aisthanesthai","感覚・心で知覚する"],["aisthētikos","知覚に関する・感覚で認識できる（ギリシャ語）"],["aesthetic","感覚による知覚 → 美的感覚・美学に関する"]],note:"a- + esthetic のような分解ではない。語頭の a はギリシャ語由来の語形に含まれる。",source:"https://www.etymonline.com/word/aesthetic"},
+  40:{components:[["ad-","〜に・〜へ"],["facere","する・作る"]],path:[["ad + facere","〜に作用する・何かをする"],["afficere → affectus","作用する・影響を与える／作用を受けた状態（ラテン語）"],["affect","作用する・影響を及ぼす"]],note:"ad- は f の前で af- に同化。なお「装う・気取る」の affect は別系統の意味展開を含むため、ここでは主要な「影響する」の系統を示す。",source:"https://www.etymonline.com/word/affect"},
+  41:{components:[["ad-","〜へ"],["fluere","流れる"],["-ence","状態・性質を表す名詞語尾"]],path:[["ad + fluere","〜へ流れ込む"],["affluere → affluentia","流れ込む・豊富に流れ込む → 豊富さ（ラテン語）"],["affluence","豊かな流入 → 豊かさ・富"]],note:"ad- は f の前で af- に同化。もとは「流れ込むこと・豊富な流れ」という比喩。",source:"https://www.etymonline.com/word/affluence"},
+  42:{components:[["ge-","完了・強意を表した古英語の接頭辞"],["forðian / forth","前へ進める・促進する"]],path:[["geforðian","前へ進める・成し遂げる（古英語）"],["aforth → afford","中英語で ge- が a- に弱まり、綴りも変化"],["afford","成し遂げる → 費用を負担できる・機会を与える"]],note:"重要：afford は ad- + ford ではない。16世紀に af- が ad- 由来と誤解され、-th- も -d に変化した。",source:"https://www.etymonline.com/word/afford"},
+  43:{components:[["aestimare","価値を見積もる・評価する（ラテン語）"]],path:[["aestimare","価値を見積もる"],["aesmer / esmer","見積もる・評価する（古フランス語）"],["aim","見積もる → 行動の狙いを定める → 目標"]],note:"現代英語 aim を a- + im などに分けるのは不適切。歴史的には「見積もる・計算する」から「狙いを定める」へ意味が展開した。",source:"https://www.etymonline.com/word/aim"},
+  44:{components:[["ante","前に"],["cedere","行く・進む"],["-or","行為者・〜するものを表す語尾"]],path:[["ante + cedere","前に行く"],["antecedere → antecessor","先行する → 先に行く者（ラテン語）"],["ancestre → ancestor","古フランス語を経て英語へ。先に生きた人 → 祖先"]],note:"ancestor は「先に行った人」という構成。",source:"https://www.etymonline.com/word/ancestor"},
+  45:{components:[["ad-","〜へ・〜に"],["plicare","折る・折り重ねる"]],path:[["ad + plicare","〜へ折り重ねる・接触させる"],["applicare","くっつける・結びつける（ラテン語）"],["aploiier → apply","古フランス語を経て英語へ。接触させる → 適用する"]],note:"語源的な核は「折り重ねて接触させる」。現代の apply を単純に ad + ply と切るより、ラテン語 applicare まで見る。",source:"https://www.etymonline.com/word/apply"},
+  46:{components:[["ad-","〜へ・〜に"],["prope","近くに（ラテン語）"]],path:[["ad + prope","近くへ"],["appropiare","近づく（後期ラテン語）"],["approchier → approach","古フランス語を経て英語へ。近づく → 問題に取り組む方法"]],note:"approach の語源的な核は「近づく」。名詞の「取り組み方」は、対象への近づき方から発展した。",source:"https://www.etymonline.com/word/approach"},
+  47:{components:[["arguere","明らかにする・証明する（ラテン語）"],["*arg-","輝く・白い（印欧祖語の語根とされる）"]],path:[["*arg-","輝く・明るい（再建された語根）"],["arguere","明らかにする・証明する"],["arguer → argue","理由を示して証明する → 論じる・主張する"]],note:"*arg- は再建された語根であり、確定した直接の語形ではない。arguere の語源分析にも学説上の留保がある。",source:"https://www.etymonline.com/word/argue"}
+};
+function renderEtymology(w,n){
+ const data=ETYMOLOGY_MAPS[w.id];
+ if(!data)return '<p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w);
+ const components=data.components.map(part=>'<div class="ety-component"><strong>'+escapeHtml(part[0])+'</strong><span>'+escapeHtml(part[1])+'</span></div>').join('<span class="ety-plus" aria-hidden="true">+</span>');
+ const path=data.path.map((step,i)=>'<div class="ety-step"><div class="ety-step-form">'+escapeHtml(step[0])+'</div><div class="ety-step-gloss">'+escapeHtml(step[1])+'</div></div>'+(i<data.path.length-1?'<div class="ety-arrow" aria-hidden="true">↓</div>':'')).join('');
+ return '<div class="ety-visual">'+(data.components.length?'<div class="ety-components">'+components+'</div>':'')+'<div class="ety-path">'+path+'</div>'+(data.note?'<details class="ety-note"><summary>語源の補足・注意</summary><p>'+escapeHtml(data.note)+'</p></details>':'')+'<a class="ety-source" href="'+escapeHtml(data.source)+'" target="_blank" rel="noopener">語源資料を確認 ↗</a></div>';
+}
 const NOTE_PARTS = {
  1:["com-","mittere"],2:["com-"],3:["com-"],4:["com-"],5:["con-"],6:["con-","firm"],8:["con-","tenere"],9:["con-","trahere"],10:["con-"],14:["de-"],16:["dis-"],19:["en-"],20:["ex-"]
 };
@@ -481,7 +510,7 @@ function openNote(id,autoplay=true){
  '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(String(w.pos||"").split("/").map(p=>({"noun":"n","verb":"v","adj":"a","adjective":"a","adv":"ad","adverb":"ad","名詞":"n","動詞":"v","形容詞":"a","副詞":"ad"}[p.trim().toLowerCase()]||p.trim())).join("/"))+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button><button type="button" class="weak-toggle" data-weak-toggle="'+w.id+'">苦手にする</button></div>'+
  (effectiveCoreImage(w,n)?'<p id="noteCoreImageValue" class="note-core">'+escapeHtml(effectiveCoreImage(w,n))+'</p>':'<p id="noteCoreImageValue" class="note-core hidden"></p>')+'</div>'+
  renderSemanticMap(w,n)+
- '<section class="note-section etymology-section"><h3>ETYMOLOGY</h3><p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w)+'</section>'+
+ '<section class="note-section etymology-section"><h3>ETYMOLOGY</h3>'+renderEtymology(w,n)+'</section>'+
  renderIndependentMeanings(w,n)+renderMixedSentence(n)+renderDomainExamples(n)+renderMemoSection(n)+
  (w.id===28?"":'<section class="note-section">'+renderUsageFrame(w)+(USAGE_COMPONENTS[w.id]?'':('<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p>'+(w.id===2?'<p class="hint">before you decide＝「決める前に」。時を表す節で、compare の語法の例外ではない。</p>':'')+'<p id="exampleJa" class="example-ja translation-text">'+escapeHtml(n.ja||"")+'</p>'))+'</section>')+
  
