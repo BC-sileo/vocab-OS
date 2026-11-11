@@ -338,3 +338,12 @@ compareなど一部の単語だけに作り込んだUIを、別の単語にも�
 - 不確実な語源・再建語根・誤った語源分解につながりやすい箇所は、折りたたみ式の補足に留保を記す。
 - 語源の根拠となる資料へのリンクを各語に保持する。
 - 初回データは高VEN度20語（appropriate / appreciate / aspect / atmosphere / attempt / available / account / adapt / admire / admit / advance / aesthetic / affect / affluence / afford / aim / ancestor / apply / approach / argue）。これは主要経路の初稿であり、学説上の細部を含む完全な語源辞典ではない。
+
+## Build versioning and note views (2026-11-11)
+
+- ユーザー確認用の BUILD 番号を index.html のヘッダーに表示する。アプリ内容を更新するコミットごとに必ず 1 増やし、CSS / JS のキャッシュバスターも同じ番号へ揃える。
+- 単語ノートを開いた時点で、その単語の閲覧回数を1増やす。戻って再度開いた場合も1回として数える。pendingノートも対象。
+- 閲覧回数は notesById[id].viewCount に保存し、既存の notes 保存処理で端末内に永続化する。
+- 単語一覧の並び替え項目は VEN度・閲覧回数・単語名。各項目に昇順・降順を用意する。
+- 一覧には各単語の閲覧回数を表示する。初期値は0回。
+- 現在の BUILD は 2。次回の内容更新では 3 にする。
