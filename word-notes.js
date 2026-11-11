@@ -234,8 +234,8 @@ function renderSemanticMap(w,n){
 function renderDomainExamples(n){
  const examples=Array.isArray(n.domainExamples)?n.domainExamples.filter(item=>item&&item.expression):[];
  const content=examples.length
-  ? '<div class="domain-example-list">'+examples.map(item=>'<article class="domain-example"><div class="domain-example-top"><span class="domain-example-domain">'+escapeHtml(item.domain||"分野")+'</span><strong>'+escapeHtml(item.expression)+'</strong></div><p class="domain-example-meaning">'+escapeHtml(item.meaning||"")+'</p>'+(item.explanation?'<p class="domain-example-explanation">'+escapeHtml(item.explanation)+'</p>':"")+'</article>').join("")+'</div>'
-  : '<p class="domain-example-empty">この単語が他分野で使われる実例を、確認でき次第ここに追加します。</p>';
+  ? '<div class="domain-example-list">'+examples.map(item=>'<article class="domain-example"><div class="domain-example-top"><span class="domain-example-domain">'+escapeHtml(item.domain||"分野")+'</span><strong>'+escapeHtml(item.expression)+'</strong></div><p class="domain-example-meaning">'+escapeHtml(item.meaning||"")+'</p>'+(item.explanation?'<p class="domain-example-explanation">'+escapeHtml(item.explanation)+'</p>':"")+(item.source?'<a class="domain-example-source" href="'+escapeHtml(item.source)+'" target="_blank" rel="noopener">資料 ↗</a>':"")+'</article>').join("")+'</div>'
+  : '<p class="domain-example-empty">他分野の用例は未登録です。</p>';
  return '<section class="note-section domain-examples-section"><h3>FIELD CONNECTIONS</h3><div class="domain-examples-heading">他分野での用例</div>'+content+'</section>';
 }
 function renderIndependentMeanings(w,n){
