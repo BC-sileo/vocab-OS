@@ -73,7 +73,10 @@
       const options=(item.options&&item.options.length)?item.options:[item];
       return options.map(function(option){
         const parts=(item.parts||[]).map(function(part){
-          if(part && typeof part==="object" && part.choice)return option.label||option.value||"選択";
+          if(part && typeof part==="object"){
+            if(part.choice)return option.label||option.value||"選択";
+            return String(part.text||part.label||part.value||"");
+          }
           return String(part);
         });
         const explanation=option.explanation||option.meaning||item.explanation||"";
