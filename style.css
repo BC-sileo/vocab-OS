@@ -434,3 +434,6 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .note-sort-toolbar{display:flex;align-items:end;gap:10px;padding:10px 0 4px}
 .note-sort-toolbar label{display:flex;flex-direction:column;gap:5px;flex:1;min-width:0;font-size:11px;font-weight:750;color:var(--muted)}
 .note-sort-toolbar select{width:100%;min-width:0;padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;font-size:13px}
+
+/* Source links for researched cross-disciplinary examples */
+.domain-example-source{display:inline-flex;align-items:center;margin-top:7px;font-size:10px;font-weight:750;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
