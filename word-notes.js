@@ -504,7 +504,7 @@ function mixedExampleMarkup(n){
  if(parts.length<2||!token)return escapeHtml(template);
  return escapeHtml(parts[0])+'<button id="mixedWordToken" class="mixed-token" type="button" aria-expanded="false">'+escapeHtml(token)+'</button>'+escapeHtml(parts.slice(1).join("{{word}}"))+'<span id="mixedTarget" class="mixed-target translation-text hidden">'+escapeHtml(n.mixedTarget||"")+'</span>';
 }
-function renderMixedSentence(n){return '<section class="note-section mixed-sentence-section"><h3>MIX SENTANCE</h3><p class="mixed-sentence">'+mixedExampleMarkup(n)+'</p><p class="hint">英語部分をタップすると、元の日本語表現を表示。</p></section>';}
+function renderMixedSentence(n){return '<div class="mixed-sentence-section"><h4>MIX SENTENCE</h4><p class="mixed-sentence">'+mixedExampleMarkup(n)+'</p><p class="hint">英語部分をタップすると、元の日本語表現を表示。</p></div>';}
 function imageCueMarkup(w){
  const url=imageUrl(w);
  return url ? '<img class="image-cue" loading="lazy" src="'+escapeHtml(url)+'" alt="'+escapeHtml(w.word)+'の画像" onerror="this.remove()">' : "";
