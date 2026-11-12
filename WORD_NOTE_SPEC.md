@@ -377,3 +377,13 @@ compareなど一部の単語だけに作り込んだUIを、別の単語にも�
 - 語義別の構造カード・例文に加え、従来の語法パターンとMIX SENTENCEをMEANINGセクション内に統合。独立した用法セクションを廃止し、指定順序を保つ。
 - BUILD 5。style.css / word-notes.js / learning.js のキャッシュバスターを5に統一。
 - JavaScript構文チェック済み。実機でのレイアウト・タップ操作確認は未実施。
+
+
+## Build 6: SEMANTIC MAP全語対応と表示整理（2026-11-12）
+
+- 47語すべてについて、SEMANTIC MAPを実行時に補完する。既存8語の個別グラフは保持し、各語の独立語義データから不足ノードとコアイメージからの接続を追加する。残る39語にもグラフを生成。
+- SEMANTIC MAPからノード説明・エッジ説明・「各要素の説明を見る」を削除し、語義ラベルと接続だけを表示。説明はMEANINGへ集約。
+- MIX SENTENCEをFIELD CONNECTIONS直後へ移動。
+- caution/危険マークをMEANING見出し直下、意味カードより前へ移動。
+- BUILD 6。style.css / word-notes.js / learning.js のキャッシュバスターを6に統一。
+- JavaScript構文チェック済み。実機表示確認は未実施。
