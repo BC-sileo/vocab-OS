@@ -96,9 +96,12 @@ const ETYMOLOGY_MAPS = {
 function renderEtymology(w,n){
  const data=ETYMOLOGY_MAPS[w.id];
  if(!data)return '<p>'+escapeHtml(n.decomp||"語源情報は未登録です。")+'</p>'+renderDecompParts(w);
+ const renderStep=step=>'<div class="ety-step"><div class="ety-step-form">'+escapeHtml(step[0])+'</div><div class="ety-step-gloss">'+escapeHtml(step[1])+'</div></div>';
+ const first=data.path.length?renderStep(data.path[0]):"";
+ const rest=data.path.slice(1).map((step,i)=>renderStep(step)+(i<data.path.length-2?'<div class="ety-arrow" aria-hidden="true">↓</div>':"")).join("");
  const components=data.components.map(part=>'<div class="ety-component"><strong>'+escapeHtml(part[0])+'</strong><span>'+escapeHtml(part[1])+'</span></div>').join('<span class="ety-plus" aria-hidden="true">+</span>');
- const path=data.path.map((step,i)=>'<div class="ety-step"><div class="ety-step-form">'+escapeHtml(step[0])+'</div><div class="ety-step-gloss">'+escapeHtml(step[1])+'</div></div>'+(i<data.path.length-1?'<div class="ety-arrow" aria-hidden="true">↓</div>':'')).join('');
- return '<div class="ety-visual">'+(data.components.length?'<div class="ety-components">'+components+'</div>':'')+'<div class="ety-path">'+path+'</div>'+(data.note?'<details class="ety-note"><summary>語源の補足・注意</summary><p>'+escapeHtml(data.note)+'</p></details>':'')+'<a class="ety-source" href="'+escapeHtml(data.source)+'" target="_blank" rel="noopener">語源資料を確認 ↗</a></div>';
+ const more=(data.components.length?'<div class="ety-components">'+components+'</div>':"")+(rest?'<div class="ety-path ety-path-more">'+rest+'</div>':"")+(data.note?'<div class="ety-note-text">'+escapeHtml(data.note)+'</div>':"");
+ return '<div class="ety-visual">'+(first?'<div class="ety-path ety-path-first">'+first+'</div>':'')+(more?'<details class="ety-more"><summary>語源の続きを見る</summary><div class="ety-more-content">'+more+'</div></details>':"")+'<a class="ety-source" href="'+escapeHtml(data.source)+'" target="_blank" rel="noopener">語源資料を確認 ↗</a></div>';
 }
 const NOTE_PARTS = {
  1:["com-","mittere"],2:["com-"],3:["com-"],4:["com-"],5:["con-"],6:["con-","firm"],8:["con-","tenere"],9:["con-","trahere"],10:["con-"],14:["de-"],16:["dis-"],19:["en-"],20:["ex-"]
@@ -229,7 +232,7 @@ function renderSemanticMap(w,n){
   if(!from||!to)return "";
   return '<article class="semantic-edge"><div class="semantic-edge-route"><span>'+escapeHtml(from.label)+'</span><span class="semantic-edge-arrow">→</span><span>'+escapeHtml(to.label)+'</span></div><span class="semantic-edge-kind">'+escapeHtml(edge.type||"意味の関係")+'</span><p>'+escapeHtml(edge.description||"")+'</p></article>';
  }).join("");
- return '<section class="note-section semantic-map-section"><h3>SEMANTIC MAP</h3><div class="semantic-map-nodes">'+nodes+'</div><div class="semantic-map-edges">'+edges+'</div></section>';
+ return '<section class="note-section semantic-map-section"><h3>SEMANTIC MAP</h3><div class="semantic-map-edges">'+edges+'</div><details class="semantic-map-nodes-fold"><summary>各要素の説明を見る</summary><div class="semantic-map-nodes">'+nodes+'</div></details></section>';
 }
 function renderDomainExamples(n){
  const examples=Array.isArray(n.domainExamples)?n.domainExamples.filter(item=>item&&item.expression):[];
@@ -261,7 +264,7 @@ function renderIndependentMeanings(w,n){
   const infoUI=entry.description?'<details class="meaning-info-fold"><summary>意味・補足</summary><p>'+escapeHtml(entry.description)+'</p></details>':"";
   return '<details class="meaning-item meaning-fold"><summary>'+(pos?'<span class="meaning-pos">'+escapeHtml(pos)+'</span>':"")+'<strong>'+escapeHtml(label||"語義")+'</strong><span class="meaning-open-mark" aria-hidden="true"></span></summary><div class="meaning-detail">'+structure+exampleUI+infoUI+(!structure&&!sentence?'<p>'+escapeHtml(entry.description||entry.meaning||"")+'</p>':"")+'</div></details>';
  }).join("");
- return '<section class="note-section meaning-section"><h3>MEANING</h3><div class="meaning-list">'+cards+'</div>'+(n.caution?'<div class="meaning-warning"><span class="meaning-warning-icon" aria-label="注意">⚠</span><span>'+escapeHtml(n.caution)+'</span></div>':"")+'</section>';
+ return '<section class="note-section meaning-section"><h3>MEANING</h3><div class="meaning-list">'+cards+'</div>'+(w.id===28?"":'<div class="meaning-patterns"><h4>PATTERNS</h4>'+renderUsageFrame(w)+'</div>')+renderMixedSentence(n)+(n.caution?'<div class="meaning-warning"><span class="meaning-warning-icon" aria-label="注意">⚠</span><span>'+escapeHtml(n.caution)+'</span></div>':"")+'</section>';
 }
 // Every word uses the same usage-component schema.
 // Differences between words live in data (items, selectable variants and examples), not in custom renderers.
@@ -550,10 +553,8 @@ function openNote(id,autoplay=true){
  d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button><div class="translation-toolbar"><span>日本語訳</span><button type="button" id="toggleTranslations" class="subtle-btn translation-toggle-visible" aria-pressed="false">訳を隠す</button></div>'+
  '<div class="note-hero">'+imageCueMarkup(w)+'<div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">'+escapeHtml(String(w.pos||"").split("/").map(p=>({"noun":"n","verb":"v","adj":"a","adjective":"a","adv":"ad","adverb":"ad","名詞":"n","動詞":"v","形容詞":"a","副詞":"ad"}[p.trim().toLowerCase()]||p.trim())).join("/"))+'</span></div><button id="playWordAudio" class="audio-btn" type="button" aria-label="英単語の発音を再生">🔊 発音</button><button type="button" class="weak-toggle" data-weak-toggle="'+w.id+'">苦手にする</button></div>'+
  (effectiveCoreImage(w,n)?'<p id="noteCoreImageValue" class="note-core">'+escapeHtml(effectiveCoreImage(w,n))+'</p>':'<p id="noteCoreImageValue" class="note-core hidden"></p>')+'</div>'+
- renderSemanticMap(w,n)+
  '<section class="note-section etymology-section"><h3>ETYMOLOGY</h3>'+renderEtymology(w,n)+'</section>'+
- renderIndependentMeanings(w,n)+renderMixedSentence(n)+renderDomainExamples(n)+renderMemoSection(n)+
- (w.id===28?"":'<section class="note-section">'+renderUsageFrame(w)+(USAGE_COMPONENTS[w.id]?'':('<p class="example-en">'+escapeHtml(n.example||"例文は未登録です。")+'</p>'+(w.id===2?'<p class="hint">before you decide＝「決める前に」。時を表す節で、compare の語法の例外ではない。</p>':'')+'<p id="exampleJa" class="example-ja translation-text">'+escapeHtml(n.ja||"")+'</p>'))+'</section>')+
+ renderDomainExamples(n)+renderSemanticMap(w,n)+renderIndependentMeanings(w,n)+renderMemoSection(n)+
  
  
 
