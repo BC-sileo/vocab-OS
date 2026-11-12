@@ -437,3 +437,16 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 
 /* Source links for researched cross-disciplinary examples */
 .domain-example-source{display:inline-flex;align-items:center;margin-top:7px;font-size:10px;font-weight:750;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+/* Build 5: progressive etymology and relationship-first semantic map */
+.ety-more{border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:var(--panel)}
+.ety-more>summary,.semantic-map-nodes-fold>summary{cursor:pointer;list-style:none;font-size:12px;font-weight:750;color:var(--muted);text-align:center;padding:5px}
+.ety-more>summary::-webkit-details-marker,.semantic-map-nodes-fold>summary::-webkit-details-marker{display:none}
+.ety-more-content{display:grid;gap:11px;padding-top:10px}
+.ety-path-more{margin-top:2px}
+.ety-note-text{padding:9px 11px;border-radius:9px;background:var(--panel2);font-size:12px;line-height:1.65;color:var(--muted)}
+.semantic-map-nodes-fold{margin-top:9px;border:1px solid var(--line);border-radius:10px;padding:5px 9px}
+.semantic-map-nodes-fold .semantic-map-nodes{margin-top:8px}
+.meaning-patterns{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.meaning-patterns h4,.mixed-sentence-section h4{margin:0 0 9px;font-size:11px;letter-spacing:.08em;color:var(--muted);font-weight:800}
+.mixed-sentence-section{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
