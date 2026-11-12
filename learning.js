@@ -103,6 +103,19 @@
       return !!r.completedFirstRun;
     });
   }
+  function refreshEligibility(){
+    const candidates=eligibleWords(setupMode);
+    const label=setupMode==="first"?"初見単語・苦手単語":"初見モード完了済みの単語";
+    if(!candidates.length){
+      setSetupMessage(label+"は現在0語です。");
+      const choose=document.getElementById("chooseLearningWords");
+      if(choose)choose.disabled=true;
+      return;
+    }
+    setSetupMessage("選択可能："+candidates.length+"語（"+label+"）");
+    const choose=document.getElementById("chooseLearningWords");
+    if(choose)choose.disabled=false;
+  }
   function selectedCriteria(){
     return Array.from(document.querySelectorAll("[data-learning-criterion]:checked")).map(function(el){return el.dataset.learningCriterion;});
   }
