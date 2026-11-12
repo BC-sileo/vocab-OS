@@ -387,3 +387,11 @@ compareなど一部の単語だけに作り込んだUIを、別の単語にも�
 - caution/危険マークをMEANING見出し直下、意味カードより前へ移動。
 - BUILD 6。style.css / word-notes.js / learning.js のキャッシュバスターを6に統一。
 - JavaScript構文チェック済み。実機表示確認は未実施。
+
+
+## Build 7: 起動・単語選択の不具合修正（2026-11-12）
+
+- SEMANTIC MAP補完処理の実行位置を修正。語義データ・コアイメージ定義の初期化完了後に実行し、word-notes.jsのTemporal Dead Zoneエラーを解消。
+- learning.jsで未定義だったrefreshEligibility()を実装。初見／復習それぞれの選択可能語数を表示し、候補0語時は選択ボタンを無効化。
+- BUILD 7、word-notes.js / learning.js のキャッシュバスターを7に更新。
+- 両JSの構文チェック、初期化順、ボタン配線の静的確認済み。ブラウザ実機テストは未実施。
