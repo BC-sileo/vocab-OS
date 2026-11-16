@@ -27,7 +27,7 @@ textarea{box-sizing:border-box;width:100%;min-height:70px;margin-top:6px;padding
 </div>
 </main>
 <script>
-function b64url(bytes){let binary="";for(const byte of new Uint8Array(bytes))binary+=String.fromCharCode(byte);return btoa(binary).replace(/\\+/g,"-").replace(/\\//g,"_").replace(/=+$/,"");}
+function b64url(bytes){let binary="";for(const byte of new Uint8Array(bytes))binary+=String.fromCharCode(byte);return btoa(binary).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
 document.getElementById("generate").onclick=async function(){
   const pair=await crypto.subtle.generateKey({name:"ECDSA",namedCurve:"P-256"},true,["sign","verify"]);
   const publicRaw=await crypto.subtle.exportKey("raw",pair.publicKey);
