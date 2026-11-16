@@ -460,3 +460,12 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .notification-actions button{width:auto;min-width:140px}
 .notification-status{padding:10px 12px;border-radius:9px;background:var(--surface-soft,#f3f1ea);font-size:.92rem}
 .notification-status.is-error{color:#a32920;background:#fff0ed}
+
+
+/* FSRS-6 desired retention control */
+.fsrs-settings-card{margin-top:18px}
+.fsrs-retention-label{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 8px;font-weight:700}
+.fsrs-retention-label strong{font-size:1.35rem;color:var(--accent)}
+.fsrs-retention-slider{display:block;width:100%;accent-color:var(--accent);cursor:pointer}
+.fsrs-retention-scale{display:flex;justify-content:space-between;gap:8px;margin-top:6px;font-size:11px;color:var(--muted)}
+.fsrs-rating-note{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--surface-soft,#f3f1ea);font-size:12px;line-height:1.7;color:var(--muted)}
