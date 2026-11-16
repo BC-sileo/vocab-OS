@@ -37,3 +37,11 @@
 - [会話ログ](SESSION_LOG.md)
 - [決定・未決事項台帳](DECISION_LEDGER.md)
 - [画像の選定・登録手順](IMAGE_WORKFLOW.md)
+
+## 復習期限・プッシュ通知（実装途中）
+- 初見完了後の初回復習期限を24時間後に設定。
+- 復習評価（即答／遅い／曖昧／不正解）に応じて次回期限を更新。
+- 復習モードは期限到来済みの単語を対象にする。
+- Web Pushクライアント、Service Worker、Cloudflare Workers + KVのサーバーコードを追加。
+- **未完了:** Cloudflare側のKV作成・Secret設定・Workerデプロイ・Android実機の通知テスト。設定手順は [NOTIFICATIONS_SETUP.md](NOTIFICATIONS_SETUP.md)。
+- 有料プラン・課金情報は使わず、無料枠超過時は通知が止まる設計。
