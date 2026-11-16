@@ -10,7 +10,7 @@ function response(data,status,origin,env){
     headers["Access-Control-Allow-Headers"]="Content-Type, Authorization";
     headers["Vary"]="Origin";
   }
-  return new Response(JSON.stringify(data),{status,headers});
+  return new Response(status===204?null:JSON.stringify(data),{status,headers});
 }
 function validDeviceId(value){
   return typeof value==="string" && /^[a-f0-9-]{36}$/i.test(value);
