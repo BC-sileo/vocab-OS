@@ -54,7 +54,8 @@
       });
     }
     const deviceId=randomDeviceId();
-    await api("/subscribe","POST",{deviceId,subscription:subscription.toJSON()},config);
+    const dueAt=typeof window.getVocabOSNextDueAt==="function"?window.getVocabOSNextDueAt():null;
+    await api("/subscribe","POST",{deviceId,subscription:subscription.toJSON(),dueAt},config);
     return deviceId;
   }
   async function enable(){
