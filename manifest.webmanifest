@@ -1,0 +1,11 @@
+{
+  "name": "Vocab OS",
+  "short_name": "Vocab OS",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f1e8",
+  "theme_color": "#f4f1e8",
+  "description": "単語を構造から学び、復習する。"
+}
