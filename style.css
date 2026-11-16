@@ -450,3 +450,13 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .meaning-patterns{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
 .meaning-patterns h4,.mixed-sentence-section h4{margin:0 0 9px;font-size:11px;letter-spacing:.08em;color:var(--muted);font-weight:800}
 .mixed-sentence-section{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+
+
+/* Push notification settings */
+.notification-card{margin-top:18px}
+.notification-field{display:block;margin:14px 0;font-weight:600}
+.notification-field input{display:block;box-sizing:border-box;width:100%;margin-top:7px;padding:12px;border:1px solid var(--line,#cfcfcf);border-radius:10px;background:var(--surface,#fff);color:var(--text,#222);font:inherit}
+.notification-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.notification-actions button{width:auto;min-width:140px}
+.notification-status{padding:10px 12px;border-radius:9px;background:var(--surface-soft,#f3f1ea);font-size:.92rem}
+.notification-status.is-error{color:#a32920;background:#fff0ed}
