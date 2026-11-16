@@ -40,7 +40,12 @@
   }
   function recordFor(id){
     if(!store.records[id]) store.records[id]={weak:false,completedFirstRun:false,scores:{},attempts:0};
-    return store.records[id];
+    const record=store.records[id];
+    if(record.completedFirstRun && !Number.isFinite(Number(record.nextReviewAt))){
+      record.intervalDays=1;
+      record.nextReviewAt=Date.now();
+    }
+    return record;
   }
   function byId(id){return WORDS.find(function(w){return w.id===Number(id);});}
   function safeText(value){
