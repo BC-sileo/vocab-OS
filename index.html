@@ -6,12 +6,12 @@
   <meta name="theme-color" content="#f4f1e8">
   <title>Vocab OS</title>
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <header class="topbar">
     <div>
-      <div class="eyebrow">VOCAB OS · BUILD 9</div>
+      <div class="eyebrow">VOCAB OS · BUILD 10</div>
       <h1>単語を、構造から覚える。</h1>
     </div>
     <div class="topbar-actions"><button id="tocBtn" class="icon-btn" aria-label="目次">☰</button></div>
@@ -26,6 +26,18 @@
       <button id="reviewBtn" class="secondary-wide-btn">復習モード</button>
       <button id="resumeLearningBtn" class="secondary-wide-btn hidden">学習を再開</button>
       <button id="notesBtn" class="subtle-btn">単語ノートを開く</button>
+    </section>
+    <section class="card fsrs-settings-card">
+      <p class="eyebrow">SPACED REPETITION · FSRS-6</p>
+      <h2>復習間隔</h2>
+      <label class="fsrs-retention-label" for="fsrsRetention">
+        <span>目標保持率</span>
+        <strong id="fsrsRetentionValue">90%</strong>
+      </label>
+      <input id="fsrsRetention" class="fsrs-retention-slider" type="range" min="80" max="95" step="1" value="90" aria-label="目標保持率">
+      <div class="fsrs-retention-scale"><span>80% · 復習量少なめ</span><span>95% · 記憶維持優先</span></div>
+      <p class="hint">高くするほど復習間隔は短くなり、復習回数が増えます。初期値は90%。設定変更は次回の採点から反映され、すでに決まった復習日は変わりません。</p>
+      <p class="fsrs-rating-note">採点の対応：即答＝Easy ／ 遅い＝Good ／ 曖昧＝Hard（正解を思い出せた場合）／ 不正解＝Again</p>
     </section>
     <section class="card notification-card">
       <p class="eyebrow">PUSH NOTIFICATIONS</p>
@@ -186,7 +198,8 @@
 
   <script src="app.js"></script>
   <script src="word-notes.js?v=7"></script>
-  <script src="learning.js?v=8"></script>
+  <script src="fsrs-loader.js?v=1"></script>
+  <script src="learning.js?v=9"></script>
   <script src="theme.js"></script>
   <script src="notifications.js?v=2"></script>
 </body>
