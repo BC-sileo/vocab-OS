@@ -104,8 +104,8 @@
     return WORDS.filter(function(w){
       if(w.pending)return false;
       const r=recordFor(w.id);
-      if(mode==="first")return !r.completedFirstRun || !!r.weak;
-      return !!r.completedFirstRun;
+      if(mode==="first")return !r.completedFirstRun;
+      return !!r.completedFirstRun && Number.isFinite(Number(r.nextReviewAt)) && Number(r.nextReviewAt)<=Date.now();
     });
   }
   function refreshEligibility(){
@@ -160,7 +160,7 @@
   function refreshEligibility(){
     const pool=eligibleWords(setupMode);
     const countEl=document.getElementById("learningEligibility");
-    const label=setupMode==="first"?"初見単語または苦手マーク済み":"初見モード完了済み";
+    const label=setupMode==="first"?"初見未完了の単語":"復習期限が来た単語";
     if(countEl)countEl.textContent=label+"：現在 "+pool.length+" 語が選択対象";
   }
   function renderPreview(ids,criteria){
@@ -190,8 +190,8 @@
     const start=document.getElementById("startLearningSelection");
     if(title)title.textContent=setupMode==="first"?"初見モード":"復習モード";
     if(description)description.textContent=setupMode==="first"
-      ?"初見単語、または自分で苦手にした単語だけが対象です。"
-      :"初見モードを完了した単語だけが対象です。未完了の初見単語は含まれません。";
+      ?"初見モードを完了していない単語が対象です。完了済みの単語は初見モードに戻りません。"
+      :"初見完了済みで、復習期限が来た単語だけが対象です。";
     document.querySelectorAll("[data-learning-criterion]").forEach(function(el){el.checked=false;});
     const count=document.getElementById("learningWordCount");
     if(count)count.value=String(Math.min(MAX_WORD_COUNT,Math.max(1,store.wordCount||DEFAULT_WORD_COUNT)));
@@ -474,6 +474,33 @@
     if(session.index>=session.wordIds.length){completeLearning();return;}
     renderTestWord();
   }
+  function nextDueAt(){
+    const due=WORDS.filter(function(w){return !w.pending;}).map(function(w){
+      const r=recordFor(w.id);
+      return r.completedFirstRun ? Number(r.nextReviewAt) : NaN;
+    }).filter(Number.isFinite);
+    return due.length ? Math.min.apply(null,due) : null;
+  }
+  window.getVocabOSNextDueAt=nextDueAt;
+
+  function scheduleAfterReview(id,state){
+    const r=recordFor(id);
+    let days=Number(r.intervalDays)||1;
+    if(state==="即答")days=Math.min(60,Math.max(1,days*2.2));
+    else if(state==="遅い")days=Math.min(30,Math.max(1,days*1.4));
+    else if(state==="曖昧")days=1;
+    else if(state==="不正解")days=0.5;
+    r.intervalDays=days;
+    r.lastReviewState=state;
+    r.lastReviewedAt=Date.now();
+    r.nextReviewAt=r.lastReviewedAt+days*24*60*60*1000;
+  }
+  function syncNotificationSchedule(){
+    if(window.VocabOSNotifications && typeof window.VocabOSNotifications.syncNextDue==="function"){
+      window.VocabOSNotifications.syncNextDue();
+    }
+  }
+
   function completeLearning(){
     const session=store.activeSession;
     if(session && session.kind==="first"){
@@ -481,10 +508,13 @@
         const r=recordFor(id);
         r.completedFirstRun=true;
         r.firstRunCompletedAt=Date.now();
+        r.intervalDays=1;
+        r.nextReviewAt=r.firstRunCompletedAt+24*60*60*1000;
       });
     }
     store.activeSession=null;
     saveLearning();
+    syncNotificationSchedule();
     const title=document.getElementById("learningDoneTitle");
     const summary=document.getElementById("learningDoneSummary");
     if(title)title.textContent="学習を完了しました";
@@ -530,8 +560,13 @@
         return;
       }
       if(session.kind==="review"){
+        session.wordIds.forEach(function(id){
+          const state=sessionStates[id];
+          if(state)scheduleAfterReview(id,state);
+        });
         store.activeSession=null;
         saveLearning();
+        syncNotificationSchedule();
         baseFinishReview();
         return;
       }
@@ -548,7 +583,11 @@
     if(!id || !byId(id))return;
     const record=recordFor(id);
     record.weak=!record.weak;
+    if(record.weak && record.completedFirstRun){
+      record.nextReviewAt=Date.now();
+    }
     saveLearning();
+    syncNotificationSchedule();
     refreshWeakToggles();
   });
   document.addEventListener("visibilitychange",function(){
