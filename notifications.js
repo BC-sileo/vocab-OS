@@ -9,7 +9,7 @@
     const node=$("notificationStatus");
     if(node){node.textContent=message;node.classList.toggle("is-error",!!isError);}
   }
-  function baseUrl(){return String($("notificationWorkerUrl").value||"").trim().replace(/\\/$/,"");}
+  function baseUrl(){return String($("notificationWorkerUrl").value||"").trim().replace(/\/+$/,"");}
   function token(){return String($("notificationApiToken").value||"").trim();}
   function randomDeviceId(){
     let config=load();
