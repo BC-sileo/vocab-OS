@@ -40,7 +40,9 @@
 
 ## 復習期限・プッシュ通知（実装途中）
 - 初見完了後の初回復習期限を24時間後に設定。
-- 復習評価（即答／遅い／曖昧／不正解）に応じて次回期限を更新。
+- Anki互換のFSRS-6で復習間隔を計算（目標保持率80〜95%、初期値90%）。
+- 復習評価（即答／遅い／曖昧／不正解）をFSRSのAgain／Hard／Good／Easyに対応づけ、単語ごとの記憶状態と履歴を保存。
+- 現在はFSRS-6標準パラメータを使用。Ankiのような個人履歴ベースのパラメータ最適化は未実装。
 - 復習モードは期限到来済みの単語を対象にする。
 - Web Pushクライアント、Service Worker、Cloudflare Workers + KVのサーバーコードを追加。
 - **未完了:** Cloudflare側のKV作成・Secret設定・Workerデプロイ・Android実機の通知テスト。設定手順は [NOTIFICATIONS_SETUP.md](NOTIFICATIONS_SETUP.md)。
