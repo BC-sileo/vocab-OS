@@ -1,6 +1,6 @@
 # Vocab OS — いまここ
 
-最終更新: 2026-11-10
+最終更新: 2026-11-16
 
 > 次回はここから読む。次の作業に直結する情報だけを置く。
 
@@ -34,3 +34,11 @@
 - [画像の選定・登録手順](IMAGE_WORKFLOW.md)
 - [単語ノート実装](word-notes.js)
 - [現行アプリ](https://github.com/BC-sileo/vocab-OS)
+
+## 2026-11-16 — 復習期限・プッシュ通知
+- learning.jsに期限管理を追加。初見完了から24時間後に初回復習、以後は自己評価に応じて間隔を更新する。
+- 初見モードは未完了語のみ。復習モードは期限到来語のみ（既存の完了記録は初回移行時に期限到来扱い）。
+- sw.js、manifest.webmanifest、notifications.js、worker/index.js、wrangler.toml、キー生成ページ、設定ガイドを追加。
+- Cloudflare WorkerはFree枠前提。API_TOKENとVAPID秘密鍵はCloudflare Secretsに置き、公開リポジトリには入れない。
+- **まだ通知は稼働していない。** Cloudflare KV namespace ID・Secrets・Worker URLの設定とデプロイ、端末での通知許可が必要。
+- 次はNOTIFICATIONS_SETUP.mdに従い、CloudflareをWorkers Freeのまま設定する。課金方法の登録やPaidへの変更はしない。
