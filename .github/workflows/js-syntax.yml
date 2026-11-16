@@ -18,6 +18,7 @@ jobs:
         run: |
           node --check app.js
           node --check word-notes.js
+          node --check fsrs-loader.js
           node --check learning.js
           node --check theme.js
           node --check notifications.js
