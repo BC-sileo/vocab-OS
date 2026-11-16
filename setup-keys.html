@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vocab OS 通知キー生成</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:760px;margin:32px auto;padding:0 18px;line-height:1.7;background:#f4f1e8;color:#242424}
+main{background:white;border-radius:16px;padding:22px}
+button{padding:12px 18px;border:0;border-radius:10px;background:#244d43;color:white;font-size:16px}
+label{display:block;font-weight:700;margin-top:18px}
+textarea{box-sizing:border-box;width:100%;min-height:70px;margin-top:6px;padding:10px;border:1px solid #aaa;border-radius:8px;font:13px monospace}
+.warning{color:#9a2e25;font-weight:700}
+</style>
+</head>
+<body>
+<main>
+<h1>Vocab OS 通知キー生成</h1>
+<p>このページはブラウザ内だけで鍵を生成します。生成した秘密鍵をGitHubや他人に送らないでください。</p>
+<p class="warning">秘密鍵・APIトークンはCloudflareのSecretに設定します。公開リポジトリへ貼り付けないでください。</p>
+<button id="generate">キーを生成</button>
+<div id="outputs" hidden>
+<label>API_TOKEN（Cloudflare Secret）<textarea id="api" readonly></textarea></label>
+<label>VAPID_PUBLIC_KEY（公開値）<textarea id="public" readonly></textarea></label>
+<label>VAPID_PRIVATE_KEY（Cloudflare Secret）<textarea id="private" readonly></textarea></label>
+<p>この3つを安全に控えてください。秘密鍵とAPIトークンは第三者に共有しないこと。</p>
+</div>
+</main>
+<script>
+function b64url(bytes){let binary="";for(const byte of new Uint8Array(bytes))binary+=String.fromCharCode(byte);return btoa(binary).replace(/\\+/g,"-").replace(/\\//g,"_").replace(/=+$/,"");}
+document.getElementById("generate").onclick=async function(){
+  const pair=await crypto.subtle.generateKey({name:"ECDSA",namedCurve:"P-256"},true,["sign","verify"]);
+  const publicRaw=await crypto.subtle.exportKey("raw",pair.publicKey);
+  const privateJwk=await crypto.subtle.exportKey("jwk",pair.privateKey);
+  const tokenBytes=crypto.getRandomValues(new Uint8Array(32));
+  document.getElementById("api").value=Array.from(tokenBytes).map(x=>x.toString(16).padStart(2,"0")).join("");
+  document.getElementById("public").value=b64url(publicRaw);
+  document.getElementById("private").value=privateJwk.d;
+  document.getElementById("outputs").hidden=false;
+};
+</script>
+</body>
+</html>
