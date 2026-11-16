@@ -58,10 +58,16 @@ export default {
         return response({error:"Invalid push subscription"},400,origin,env);
       }
       const previous=await env.NOTIFICATIONS.get(key,"json");
+      let dueAt=previous&&Number.isFinite(previous.dueAt)?previous.dueAt:null;
+      if(Object.prototype.hasOwnProperty.call(body,"dueAt")){
+        if(body.dueAt===null)dueAt=null;
+        else if(Number.isFinite(Number(body.dueAt)) && Number(body.dueAt)>=0)dueAt=Number(body.dueAt);
+        else return response({error:"Invalid dueAt"},400,origin,env);
+      }
       const record={
         subscription:sub,
-        dueAt:previous&&Number.isFinite(previous.dueAt)?previous.dueAt:null,
-        notifiedAt:previous&&Number.isFinite(previous.notifiedAt)?previous.notifiedAt:null,
+        dueAt,
+        notifiedAt:previous&&previous.dueAt===dueAt&&Number.isFinite(previous.notifiedAt)?previous.notifiedAt:null,
         updatedAt:Date.now()
       };
       await env.NOTIFICATIONS.put(key,JSON.stringify(record));
@@ -72,7 +78,8 @@ export default {
       if(!record||!record.subscription)return response({error:"Device is not subscribed"},404,origin,env);
       const dueAt=body.dueAt===null?null:Number(body.dueAt);
       if(dueAt!==null && (!Number.isFinite(dueAt)||dueAt<0))return response({error:"Invalid dueAt"},400,origin,env);
-      if(dueAt!==record.dueAt)record.notifiedAt=null;
+      if(dueAt===record.dueAt)return response({ok:true,dueAt,unchanged:true},200,origin,env);
+      record.notifiedAt=null;
       record.dueAt=dueAt;
       record.updatedAt=Date.now();
       await env.NOTIFICATIONS.put(key,JSON.stringify(record));
