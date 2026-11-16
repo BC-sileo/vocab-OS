@@ -3,6 +3,7 @@
   "use strict";
 
   const STORAGE_KEY = "vocabOS_learning_v1";
+  const FSRS_SETTINGS_KEY = "vocabOS_fsrs_settings_v1";
   const DEFAULT_WORD_COUNT = 5;
   const MAX_WORD_COUNT = 20;
   const CRITERIA = [
@@ -32,6 +33,66 @@
   let timerEndAt = 0;
   let timerRemaining = 10000;
   let reviewFinishHandled = false;
+
+  function getDesiredRetention(){
+    const raw=localStorage.getItem(FSRS_SETTINGS_KEY);
+    const value=raw===null?90:Number(raw);
+    return Math.max(80,Math.min(95,Number.isFinite(value)?Math.round(value):90));
+  }
+  function fsrsScheduler(lib){
+    return lib.fsrs({
+      request_retention:getDesiredRetention()/100,
+      maximum_interval:36500,
+      enable_fuzz:true,
+      enable_short_term:true,
+      learning_steps:[],
+      relearning_steps:[]
+    });
+  }
+  function fsrsRating(lib,state,scores){
+    let rating=state==="即答"?lib.Rating.Easy:
+      state==="曖昧"?lib.Rating.Hard:
+      state==="不正解"?lib.Rating.Again:lib.Rating.Good;
+    const values=Object.values(scores||{});
+    if(values.includes("retry"))return lib.Rating.Again;
+    if(values.includes("partial") && rating>lib.Rating.Hard)return lib.Rating.Hard;
+    return rating;
+  }
+  function storedFSRSCard(card){
+    return Object.assign({},card,{
+      due:card.due instanceof Date?card.due.getTime():new Date(card.due).getTime(),
+      last_review:card.last_review?(card.last_review instanceof Date?card.last_review.getTime():new Date(card.last_review).getTime()):null
+    });
+  }
+  function restoreFSRSCard(record,lib,now){
+    const saved=record.fsrsCard;
+    if(saved && Number.isFinite(Number(saved.due))){
+      return Object.assign({},saved,{
+        due:new Date(Number(saved.due)),
+        last_review:saved.last_review?new Date(Number(saved.last_review)):undefined
+      });
+    }
+    return lib.createEmptyCard(new Date(record.firstRunCompletedAt||now.getTime()));
+  }
+  function applyFSRSResult(record,result,state,rating,now){
+    record.fsrsCard=storedFSRSCard(result.card);
+    record.lastReviewState=state;
+    record.lastReviewedAt=now.getTime();
+    record.nextReviewAt=result.card.due.getTime();
+    record.intervalDays=Math.max(0,(record.nextReviewAt-now.getTime())/86400000);
+    const log=result.log||{};
+    record.fsrsHistory=(record.fsrsHistory||[]).concat([{
+      rating:rating,
+      review:log.review instanceof Date?log.review.getTime():now.getTime(),
+      due:log.due instanceof Date?log.due.getTime():record.nextReviewAt,
+      state:log.state,
+      scheduled_days:log.scheduled_days,
+      elapsed_days:log.elapsed_days,
+      last_elapsed_days:log.last_elapsed_days,
+      stability:result.card.stability,
+      difficulty:result.card.difficulty
+    }]).slice(-500);
+  }
 
   function saveLearning(){
     try { localStorage.setItem(STORAGE_KEY,JSON.stringify(store)); }
@@ -483,17 +544,13 @@
   }
   window.getVocabOSNextDueAt=nextDueAt;
 
-  function scheduleAfterReview(id,state){
+  async function scheduleAfterReview(id,state,lib,scheduler){
     const r=recordFor(id);
-    let days=Number(r.intervalDays)||1;
-    if(state==="即答")days=Math.min(60,Math.max(1,days*2.2));
-    else if(state==="遅い")days=Math.min(30,Math.max(1,days*1.4));
-    else if(state==="曖昧")days=1;
-    else if(state==="不正解")days=0.5;
-    r.intervalDays=days;
-    r.lastReviewState=state;
-    r.lastReviewedAt=Date.now();
-    r.nextReviewAt=r.lastReviewedAt+days*24*60*60*1000;
+    const now=new Date();
+    const card=restoreFSRSCard(r,lib,now);
+    const rating=fsrsRating(lib,state,r.scores);
+    const result=scheduler.next(card,now,rating);
+    applyFSRSResult(r,result,state,rating,now);
   }
   function syncNotificationSchedule(){
     if(window.VocabOSNotifications && typeof window.VocabOSNotifications.syncNextDue==="function"){
@@ -501,16 +558,32 @@
     }
   }
 
-  function completeLearning(){
+  async function completeLearning(){
     const session=store.activeSession;
     if(session && session.kind==="first"){
-      session.wordIds.forEach(function(id){
-        const r=recordFor(id);
-        r.completedFirstRun=true;
-        r.firstRunCompletedAt=Date.now();
-        r.intervalDays=1;
-        r.nextReviewAt=r.firstRunCompletedAt+24*60*60*1000;
-      });
+      try{
+        const lib=await (window.VocabOSFSRSReady||Promise.resolve(window.VocabOSFSRS));
+        if(!lib)throw new Error("FSRS library unavailable");
+        const scheduler=fsrsScheduler(lib);
+        const now=new Date();
+        session.wordIds.forEach(function(id){
+          const r=recordFor(id);
+          r.completedFirstRun=true;
+          r.firstRunCompletedAt=now.getTime();
+          const state=(session.reviewStates||{})[id]||"遅い";
+          const rating=fsrsRating(lib,state,r.scores);
+          const card=lib.createEmptyCard(now);
+          const result=scheduler.next(card,now,rating);
+          applyFSRSResult(r,result,state,rating,now);
+        });
+      }catch(error){
+        console.error("FSRS could not schedule the first review.",error);
+        session.index=Math.max(0,session.wordIds.length-1);
+        saveLearning();
+        renderTestWord();
+        alert("復習アルゴリズムを読み込めませんでした。通信を確認して、もう一度完了テストを送信してください。");
+        return;
+      }
     }
     store.activeSession=null;
     saveLearning();
@@ -518,7 +591,7 @@
     const title=document.getElementById("learningDoneTitle");
     const summary=document.getElementById("learningDoneSummary");
     if(title)title.textContent="学習を完了しました";
-    if(summary)summary.textContent="今回の "+(session?session.wordIds.length:0)+" 語は、初見学習の完了テストまで終了しました。次回から復習モードの対象になります。";
+    if(summary)summary.textContent="今回の "+(session?session.wordIds.length:0)+" 語は完了テストまで終了しました。FSRSが自己評価に応じて次回の復習日を設定しました。";
     view("learningDoneView");
   }
   window.learningBadgeFor=function(id){
@@ -560,14 +633,25 @@
         return;
       }
       if(session.kind==="review"){
-        session.wordIds.forEach(function(id){
-          const state=sessionStates[id];
-          if(state)scheduleAfterReview(id,state);
-        });
-        store.activeSession=null;
-        saveLearning();
-        syncNotificationSchedule();
-        baseFinishReview();
+        (async function(){
+          try{
+            const lib=await (window.VocabOSFSRSReady||Promise.resolve(window.VocabOSFSRS));
+            if(!lib)throw new Error("FSRS library unavailable");
+            const scheduler=fsrsScheduler(lib);
+            for(const id of session.wordIds){
+              const state=sessionStates[id];
+              if(state)await scheduleAfterReview(id,state,lib,scheduler);
+            }
+            store.activeSession=null;
+            saveLearning();
+            syncNotificationSchedule();
+            baseFinishReview();
+          }catch(error){
+            console.error("FSRS could not schedule reviews.",error);
+            reviewFinishHandled=false;
+            alert("復習間隔を計算できませんでした。通信を確認してから「学習を再開」し、もう一度完了してください。");
+          }
+        })();
         return;
       }
     }
@@ -628,6 +712,22 @@
   });
   const countInput=document.getElementById("learningWordCount");
   if(countInput)countInput.addEventListener("input",function(){store.pendingSelection=null;const panel=document.getElementById("learningSelectionPreview");if(panel)panel.innerHTML="";const startButton=document.getElementById("startLearningSelection");if(startButton)startButton.disabled=true;});
+
+  const retentionSlider=document.getElementById("fsrsRetention");
+  const retentionValue=document.getElementById("fsrsRetentionValue");
+  function renderRetentionSetting(){
+    const value=getDesiredRetention();
+    if(retentionSlider)retentionSlider.value=String(value);
+    if(retentionValue)retentionValue.textContent=value+"%";
+  }
+  if(retentionSlider){
+    retentionSlider.addEventListener("input",function(){
+      const value=Math.max(80,Math.min(95,Number(retentionSlider.value)||90));
+      try{localStorage.setItem(FSRS_SETTINGS_KEY,String(value));}catch(error){console.warn("FSRS setting could not be saved.",error);}
+      if(retentionValue)retentionValue.textContent=value+"%";
+    });
+  }
+  renderRetentionSetting();
   refreshResumeButton();
   if(store.activeSession)refreshResumeButton();
 })();
