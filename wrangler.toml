@@ -1,0 +1,16 @@
+name = "vocab-os-notifications"
+main = "worker/index.js"
+compatibility_date = "2026-11-16"
+
+[vars]
+ALLOWED_ORIGIN = "https://bc-sileo.github.io"
+APP_URL = "https://bc-sileo.github.io/vocab-OS/"
+VAPID_PUBLIC_KEY = "SET_FROM_setup-keys.html"
+VAPID_SUBJECT = "https://bc-sileo.github.io/vocab-OS/"
+
+[[kv_namespaces]]
+binding = "NOTIFICATIONS"
+id = "REPLACE_WITH_YOUR_FREE_KV_NAMESPACE_ID"
+
+[triggers]
+crons = ["*/15 * * * *"]
