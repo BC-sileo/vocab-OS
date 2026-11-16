@@ -77,7 +77,7 @@
     const config=load();
     if(!config.workerUrl||!config.apiToken||!config.deviceId)return;
     try{
-      const registration=await navigator.serviceWorker.getRegistration("./");
+      const registration=await navigator.serviceWorker.getRegistration();
       if(!registration)return;
       const subscription=await registration.pushManager.getSubscription();
       if(!subscription)return;
@@ -88,7 +88,7 @@
   async function disable(){
     const config=load();
     try{
-      const registration=await navigator.serviceWorker.getRegistration("./");
+      const registration=await navigator.serviceWorker.getRegistration();
       if(registration){
         const subscription=await registration.pushManager.getSubscription();
         if(subscription)await subscription.unsubscribe();
