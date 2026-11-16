@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#f4f1e8">
   <title>Vocab OS</title>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
   <header class="topbar">
     <div>
-      <div class="eyebrow">VOCAB OS · BUILD 7</div>
+      <div class="eyebrow">VOCAB OS · BUILD 8</div>
       <h1>単語を、構造から覚える。</h1>
     </div>
     <div class="topbar-actions"><button id="tocBtn" class="icon-btn" aria-label="目次">☰</button></div>
@@ -25,6 +26,23 @@
       <button id="reviewBtn" class="secondary-wide-btn">復習モード</button>
       <button id="resumeLearningBtn" class="secondary-wide-btn hidden">学習を再開</button>
       <button id="notesBtn" class="subtle-btn">単語ノートを開く</button>
+    </section>
+    <section class="card notification-card">
+      <p class="eyebrow">PUSH NOTIFICATIONS</p>
+      <h2>復習通知</h2>
+      <p class="hint">復習期限が来たとき、この端末へ通知します。単語一覧や学習履歴はサーバーへ送りません。</p>
+      <label class="notification-field">通知サーバーURL
+        <input id="notificationWorkerUrl" type="url" inputmode="url" placeholder="https://your-worker.workers.dev" autocomplete="url">
+      </label>
+      <label class="notification-field">API_TOKEN
+        <input id="notificationApiToken" type="password" placeholder="Cloudflare Secretに設定した値" autocomplete="off">
+      </label>
+      <div class="notification-actions">
+        <button id="enableNotificationsBtn" class="primary-btn" type="button">通知を有効化</button>
+        <button id="disableNotificationsBtn" class="subtle-btn" type="button">通知を停止</button>
+      </div>
+      <p id="notificationStatus" class="notification-status" aria-live="polite">通知はまだ設定されていません。</p>
+      <p class="hint">初回設定には <a href="./NOTIFICATIONS_SETUP.md">通知設定ガイド</a> が必要です。</p>
     </section>
     <section class="card home-theme-card">
       <p class="eyebrow">APPEARANCE</p>
@@ -170,5 +188,6 @@
   <script src="word-notes.js?v=7"></script>
   <script src="learning.js?v=7"></script>
   <script src="theme.js"></script>
+  <script src="notifications.js?v=1"></script>
 </body>
 </html>
