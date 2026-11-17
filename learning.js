@@ -273,7 +273,8 @@
     if(description)description.textContent=setupMode==="first"
       ?"初見モードを完了していない単語が対象です。完了済みの単語は初見モードに戻りません。"
       :"初見完了済みで、復習期限が来た単語だけが対象です。";
-    renderTagCriteria();\n    document.querySelectorAll("[data-learning-criterion]").forEach(function(el){el.checked=false;});
+    renderTagCriteria();
+    document.querySelectorAll("[data-learning-criterion]").forEach(function(el){el.checked=false;});
     const count=document.getElementById("learningWordCount");
     if(count)count.value=String(Math.min(MAX_WORD_COUNT,Math.max(1,store.wordCount||DEFAULT_WORD_COUNT)));
     const panel=document.getElementById("learningSelectionPreview");
