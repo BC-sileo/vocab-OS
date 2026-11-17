@@ -56,6 +56,7 @@ for (const [word, meta] of Object.entries(MEANING_READY_WORD_META)) {
 window.VocabOSTagStore.initialize(WORDS);
 const WORD_BY_ID=new Map(WORDS.map(word=>[Number(word.id),word]));
 window.getVocabOSWordById=id=>WORD_BY_ID.get(Number(id))||null;
+window.rebuildVocabOSWordIndex=()=>{WORD_BY_ID.clear();WORDS.forEach(word=>WORD_BY_ID.set(Number(word.id),word));return WORD_BY_ID.size;};
 function compareByVEN(a,b) {
   const av = window.VocabOSTagStore.getNumericValue(a.id,"VEN度");
   const bv = window.VocabOSTagStore.getNumericValue(b.id,"VEN度");
@@ -88,7 +89,7 @@ function save(){localStorage.setItem(KEY,JSON.stringify({pageSize,sessionPages,m
 function pageCount(){return Math.max(1,Math.ceil(order.length/pageSize))}
 function pageIds(p){const n=p||1;return order.slice((n-1)*pageSize,n*pageSize)}
 function wordsFor(p){const ids=new Set(pageIds(p));return order.filter(id=>ids.has(id)).map(id=>window.getVocabOSWordById(id)).filter(Boolean)}
-function showView(id){["homeView","notesView","setupView","reviewView","resultView"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id));}
+function showView(id){["homeView","notesView","tagImportView","setupView","reviewView","resultView"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id));}
 function populateSessionPages(){
   const max=pageCount();
   sessionPages=Math.max(1,Math.min(sessionPages,max));
