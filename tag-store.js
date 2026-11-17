@@ -59,7 +59,7 @@
     const exists=data.assignments.some(item=>
       item.entityType===entityType&&String(item.entityId)===String(entityId)&&
       item.tagId===tag.id&&JSON.stringify(item.value??null)===JSON.stringify(normalizedValue)&&
-      String(item.source||"")===String(source||"")
+      true
     );
     if(exists)return false;
     data.assignments.push({entityType,entityId,tagId:tag.id,value:normalizedValue,source:source||null});
@@ -83,7 +83,7 @@
   function getNumericValue(wordId,name){
     const key=String(name).toLocaleLowerCase("en-US");
     const matches=getWordTags(wordId).filter(tag=>tag.name.toLocaleLowerCase("en-US")===key&&typeof tag.value==="number");
-    return matches.length?Math.max(...matches.map(tag=>tag.value)):undefined;
+    const distinct=Array.from(new Set(matches.map(tag=>tag.value)));\n    return distinct.length===1?distinct[0]:undefined;
   }
   function tagsLabel(wordId){
     return getWordTags(wordId).map(tag=>tag.value===null?tag.name:tag.name+" "+tag.value).join(" · ");
