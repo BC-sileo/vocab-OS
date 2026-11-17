@@ -119,9 +119,10 @@
     if(!rows.length)return [];
     const header=rows.shift().map(v=>v.trim().toLowerCase());
     const hasHeader=header.some(v=>["word","単語","spelling"].includes(v));
-    const columns=hasHeader?header:["word","tags","translation","pos"];
-    const wordColumn=columns.findIndex(v=>["word","単語","spelling"].includes(v));
+    const columns=hasHeader?header:["word","tags","translation","pos","source"];
+    const wordColumn=hasHeader?columns.findIndex(v=>["word","単語","spelling"].includes(v)):0;
     if(wordColumn<0)throw new Error("列名に word（または単語）が必要です。");
+    if(!hasHeader)rows.unshift(header);
     return rows.map(cells=>{
       const get=names=>{const i=columns.findIndex(v=>names.includes(v));return i<0?"":String(cells[i]||"").trim();};
       return {
@@ -143,11 +144,15 @@
     }).filter(tag=>tag.name);
   }
   function previewImport(text){
-    const rows=parseCSV(text),seen=new Set(),items=[];
+    const rawRows=parseCSV(text),grouped=new Map(),items=[];
+    rawRows.forEach(row=>{
+      const key=normalizeWordKey(row.word);if(!key)return;
+      if(!grouped.has(key))grouped.set(key,{...row});
+      else{const prior=grouped.get(key);prior.tags=[prior.tags,row.tags].filter(Boolean).join(";");prior.translation=prior.translation||row.translation;prior.pos=prior.pos||row.pos;prior.source=[prior.source,row.source].filter(Boolean).join(";");}
+    });
+    const rows=Array.from(grouped.values());
     rows.forEach(row=>{
-      const key=normalizeWordKey(row.word);
-      if(!key)return;
-      const duplicateInFile=seen.has(key);seen.add(key);
+      const key=normalizeWordKey(row.word);if(!key)return;
       const existing=wordIndex.get(key);
       const candidates=existing?[]:Array.from(wordIndex.entries()).map(([candidate,word])=>({distance:levenshtein(key,candidate),word}))
         .filter(item=>item.distance<=Math.max(1,Math.min(2,Math.floor(key.length/5))))
@@ -160,13 +165,13 @@
       const conflicts=incomingTags.filter(incoming=>currentTags.some(current=>
         current.name.toLowerCase()===incoming.name.toLowerCase()&&JSON.stringify(current.value??null)!==JSON.stringify(incoming.value??null)
       ));
-      items.push({row,key,existingId:existing?.id||null,status:duplicateInFile?"duplicate-in-file":existing?"existing":candidates.length?"ambiguous":"new",candidates,additions,conflicts});
+      items.push({row,key,existingId:existing?.id||null,status:existing?"existing":candidates.length?"ambiguous":"new",candidates,additions,conflicts});
     });
     return {items,summary:{
       new:items.filter(x=>x.status==="new").length,
       existing:items.filter(x=>x.status==="existing").length,
       ambiguous:items.filter(x=>x.status==="ambiguous").length,
-      repeated:items.filter(x=>x.status==="duplicate-in-file").length,
+      repeated:rawRows.length-items.length,
       tagAdditions:items.reduce((n,x)=>n+x.additions.length,0),
       conflicts:items.reduce((n,x)=>n+x.conflicts.length,0)
     }};
