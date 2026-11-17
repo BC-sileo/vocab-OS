@@ -35,7 +35,8 @@
       const word=window.getVocabOSWordById(id);
       const detail=$("#noteDetailPanel");
       if(!word||!detail||detail.classList.contains("hidden"))return;
-      detail.insertAdjacentHTML("beforeend",tagMarkup(word));
+      const anchor=detail.querySelector(".note-hero")||detail.querySelector(".note-title-row");
+      if(anchor)anchor.insertAdjacentHTML("afterend",tagMarkup(word));else detail.insertAdjacentHTML("beforeend",tagMarkup(word));
       bindTagEditor(word);
     };
   }
