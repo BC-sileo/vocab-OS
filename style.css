@@ -491,3 +491,6 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .tag-import-status.status-ambiguous{color:#a56a16}
 .tag-import-conflict{color:var(--red)!important}
 @media(max-width:420px){.word-tag-editor{grid-template-columns:1fr 1fr}.word-tag-editor button{grid-column:1/-1}}
+
+.learning-tag-criteria{display:grid;gap:7px;margin:8px 0 12px}
+.tag-import-preview:empty{display:none}
