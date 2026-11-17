@@ -14,17 +14,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Check JavaScript syntax
+      - name: Check tag store
+        run: node --check tag-store.js
+      - name: Check tag UI
+        run: node --check tag-ui.js
+      - name: Check app
+        run: node --check app.js
+      - name: Check word notes
+        run: node --check word-notes.js
+      - name: Check learning
+        run: node --check learning.js
+      - name: Check other JavaScript
         run: |
-          node --check tag-store.js
-          node --test tag-store.test.cjs
-          node --check tag-ui.js
-          node --check app.js
-          node --check word-notes.js
           node --check fsrs-loader.js
-          node --check learning.js
           node --check theme.js
           node --check notifications.js
           node --check sw.js
           node --check worker/index.js
-          node tests/tag-store.test.cjs
+      - name: Test tag migration and import
+        run: node tests/tag-store.test.cjs
