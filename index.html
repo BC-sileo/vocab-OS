@@ -6,12 +6,12 @@
   <meta name="theme-color" content="#f4f1e8">
   <title>Vocab OS</title>
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
   <header class="topbar">
     <div>
-      <div class="eyebrow">VOCAB OS · BUILD 10</div>
+      <div class="eyebrow">VOCAB OS · BUILD 11</div>
       <h1>単語を、構造から覚える。</h1>
     </div>
     <div class="topbar-actions"><button id="tocBtn" class="icon-btn" aria-label="目次">☰</button></div>
@@ -76,9 +76,21 @@
   </main>
 
   <main id="notesView" class="hidden">
-    <div class="notes-toolbar"><input id="noteSearch" type="search" placeholder="単語・意味・コアイメージを検索" aria-label="単語を検索" autocomplete="off"><button id="notesHomeBtn" class="subtle-btn">ホーム</button></div>
+    <div class="notes-toolbar"><input id="noteSearch" type="search" placeholder="単語・意味・コアイメージ・タグを検索" aria-label="単語を検索" autocomplete="off"><button id="tagImportBtn" class="subtle-btn">タグ・インポート</button><button id="notesHomeBtn" class="subtle-btn">ホーム</button></div>
     <section id="notesListPanel" class="note-list"></section>
     <section id="noteDetailPanel" class="note-detail card hidden"></section>
+  </main>
+
+  <main id="tagImportView" class="hidden">
+    <section class="card">
+      <div class="section-head"><div><p class="eyebrow">VOCABULARY DATA</p><h2>タグ・インポート</h2></div><button id="tagImportBack" class="subtle-btn">単語一覧へ</button></div>
+      <p class="hint">CSV・TSVを貼り付けて取り込めます。列は word, tags, translation, pos, source。タグは「VEN度:18;新J8:3;FORMAL」の形式です。既存情報は原則上書きしません。</p>
+      <textarea id="tagImportText" class="word-memo" rows="9" placeholder="word,tags,translation,pos,source&#10;abandon,VEN度:18;新J8:3,手放す,v,新JACET8000"></textarea>
+      <button id="tagImportPreview" class="secondary-wide-btn">取り込み内容を確認</button>
+      <section id="tagImportPreviewPanel" class="tag-import-preview" aria-live="polite"></section>
+      <button id="tagImportApply" class="primary-btn" disabled>この内容を登録</button>
+      <p id="tagImportStatus" class="hint" aria-live="polite"></p>
+    </section>
   </main>
 
   <main id="setupView" class="hidden">
@@ -196,10 +208,10 @@
     </div>
   </aside>
 
-  <script src="app.js"></script>
-  <script src="word-notes.js?v=7"></script>
+  <script src="tag-store.js?v=1"></script>\n  <script src="app.js?v=11"></script>
+  <script src="word-notes.js?v=8"></script>\n  <script src="tag-ui.js?v=1"></script>
   <script src="fsrs-loader.js?v=1"></script>
-  <script src="learning.js?v=9"></script>
+  <script src="learning.js?v=10"></script>
   <script src="theme.js"></script>
   <script src="notifications.js?v=2"></script>
 </body>
