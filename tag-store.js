@@ -215,6 +215,34 @@
     rebuildIndex(words);save();
     return words;
   }
+  function matchesTagQuery(wordId,query){
+    const terms=String(query||"").trim().split(/\\s+AND\\s+|\\s+/i).filter(Boolean);
+    const current=getWordTags(wordId);
+    return terms.every(term=>{
+      let negative=false;
+      if(term.startsWith("!")){negative=true;term=term.slice(1);}
+      const match=term.match(/^(.+?)(>=|<=|>|<|=|:)(.+)$/);
+      let found=false;
+      if(!match){
+        found=current.some(tag=>tag.name.toLowerCase()===term.toLowerCase());
+      }else{
+        const name=match[1].trim().toLowerCase(),operator=match[2],raw=match[3].trim();
+        const values=raw.split("|").map(value=>value.trim()).filter(Boolean);
+        const candidates=current.filter(tag=>tag.name.toLowerCase()===name);
+        found=candidates.some(tag=>values.some(value=>{
+          const numeric=Number(value),tagNumeric=typeof tag.value==="number";
+          if(operator==="="||operator===":")return tag.value===null?value.toLowerCase()===tag.name.toLowerCase():String(tag.value).toLowerCase()===value.toLowerCase();
+          if(!tagNumeric||!Number.isFinite(numeric))return false;
+          if(operator===">=")return tag.value>=numeric;
+          if(operator==="<=")return tag.value<=numeric;
+          if(operator===">")return tag.value>numeric;
+          if(operator==="<")return tag.value<numeric;
+          return false;
+        }));
+      }
+      return negative?!found:found;
+    });
+  }
   function searchWords(words,query,requiredTags,excludedTags){
     const q=normalizeWordKey(query||"");
     const required=(requiredTags||[]).map(x=>String(x).toLowerCase());
@@ -229,7 +257,7 @@
   }
   global.VocabOSTagStore={
     initialize,save,normalizeWordKey,rebuildIndex,findWord:key=>wordIndex.get(normalizeWordKey(key))||null,
-    addTag,removeTag,getTags,getWordTags,getNumericValue,tagsLabel,ensureTag,
+    addTag,removeTag,getTags,getWordTags,getNumericValue,tagsLabel,ensureTag,matchesTagQuery,
     previewImport,applyImport,parseCSV,parseTagCell,searchWords,
     get definitions(){return data.tags.slice();},
     get customWords(){return data.customWords.slice();}
