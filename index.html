@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f4f1e8">
   <title>Vocab OS</title>
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="stylesheet" href="style.css?v=9">
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
   <header class="topbar">
@@ -76,7 +76,7 @@
   </main>
 
   <main id="notesView" class="hidden">
-    <div class="notes-toolbar"><input id="noteSearch" type="search" placeholder="単語・意味・コアイメージ・タグを検索" aria-label="単語を検索" autocomplete="off"><button id="tagImportBtn" class="subtle-btn">タグ・インポート</button><button id="notesHomeBtn" class="subtle-btn">ホーム</button></div>
+    <div class="notes-toolbar"><input id="noteSearch" type="search" placeholder="単語・意味・コアイメージを検索" aria-label="単語を検索" autocomplete="off"><input id="tagQuery" type="search" placeholder="タグ条件：新J8=3|4 AND VEN度>=10 AND !CASUAL" aria-label="タグ条件" autocomplete="off"><button id="tagImportBtn" class="subtle-btn">タグ・インポート</button><button id="notesHomeBtn" class="subtle-btn">ホーム</button></div>
     <section id="notesListPanel" class="note-list"></section>
     <section id="noteDetailPanel" class="note-detail card hidden"></section>
   </main>
