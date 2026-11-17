@@ -7,7 +7,6 @@
   const DEFAULT_WORD_COUNT = 5;
   const MAX_WORD_COUNT = 20;
   const CRITERIA = [
-    {id:"ven",label:"VEN度",description:"VEN度が高い単語を優先"},
     {id:"etymology",label:"語源・分解",description:"語源・分解情報が登録された単語を優先"},
     {id:"collocation",label:"コロケーション",description:"具体的な用法パターンが登録された単語を優先"},
     {id:"memory",label:"記憶度",description:"完了テストで想起が不安定だった単語を優先"},
@@ -182,19 +181,35 @@
     const choose=document.getElementById("chooseLearningWords");
     if(choose)choose.disabled=false;
   }
+  function renderTagCriteria(){
+    const host=document.getElementById("learningTagCriteria");if(!host)return;
+    const definitions=window.VocabOSTagStore.definitions;
+    host.innerHTML=definitions.map(tag=>'<label class="learning-criterion"><input type="checkbox" data-learning-criterion="tag:'+safeText(tag.name)+'"><span><strong>'+safeText(tag.name)+'</strong><small>このタグが付いた単語を優先</small></span></label>').join("");
+  }
   function selectedCriteria(){
     return Array.from(document.querySelectorAll("[data-learning-criterion]:checked")).map(function(el){return el.dataset.learningCriterion;});
   }
   function getSelection(mode,count,criteria){
     const candidates=eligibleWords(mode);
-    const maxVen=Math.max(1,...candidates.map(function(w){return Number(window.VocabOSTagStore.getNumericValue(w.id,"VEN度"))||0;}));
+    const selectedTagNames=criteria.filter(id=>id.startsWith("tag:")).map(id=>id.slice(4));
+    const maxByTag={};
+    selectedTagNames.forEach(name=>{
+      maxByTag[name]=Math.max(1,...candidates.map(word=>{
+        const values=window.VocabOSTagStore.getWordTags(word.id).filter(tag=>tag.name.toLowerCase()===name.toLowerCase()&&typeof tag.value==="number").map(tag=>tag.value);
+        return values.length?Math.max(...values):0;
+      }));
+    });
     const scored=candidates.map(function(w){
       const n=noteFor(w),r=recordFor(w.id);
       let hits=0,strength=0;
-      const venValue=window.VocabOSTagStore.getNumericValue(w.id,"VEN度");
-      if(criteria.includes("ven") && Number.isFinite(venValue)){
-        hits++;strength+=venValue/maxVen;
-      }
+      selectedTagNames.forEach(name=>{
+        const matching=window.VocabOSTagStore.getWordTags(w.id).filter(tag=>tag.name.toLowerCase()===name.toLowerCase());
+        if(matching.length){
+          hits++;
+          const numeric=matching.filter(tag=>typeof tag.value==="number").map(tag=>tag.value);
+          strength+=numeric.length?Math.max(...numeric)/maxByTag[name]:1;
+        }
+      });
       if(criteria.includes("etymology") && hasEtymology(w)){hits++;strength+=1;}
       if(criteria.includes("collocation") && usageItems(w).length){hits++;strength+=1;}
       if(criteria.includes("memory")){
@@ -211,7 +226,11 @@
   }
   function criteriaNamesFor(w,criteria){
     const tags=[];
-    if(criteria.includes("ven")&&Number.isFinite(window.VocabOSTagStore.getNumericValue(w.id,"VEN度")))tags.push("VEN度");
+    criteria.filter(id=>id.startsWith("tag:")).forEach(id=>{
+      const name=id.slice(4);
+      const found=window.VocabOSTagStore.getWordTags(w.id).filter(tag=>tag.name.toLowerCase()===name.toLowerCase());
+      if(found.length)tags.push(name+(found[0].value===null?"":" "+found.map(tag=>tag.value).join("/")));
+    });
     if(criteria.includes("etymology")&&hasEtymology(w))tags.push("語源");
     if(criteria.includes("collocation")&&usageItems(w).length)tags.push("コロケーション");
     if(criteria.includes("memory")&&memoryWeakness(w.id)>0)tags.push("記憶");
@@ -236,7 +255,7 @@
     }
     panel.innerHTML='<p class="learning-preview-title">'+ids.length+'語を選びました</p><ol class="learning-preview-list">'+ids.map(function(id){
       const w=byId(id),tags=criteriaNamesFor(w,criteria);
-      return '<li><strong>'+safeText(w.word)+'</strong><small>'+(Number.isFinite(window.VocabOSTagStore.getNumericValue(w.id,"VEN度"))?"VEN度 "+window.VocabOSTagStore.getNumericValue(w.id,"VEN度"):"VEN度未設定")+(tags.length?" · "+safeText(tags.join(" / ")):"")+'</small></li>';
+      return '<li><strong>'+safeText(w.word)+'</strong><small>'+window.VocabOSTagStore.tagsLabel(w.id)||"タグ未設定"+(tags.length?" · "+safeText(tags.join(" / ")):"")+'</small></li>';
     }).join("")+'</ol>';
     start.disabled=false;
   }
@@ -254,7 +273,7 @@
     if(description)description.textContent=setupMode==="first"
       ?"初見モードを完了していない単語が対象です。完了済みの単語は初見モードに戻りません。"
       :"初見完了済みで、復習期限が来た単語だけが対象です。";
-    document.querySelectorAll("[data-learning-criterion]").forEach(function(el){el.checked=false;});
+    renderTagCriteria();\n    document.querySelectorAll("[data-learning-criterion]").forEach(function(el){el.checked=false;});
     const count=document.getElementById("learningWordCount");
     if(count)count.value=String(Math.min(MAX_WORD_COUNT,Math.max(1,store.wordCount||DEFAULT_WORD_COUNT)));
     const panel=document.getElementById("learningSelectionPreview");
