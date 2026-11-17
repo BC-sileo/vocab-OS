@@ -90,7 +90,8 @@ window.refreshVocabOSWordList=()=>{order=sortedReviewWords().map(w=>w.id);popula
 function pageCount(){return Math.max(1,Math.ceil(order.length/pageSize))}
 function pageIds(p){const n=p||1;return order.slice((n-1)*pageSize,n*pageSize)}
 function wordsFor(p){const ids=new Set(pageIds(p));return order.filter(id=>ids.has(id)).map(id=>window.getVocabOSWordById(id)).filter(Boolean)}
-function showView(id){["homeView","notesView","tagImportView","setupView","reviewView","resultView"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id));}\nwindow.showView=showView;
+function showView(id){["homeView","notesView","tagImportView","setupView","reviewView","resultView"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id));}
+window.showView=showView;
 function populateSessionPages(){
   const max=pageCount();
   sessionPages=Math.max(1,Math.min(sessionPages,max));
