@@ -52,10 +52,14 @@ for (const [word, meta] of Object.entries(MEANING_READY_WORD_META)) {
  const entry=WORDS.find(w=>w.word===word); if(!entry) continue;
  entry.translation=meta[0]; entry.pos=meta[1]; entry.coreImage=""; entry.pending=false; entry.meaningReady=true;
 }
+// Convert legacy VEN metadata into ordinary tags before any UI uses WORDS.
+window.VocabOSTagStore.initialize(WORDS);
+const WORD_BY_ID=new Map(WORDS.map(word=>[Number(word.id),word]));
+window.getVocabOSWordById=id=>WORD_BY_ID.get(Number(id))||null;
 function compareByVEN(a,b) {
-  const av = Number.isFinite(a.ven) ? a.ven : -1;
-  const bv = Number.isFinite(b.ven) ? b.ven : -1;
-  return bv - av || a.word.localeCompare(b.word);
+  const av = window.VocabOSTagStore.getNumericValue(a.id,"VEN度");
+  const bv = window.VocabOSTagStore.getNumericValue(b.id,"VEN度");
+  return (Number.isFinite(bv)?bv:-1)-(Number.isFinite(av)?av:-1) || a.word.localeCompare(b.word);
 }
 function sortedReviewWords() {
   return WORDS.filter(w => !w.pending).slice().sort(compareByVEN);
@@ -83,7 +87,7 @@ const pageSizeEl=$("#pageSize"),sessionPagesEl=$("#sessionPages"),list=$("#wordL
 function save(){localStorage.setItem(KEY,JSON.stringify({pageSize,sessionPages,mode,order,states,notes:notesById}));}
 function pageCount(){return Math.max(1,Math.ceil(order.length/pageSize))}
 function pageIds(p){const n=p||1;return order.slice((n-1)*pageSize,n*pageSize)}
-function wordsFor(p){const ids=new Set(pageIds(p));return order.filter(id=>ids.has(id)).map(id=>WORDS[id-1])}
+function wordsFor(p){const ids=new Set(pageIds(p));return order.filter(id=>ids.has(id)).map(id=>window.getVocabOSWordById(id)).filter(Boolean)}
 function showView(id){["homeView","notesView","setupView","reviewView","resultView"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id));}
 function populateSessionPages(){
   const max=pageCount();
@@ -176,7 +180,7 @@ function renderResults(){
   const weak=resultIds.length;
   $("#resultSummary").textContent=weak?weak+"語が今回の再接触対象です。":"今回はすべて即答でした。";
   $("#resultList").innerHTML=resultIds.length?resultIds.map(id=>{
-    const w=WORDS[id-1],s=sessionStates[id];
+    const w=window.getVocabOSWordById(id),s=sessionStates[id];
     return '<article class="result-card">'+imageCueMarkup(w)+'<div class="result-meta"><div class="result-word">'+w.word+'</div><span class="status">'+s+'</span></div><div class="result-label">コアイメージ</div><div class="result-core">'+w.coreImage+'</div></article>';
   }).join(""):'<section class="card"><strong>苦手語はありません。</strong><p class="hint">今回の接触はここで完了です。</p></section>';
   $("#finishBtn").disabled=true;
