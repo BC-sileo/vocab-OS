@@ -117,12 +117,12 @@
     }
     row.push(field);if(row.some(cell=>cell.trim()))rows.push(row);
     if(!rows.length)return [];
-    const header=rows.shift().map(v=>v.trim().toLowerCase());
+    const header=rows[0].map(v=>v.trim().toLowerCase());
     const hasHeader=header.some(v=>["word","単語","spelling"].includes(v));
     const columns=hasHeader?header:["word","tags","translation","pos","source"];
     const wordColumn=hasHeader?columns.findIndex(v=>["word","単語","spelling"].includes(v)):0;
     if(wordColumn<0)throw new Error("列名に word（または単語）が必要です。");
-    if(!hasHeader)rows.unshift(header);
+    if(hasHeader)rows.shift();
     return rows.map(cells=>{
       const get=names=>{const i=columns.findIndex(v=>names.includes(v));return i<0?"":String(cells[i]||"").trim();};
       return {
@@ -192,8 +192,8 @@
         if((!word.translation||word.translation==="意味データ登録待ち")&&item.row.translation){word.translation=item.row.translation;word.pending=false;}
         if((!word.pos||word.pos==="未登録")&&item.row.pos)word.pos=item.row.pos;
       }
-      const source=item.row.source||"";
-      if(source)if(addTag("word",word.id,"出典",source,source))report.tagsAdded++;
+      const sources=String(item.row.source||"").split(/[;；]/).map(value=>value.trim()).filter(Boolean);
+      sources.forEach(source=>{if(addTag("word",word.id,"出典",source,source))report.tagsAdded++;});
       item.additions.forEach(tag=>{if(addTag("word",word.id,tag.name,tag.value,source||null))report.tagsAdded++;});
       item.conflicts.forEach(tag=>report.conflicts.push({word:word.word,tag:tag.name,existing:getWordTags(word.id).filter(t=>t.name.toLowerCase()===tag.name.toLowerCase()).map(t=>t.value),incoming:tag.value}));
       addedInThisBatch.set(item.key,word.id);
