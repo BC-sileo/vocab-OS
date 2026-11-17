@@ -108,7 +108,7 @@
     }
     return record;
   }
-  function byId(id){return WORDS.find(function(w){return w.id===Number(id);});}
+  function byId(id){return window.getVocabOSWordById?window.getVocabOSWordById(id):WORDS.find(function(w){return w.id===Number(id);});}
   function safeText(value){
     return String(value==null?"":value).replace(/[&<>"']/g,function(c){
       return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
@@ -187,12 +187,13 @@
   }
   function getSelection(mode,count,criteria){
     const candidates=eligibleWords(mode);
-    const maxVen=Math.max(1,...candidates.map(function(w){return Number(w.ven)||0;}));
+    const maxVen=Math.max(1,...candidates.map(function(w){return Number(window.VocabOSTagStore.getNumericValue(w.id,"VEN度"))||0;}));
     const scored=candidates.map(function(w){
       const n=noteFor(w),r=recordFor(w.id);
       let hits=0,strength=0;
-      if(criteria.includes("ven") && Number.isFinite(w.ven)){
-        hits++;strength+=Number(w.ven)/maxVen;
+      const venValue=window.VocabOSTagStore.getNumericValue(w.id,"VEN度");
+      if(criteria.includes("ven") && Number.isFinite(venValue)){
+        hits++;strength+=venValue/maxVen;
       }
       if(criteria.includes("etymology") && hasEtymology(w)){hits++;strength+=1;}
       if(criteria.includes("collocation") && usageItems(w).length){hits++;strength+=1;}
@@ -210,7 +211,7 @@
   }
   function criteriaNamesFor(w,criteria){
     const tags=[];
-    if(criteria.includes("ven")&&Number.isFinite(w.ven))tags.push("VEN度");
+    if(criteria.includes("ven")&&Number.isFinite(window.VocabOSTagStore.getNumericValue(w.id,"VEN度")))tags.push("VEN度");
     if(criteria.includes("etymology")&&hasEtymology(w))tags.push("語源");
     if(criteria.includes("collocation")&&usageItems(w).length)tags.push("コロケーション");
     if(criteria.includes("memory")&&memoryWeakness(w.id)>0)tags.push("記憶");
@@ -235,7 +236,7 @@
     }
     panel.innerHTML='<p class="learning-preview-title">'+ids.length+'語を選びました</p><ol class="learning-preview-list">'+ids.map(function(id){
       const w=byId(id),tags=criteriaNamesFor(w,criteria);
-      return '<li><strong>'+safeText(w.word)+'</strong><small>'+(Number.isFinite(w.ven)?"VEN度 "+w.ven:"VEN度未設定")+(tags.length?" · "+safeText(tags.join(" / ")):"")+'</small></li>';
+      return '<li><strong>'+safeText(w.word)+'</strong><small>'+(Number.isFinite(window.VocabOSTagStore.getNumericValue(w.id,"VEN度"))?"VEN度 "+window.VocabOSTagStore.getNumericValue(w.id,"VEN度"):"VEN度未設定")+(tags.length?" · "+safeText(tags.join(" / ")):"")+'</small></li>';
     }).join("")+'</ol>';
     start.disabled=false;
   }
