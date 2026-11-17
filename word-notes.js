@@ -568,7 +568,7 @@ function renderNoteList(){
  key.onchange=()=>{noteSortKey=key.value;renderNoteList();};
  direction.onchange=()=>{noteSortDirection=direction.value;renderNoteList();};
  const clear=$("#clearDecompFilter");if(clear)clear.onclick=()=>{activeDecompFilter="";renderNoteList();};
- $("#notesListPanel").querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openNote(Number(b.dataset.id)));
+ $("#notesListPanel").querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>window.openNote(Number(b.dataset.id)));
 }
 function openNote(id,autoplay=true){
  if(!$("#notesListPanel").classList.contains("hidden"))noteListScrollY=window.scrollY;
