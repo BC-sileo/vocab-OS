@@ -79,7 +79,7 @@
     const report=tags.applyImport(currentPreview,WORDS);
     if(window.rebuildVocabOSWordIndex)window.rebuildVocabOSWordIndex();
     if(typeof renderNoteList==="function")renderNoteList();
-    if(typeof populateSessionPages==="function")populateSessionPages();
+    if(window.refreshVocabOSWordList)window.refreshVocabOSWordList();
     currentPreview=null;$("#tagImportApply").disabled=true;
     $("#tagImportStatus").textContent="登録完了：新規 "+report.created+" 語、既存更新 "+report.updated+" 語、タグ追加 "+report.tagsAdded+" 件、要確認のため保留 "+report.skipped+" 件。";
     if(report.conflicts.length)$("#tagImportStatus").textContent+=" タグ値の競合 "+report.conflicts.length+" 件は両方保存しました。";
