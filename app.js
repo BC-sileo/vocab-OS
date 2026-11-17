@@ -85,7 +85,7 @@ let resultIds=[];
 const $=s=>document.querySelector(s);
 const pageSizeEl=$("#pageSize"),sessionPagesEl=$("#sessionPages"),list=$("#wordList");
 
-function save(){localStorage.setItem(KEY,JSON.stringify({pageSize,sessionPages,mode,order,states,notes:notesById}));}
+function save(){localStorage.setItem(KEY,JSON.stringify({pageSize,sessionPages,mode,order,states,notes:notesById}));}\nwindow.refreshVocabOSWordList=()=>{order=sortedReviewWords().map(w=>w.id);populateSessionPages();save();};
 function pageCount(){return Math.max(1,Math.ceil(order.length/pageSize))}
 function pageIds(p){const n=p||1;return order.slice((n-1)*pageSize,n*pageSize)}
 function wordsFor(p){const ids=new Set(pageIds(p));return order.filter(id=>ids.has(id)).map(id=>window.getVocabOSWordById(id)).filter(Boolean)}
