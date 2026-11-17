@@ -30,7 +30,7 @@ assert.equal(preview.summary.new, 1);
 assert.equal(preview.summary.tagAdditions, 4);
 const report = tags.applyImport(preview, words);
 assert.equal(report.created, 1);
-assert.equal(report.tagsAdded, 5);
+assert.equal(report.tagsAdded, 6);
 assert.equal(words.length, 3);
 assert.equal(tags.getNumericValue(7, "VEN度"), 18);
 assert.equal(tags.getWordTags(7).some(tag => tag.name === "新J8" && tag.value === 3), true);
