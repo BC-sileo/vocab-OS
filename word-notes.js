@@ -552,14 +552,14 @@ function noteSearchText(w,n){
  return [w.word,w.translation,effectiveCoreImage(w,n),window.VocabOSTagStore.tagsLabel(w.id),n.meaning,n.usage,mapText,independentText,domainText].join(" ").toLowerCase();
 }
 function renderNoteList(){
- const q=$("#noteSearch").value.trim().toLowerCase();
+ const q=$("#noteSearch").value.trim().toLowerCase();\n const tagQuery=$("#tagQuery")?$("#tagQuery").value.trim():"";
  const sortValue=w=>noteSortKey==="views"?(Number(notesById[w.id]?.viewCount)||0):noteSortKey==="word"?w.word:((Number(window.VocabOSTagStore.getNumericValue(w.id,"VEN度"))||-1));
  const rows=WORDS.slice().sort((a,b)=>{
   const av=sortValue(a),bv=sortValue(b);
   let cmp=typeof av==="string"?av.localeCompare(bv):av-bv;
   if(noteSortDirection==="desc")cmp=-cmp;
   return cmp||a.word.localeCompare(b.word);
- }).filter(w=>{const n=noteFor(w),text=noteSearchText(w,n);return text.includes(q)&&(!activeDecompFilter||(NOTE_PARTS[w.id]||[]).includes(activeDecompFilter));});
+ }).filter(w=>{const n=noteFor(w),text=noteSearchText(w,n);return text.includes(q)&&(!tagQuery||window.VocabOSTagStore.matchesTagQuery(w.id,tagQuery))&&(!activeDecompFilter||(NOTE_PARTS[w.id]||[]).includes(activeDecompFilter));});
  const sortLabel=noteSortKey==="ven"?"VEN度":noteSortKey==="views"?"閲覧回数":"単語";
  $("#notesListPanel").innerHTML='<div class="note-sort-toolbar"><label>並び順<select id="noteSortKey"><option value="ven">VEN度</option><option value="views">閲覧回数</option><option value="word">単語</option></select></label><label>順序<select id="noteSortDirection"><option value="desc">降順</option><option value="asc">昇順</option></select></label></div><div class="ven-sort-caption">'+escapeHtml(sortLabel)+'・'+(noteSortDirection==="desc"?"降順":"昇順")+'</div>'+(activeDecompFilter?'<button class="subtle-btn" id="clearDecompFilter">← 全単語に戻る：'+escapeHtml(activeDecompFilter)+'</button>':"")+rows.map(w=>{const n=noteFor(w);const views=Number(notesById[w.id]?.viewCount)||0;return '<button class="note-list-item" data-id="'+w.id+'"><span class="note-list-word">'+escapeHtml(w.word)+'</span><span class="note-list-core">'+escapeHtml(n.meaning||w.translation)+'</span><span class="note-list-meta">'+escapeHtml(w.pos)+' · '+(window.VocabOSTagStore.tagsLabel(w.id)||"タグ未設定")+' · 閲覧 '+views+'回'+(w.pending?' · 内容登録待ち':'')+(hasPersonalMemo(n)?' · メモあり':'')+(typeof window.learningBadgeFor==="function"?window.learningBadgeFor(w.id):"")+' · '+(imageUrl(w)?'画像あり':'画像未設定')+'</span></button>';}).join("")||'<div class="card">該当する単語がありません。</div>';
  const key=$("#noteSortKey"),direction=$("#noteSortDirection");
@@ -711,4 +711,4 @@ function saveImageData(id){
 }
 $("#notesBtn").onclick=openNotes;
 $("#notesHomeBtn").onclick=()=>showView("homeView");
-$("#noteSearch").addEventListener("input",renderNoteList);
+$("#noteSearch").addEventListener("input",renderNoteList);\n$("#tagQuery").addEventListener("input",renderNoteList);
