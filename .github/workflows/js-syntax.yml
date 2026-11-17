@@ -26,3 +26,4 @@ jobs:
           node --check notifications.js
           node --check sw.js
           node --check worker/index.js
+          node tests/tag-store.test.cjs
