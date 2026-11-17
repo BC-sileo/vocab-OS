@@ -32,4 +32,6 @@ jobs:
           node --check sw.js
           node --check worker/index.js
       - name: Test tag migration and import
-        run: node tests/tag-store.test.cjs
+        run: |
+          node tests/tag-store.test.cjs
+          node --test tag-store.test.cjs
