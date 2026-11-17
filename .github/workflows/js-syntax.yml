@@ -17,6 +17,7 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --check tag-store.js
+          node --test tag-store.test.cjs
           node --check tag-ui.js
           node --check app.js
           node --check word-notes.js
