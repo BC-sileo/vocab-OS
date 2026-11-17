@@ -216,10 +216,10 @@
     return words;
   }
   function matchesTagQuery(wordId,query){
-    const terms=String(query||"").trim().split(/\s+AND\s+|\s+/i).filter(Boolean);
+    const groups=String(query||"").trim().split(/\s+AND\s+/i).filter(Boolean);
     const current=getWordTags(wordId);
-    return terms.every(term=>{
-      let negative=false;
+    function matchesTerm(rawTerm){
+      let term=rawTerm.trim(),negative=false;
       if(term.startsWith("!")){negative=true;term=term.slice(1);}
       const match=term.match(/^(.+?)(>=|<=|>|<|=|:)(.+)$/);
       let found=false;
@@ -241,7 +241,8 @@
         }));
       }
       return negative?!found:found;
-    });
+    }
+    return groups.every(group=>group.split(/\s+OR\s+/i).some(matchesTerm));
   }
   function searchWords(words,query,requiredTags,excludedTags){
     const q=normalizeWordKey(query||"");
