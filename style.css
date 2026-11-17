@@ -469,3 +469,25 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 .fsrs-retention-slider{display:block;width:100%;accent-color:var(--accent);cursor:pointer}
 .fsrs-retention-scale{display:flex;justify-content:space-between;gap:8px;margin-top:6px;font-size:11px;color:var(--muted)}
 .fsrs-rating-note{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--surface-soft,#f3f1ea);font-size:12px;line-height:1.7;color:var(--muted)}
+
+
+/* Generic lexical tags and import preview */
+.word-tag-summary{display:inline-flex;max-width:100%;padding:5px 9px;border-radius:8px;background:var(--panel2);color:var(--accent);font-size:11px;font-weight:750;overflow-wrap:anywhere}
+.word-tags-section{margin-top:16px}
+.word-tag-chips{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 12px}
+.word-tag-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);font-size:12px;font-weight:700}
+.word-tag-chip button{border:0;background:transparent;color:var(--muted);font-size:16px;line-height:1;cursor:pointer;padding:0 2px}
+.word-tag-editor{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.7fr) auto;gap:7px}
+.word-tag-editor input{min-width:0;width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--text);font:inherit;font-size:13px}
+.tag-import-preview{display:grid;gap:8px;margin-top:14px}
+.tag-import-summary{display:flex;flex-wrap:wrap;gap:7px;padding:10px;border-radius:10px;background:var(--panel2);font-size:12px;font-weight:750}
+.tag-import-summary span{padding:3px 5px}
+.tag-import-row{display:grid;gap:5px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.tag-import-row>div{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag-import-row strong{font-size:14px}
+.tag-import-row small{font-size:11px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}
+.tag-import-status{padding:3px 7px;border-radius:6px;background:var(--panel2);font-size:10px;font-weight:800}
+.tag-import-status.status-new{color:#24734b}
+.tag-import-status.status-ambiguous{color:#a56a16}
+.tag-import-conflict{color:var(--red)!important}
+@media(max-width:420px){.word-tag-editor{grid-template-columns:1fr 1fr}.word-tag-editor button{grid-column:1/-1}}
