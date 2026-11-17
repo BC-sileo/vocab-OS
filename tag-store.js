@@ -216,7 +216,7 @@
     return words;
   }
   function matchesTagQuery(wordId,query){
-    const terms=String(query||"").trim().split(/\\s+AND\\s+|\\s+/i).filter(Boolean);
+    const terms=String(query||"").trim().split(/\s+AND\s+|\s+/i).filter(Boolean);
     const current=getWordTags(wordId);
     return terms.every(term=>{
       let negative=false;
