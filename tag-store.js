@@ -83,7 +83,8 @@
   function getNumericValue(wordId,name){
     const key=String(name).toLocaleLowerCase("en-US");
     const matches=getWordTags(wordId).filter(tag=>tag.name.toLocaleLowerCase("en-US")===key&&typeof tag.value==="number");
-    const distinct=Array.from(new Set(matches.map(tag=>tag.value)));\n    return distinct.length===1?distinct[0]:undefined;
+    const distinct=Array.from(new Set(matches.map(tag=>tag.value)));
+    return distinct.length===1?distinct[0]:undefined;
   }
   function tagsLabel(wordId){
     return getWordTags(wordId).map(tag=>tag.value===null?tag.name:tag.name+" "+tag.value).join(" · ");
@@ -194,7 +195,8 @@
       }
       const sources=String(item.row.source||"").split(/[;；]/).map(value=>value.trim()).filter(Boolean);
       sources.forEach(source=>{if(addTag("word",word.id,"出典",source,source))report.tagsAdded++;});
-      item.additions.forEach(tag=>{if(addTag("word",word.id,tag.name,tag.value,source||null))report.tagsAdded++;});
+      const primarySource=sources[0]||null;
+      item.additions.forEach(tag=>{if(addTag("word",word.id,tag.name,tag.value,primarySource))report.tagsAdded++;});
       item.conflicts.forEach(tag=>report.conflicts.push({word:word.word,tag:tag.name,existing:getWordTags(word.id).filter(t=>t.name.toLowerCase()===tag.name.toLowerCase()).map(t=>t.value),incoming:tag.value}));
       addedInThisBatch.set(item.key,word.id);
     });
