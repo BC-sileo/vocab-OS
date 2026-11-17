@@ -58,8 +58,7 @@
     const normalizedValue=value===undefined||value===null||value===""?null:value;
     const exists=data.assignments.some(item=>
       item.entityType===entityType&&String(item.entityId)===String(entityId)&&
-      item.tagId===tag.id&&JSON.stringify(item.value??null)===JSON.stringify(normalizedValue)&&
-      true
+      item.tagId===tag.id&&JSON.stringify(item.value??null)===JSON.stringify(normalizedValue)
     );
     if(exists)return false;
     data.assignments.push({entityType,entityId,tagId:tag.id,value:normalizedValue,source:source||null});
