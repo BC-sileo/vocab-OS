@@ -255,7 +255,7 @@
     }
     panel.innerHTML='<p class="learning-preview-title">'+ids.length+'語を選びました</p><ol class="learning-preview-list">'+ids.map(function(id){
       const w=byId(id),tags=criteriaNamesFor(w,criteria);
-      return '<li><strong>'+safeText(w.word)+'</strong><small>'+window.VocabOSTagStore.tagsLabel(w.id)||"タグ未設定"+(tags.length?" · "+safeText(tags.join(" / ")):"")+'</small></li>';
+      return '<li><strong>'+safeText(w.word)+'</strong><small>'+(window.VocabOSTagStore.tagsLabel(w.id)||"タグ未設定")+(tags.length?" · "+safeText(tags.join(" / ")):"")+'</small></li>';
     }).join("")+'</ol>';
     start.disabled=false;
   }
