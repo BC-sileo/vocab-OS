@@ -159,12 +159,16 @@
         .filter(item=>item.distance<=Math.max(1,Math.min(2,Math.floor(key.length/5))))
         .sort((a,b)=>a.distance-b.distance).slice(0,3);
       const currentTags=existing?getWordTags(existing.id):[];
-      const incomingTags=parseTagCell(row.tags);
+      const incomingTags=Array.from(new Map(parseTagCell(row.tags).map(tag=>[
+        tag.name.normalize("NFKC").trim().toLocaleLowerCase("en-US")+"\\u0000"+JSON.stringify(tag.value??null),tag
+      ])).values());
       const additions=incomingTags.filter(incoming=>!currentTags.some(current=>
-        current.name.toLowerCase()===incoming.name.toLowerCase()&&JSON.stringify(current.value??null)===JSON.stringify(incoming.value??null)
+        current.name.normalize("NFKC").trim().toLocaleLowerCase("en-US")===incoming.name.normalize("NFKC").trim().toLocaleLowerCase("en-US")&&JSON.stringify(current.value??null)===JSON.stringify(incoming.value??null)
       ));
       const conflicts=incomingTags.filter(incoming=>currentTags.some(current=>
-        current.name.toLowerCase()===incoming.name.toLowerCase()&&JSON.stringify(current.value??null)!==JSON.stringify(incoming.value??null)
+        current.name.normalize("NFKC").trim().toLocaleLowerCase("en-US")===incoming.name.normalize("NFKC").trim().toLocaleLowerCase("en-US")&&JSON.stringify(current.value??null)!==JSON.stringify(incoming.value??null)
+      )||incomingTags.some(other=>
+        other!==incoming&&other.name.normalize("NFKC").trim().toLocaleLowerCase("en-US")===incoming.name.normalize("NFKC").trim().toLocaleLowerCase("en-US")&&JSON.stringify(other.value??null)!==JSON.stringify(incoming.value??null)
       ));
       items.push({row,key,existingId:existing?.id||null,status:existing?"existing":candidates.length?"ambiguous":"new",candidates,additions,conflicts});
     });
