@@ -542,7 +542,7 @@ function imageCueMarkup(w){
  return url ? '<img class="image-cue" loading="lazy" src="'+escapeHtml(url)+'" alt="'+escapeHtml(w.word)+'の画像" onerror="this.remove()">' : "";
 }
 let noteListScrollY=0;
-function openNotes(){activeDecompFilter="";noteListScrollY=0;showView("notesView");$("#notesListPanel").classList.remove("hidden");$("#noteDetailPanel").classList.add("hidden");$("#noteSearch").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});}
+function openNotes(){activeDecompFilter="";noteListScrollY=0;showView("notesView");$("#notesListPanel").classList.remove("hidden");$("#noteDetailPanel").classList.add("hidden");$("#noteSearch").value="";if($("#tagQuery"))$("#tagQuery").value="";renderNoteList();window.scrollTo({top:0,behavior:"instant"});}
 function noteSearchText(w,n){
  const map=n.semanticMap||SEMANTIC_MAPS[w.id];
  const mapText=map&&Array.isArray(map.nodes)?map.nodes.map(node=>[node.label,node.description,node.kind].join(" ")).join(" "):"";
@@ -714,3 +714,6 @@ $("#notesBtn").onclick=openNotes;
 $("#notesHomeBtn").onclick=()=>showView("homeView");
 $("#noteSearch").addEventListener("input",renderNoteList);
 $("#tagQuery").addEventListener("input",renderNoteList);
+
+window.openNote=openNote;
+window.renderNoteList=renderNoteList;
