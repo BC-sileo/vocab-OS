@@ -169,7 +169,7 @@
       )||incomingTags.some(other=>
         other!==incoming&&other.name.normalize("NFKC").trim().toLocaleLowerCase("en-US")===incoming.name.normalize("NFKC").trim().toLocaleLowerCase("en-US")&&JSON.stringify(other.value??null)!==JSON.stringify(incoming.value??null)
       ));
-      items.push({row,key,existingId:existing?.id||null,status:existing?"existing":candidates.length?"ambiguous":"new",candidates,additions,conflicts});
+      items.push({row,key,existingId:existing?.id||null,status:existing?"existing":candidates.length?"ambiguous":"new",candidates,existingTags:currentTags,additions,conflicts});
     });
     return {items,summary:{
       new:items.filter(x=>x.status==="new").length,
@@ -200,7 +200,7 @@
       sources.forEach(source=>{if(addTag("word",word.id,"出典",source,source))report.tagsAdded++;});
       const primarySource=sources[0]||null;
       item.additions.forEach(tag=>{if(addTag("word",word.id,tag.name,tag.value,primarySource))report.tagsAdded++;});
-      item.conflicts.forEach(tag=>report.conflicts.push({word:word.word,tag:tag.name,existing:getWordTags(word.id).filter(t=>t.name.toLowerCase()===tag.name.toLowerCase()).map(t=>t.value),incoming:tag.value}));
+      item.conflicts.forEach(tag=>report.conflicts.push({word:word.word,tag:tag.name,existing:(item.existingTags||[]).filter(t=>t.name.toLowerCase()===tag.name.toLowerCase()).map(t=>t.value),incoming:tag.value}));
       addedInThisBatch.set(item.key,word.id);
     });
     data.imports.push({at:Date.now(),summary:report,keys:Array.from(addedInThisBatch.keys())});
