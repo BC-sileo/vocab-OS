@@ -549,11 +549,11 @@ function noteSearchText(w,n){
  const independent=n.independentMeanings||map?.independentMeanings||[];
  const independentText=Array.isArray(independent)?independent.map(item=>typeof item==="string"?item:[item.label,item.description,item.meaning].join(" ")).join(" "):"";
  const domainText=Array.isArray(n.domainExamples)?n.domainExamples.map(item=>[item.domain,item.expression,item.meaning,item.explanation].join(" ")).join(" "):"";
- return [w.word,w.translation,effectiveCoreImage(w,n),w.ven??"",n.meaning,n.usage,mapText,independentText,domainText].join(" ").toLowerCase();
+ return [w.word,w.translation,effectiveCoreImage(w,n),window.VocabOSTagStore.tagsLabel(w.id),n.meaning,n.usage,mapText,independentText,domainText].join(" ").toLowerCase();
 }
 function renderNoteList(){
  const q=$("#noteSearch").value.trim().toLowerCase();
- const sortValue=w=>noteSortKey==="views"?(Number(notesById[w.id]?.viewCount)||0):noteSortKey==="word"?w.word:(Number.isFinite(w.ven)?w.ven:-1);
+ const sortValue=w=>noteSortKey==="views"?(Number(notesById[w.id]?.viewCount)||0):noteSortKey==="word"?w.word:((Number(window.VocabOSTagStore.getNumericValue(w.id,"VEN度"))||-1));
  const rows=WORDS.slice().sort((a,b)=>{
   const av=sortValue(a),bv=sortValue(b);
   let cmp=typeof av==="string"?av.localeCompare(bv):av-bv;
@@ -561,7 +561,7 @@ function renderNoteList(){
   return cmp||a.word.localeCompare(b.word);
  }).filter(w=>{const n=noteFor(w),text=noteSearchText(w,n);return text.includes(q)&&(!activeDecompFilter||(NOTE_PARTS[w.id]||[]).includes(activeDecompFilter));});
  const sortLabel=noteSortKey==="ven"?"VEN度":noteSortKey==="views"?"閲覧回数":"単語";
- $("#notesListPanel").innerHTML='<div class="note-sort-toolbar"><label>並び順<select id="noteSortKey"><option value="ven">VEN度</option><option value="views">閲覧回数</option><option value="word">単語</option></select></label><label>順序<select id="noteSortDirection"><option value="desc">降順</option><option value="asc">昇順</option></select></label></div><div class="ven-sort-caption">'+escapeHtml(sortLabel)+'・'+(noteSortDirection==="desc"?"降順":"昇順")+'</div>'+(activeDecompFilter?'<button class="subtle-btn" id="clearDecompFilter">← 全単語に戻る：'+escapeHtml(activeDecompFilter)+'</button>':"")+rows.map(w=>{const n=noteFor(w);const views=Number(notesById[w.id]?.viewCount)||0;return '<button class="note-list-item" data-id="'+w.id+'"><span class="note-list-word">'+escapeHtml(w.word)+'</span><span class="note-list-core">'+escapeHtml(n.meaning||w.translation)+'</span><span class="note-list-meta">'+escapeHtml(w.pos)+' · '+(Number.isFinite(w.ven)?'VEN度 '+w.ven:'VEN度未設定')+' · 閲覧 '+views+'回'+(w.pending?' · 内容登録待ち':'')+(hasPersonalMemo(n)?' · メモあり':'')+(typeof window.learningBadgeFor==="function"?window.learningBadgeFor(w.id):"")+' · '+(imageUrl(w)?'画像あり':'画像未設定')+'</span></button>';}).join("")||'<div class="card">該当する単語がありません。</div>';
+ $("#notesListPanel").innerHTML='<div class="note-sort-toolbar"><label>並び順<select id="noteSortKey"><option value="ven">VEN度</option><option value="views">閲覧回数</option><option value="word">単語</option></select></label><label>順序<select id="noteSortDirection"><option value="desc">降順</option><option value="asc">昇順</option></select></label></div><div class="ven-sort-caption">'+escapeHtml(sortLabel)+'・'+(noteSortDirection==="desc"?"降順":"昇順")+'</div>'+(activeDecompFilter?'<button class="subtle-btn" id="clearDecompFilter">← 全単語に戻る：'+escapeHtml(activeDecompFilter)+'</button>':"")+rows.map(w=>{const n=noteFor(w);const views=Number(notesById[w.id]?.viewCount)||0;return '<button class="note-list-item" data-id="'+w.id+'"><span class="note-list-word">'+escapeHtml(w.word)+'</span><span class="note-list-core">'+escapeHtml(n.meaning||w.translation)+'</span><span class="note-list-meta">'+escapeHtml(w.pos)+' · '+(window.VocabOSTagStore.tagsLabel(w.id)||"タグ未設定")+' · 閲覧 '+views+'回'+(w.pending?' · 内容登録待ち':'')+(hasPersonalMemo(n)?' · メモあり':'')+(typeof window.learningBadgeFor==="function"?window.learningBadgeFor(w.id):"")+' · '+(imageUrl(w)?'画像あり':'画像未設定')+'</span></button>';}).join("")||'<div class="card">該当する単語がありません。</div>';
  const key=$("#noteSortKey"),direction=$("#noteSortDirection");
  key.value=noteSortKey;direction.value=noteSortDirection;
  key.onchange=()=>{noteSortKey=key.value;renderNoteList();};
@@ -574,7 +574,7 @@ function openNote(id,autoplay=true){
  const w=WORDS.find(x=>x.id===id);if(!w)return;const previous=notesById[id]||{};notesById[id]={...previous,viewCount:(Number(previous.viewCount)||0)+1};save();const n=noteFor(w);
  $("#notesListPanel").classList.add("hidden");const d=$("#noteDetailPanel");d.classList.remove("hidden");d.classList.remove("translation-hidden");
  if(w.pending){
-  d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button><div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">未登録</span></div><span class="ven-detail">VEN度 '+escapeHtml(w.ven)+'</span><button type="button" class="weak-toggle" data-weak-toggle="'+w.id+'">苦手にする</button><button id="playWordAudio" class="audio-btn" type="button">🔊 発音</button></div><section class="ven-pending-card"><strong>単語登録済み・内容作成待ち</strong><p>現在は綴りとVEN度だけを登録している。語義・品詞・コアイメージ・語法などを確認してから学習カードに追加する。</p></section>'+renderMemoSection(n);
+  d.innerHTML='<button class="subtle-btn note-back" id="noteBack">← 単語一覧へ</button><div class="note-title-row"><div class="note-word-line"><h2>'+escapeHtml(w.word)+'</h2><span class="pos">未登録</span></div><span class="ven-detail">VEN度 '+escapeHtml(window.VocabOSTagStore.tagsLabel(w.id)||"タグ未設定")+'</span><button type="button" class="weak-toggle" data-weak-toggle="'+w.id+'">苦手にする</button><button id="playWordAudio" class="audio-btn" type="button">🔊 発音</button></div><section class="ven-pending-card"><strong>単語登録済み・内容作成待ち</strong><p>現在は綴りとタグを登録している。語義・品詞・コアイメージ・語法などを確認してから学習カードに追加する。</p></section>'+renderMemoSection(n);
  $("#noteBack").onclick=()=>{d.classList.add("hidden");$("#notesListPanel").classList.remove("hidden");renderNoteList();requestAnimationFrame(()=>window.scrollTo({top:noteListScrollY,behavior:"instant"}));};
   $("#playWordAudio").onclick=()=>speakWord(w);
   bindWordMemo(id,n);
