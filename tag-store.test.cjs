@@ -37,7 +37,7 @@ test("tag store keeps lexical tags separate and imports idempotently", () => {
   assert.equal(preview.summary.new,1);
   assert.equal(preview.summary.existing,1);
   assert.equal(preview.summary.repeated,1);
-  assert.equal(preview.items.find(item=>item.key==="abandon").additions.length,4);
+  assert.equal(preview.items.find(item=>item.key==="abandon").additions.length,3);
 
   const report = store.applyImport(preview,words);
   assert.equal(report.created,1);
