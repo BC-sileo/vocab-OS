@@ -50,7 +50,7 @@
     const summary='<div class="tag-import-summary"><span>新規 '+s.new+'</span><span>既存 '+s.existing+'</span><span>要確認 '+s.ambiguous+'</span><span>タグ追加 '+s.tagAdditions+'</span><span>値の競合 '+s.conflicts+'</span></div>';
     const rows=preview.items.map(item=>{
       const additions=item.additions.map(tag=>tag.name+(tag.value===null?"":" "+tag.value)).join(" · ")||"追加タグなし";
-      const conflicts=item.conflicts.map(tag=>tag.name+"：既存値と "+tag.value+" が競合").join(" / ");
+      const conflicts=item.conflicts.map(tag=>tag.name+"："+(item.existingTags||[]).filter(old=>old.name.toLowerCase()===tag.name.toLowerCase()).map(old=>old.value).join("/")+" → "+tag.value).join(" / ");
       const candidates=item.candidates.map(candidate=>candidate.word.word+"（距離 "+candidate.distance+"）").join("、");
       return '<div class="tag-import-row"><div><strong>'+escapeHTML(item.row.word)+'</strong><span class="tag-import-status status-'+item.status+'">'+statusLabel(item.status)+'</span></div><small>'+escapeHTML(additions)+'</small>'+(conflicts?'<small class="tag-import-conflict">'+escapeHTML(conflicts)+'</small>':"")+(candidates?'<small>類似候補：'+escapeHTML(candidates)+'（自動統合しません）</small>':"")+'</div>';
     }).join("");
