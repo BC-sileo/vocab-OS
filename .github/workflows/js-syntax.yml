@@ -16,6 +16,8 @@ jobs:
           node-version: 22
       - name: Check JavaScript syntax
         run: |
+          node --check tag-store.js
+          node --check tag-ui.js
           node --check app.js
           node --check word-notes.js
           node --check fsrs-loader.js
