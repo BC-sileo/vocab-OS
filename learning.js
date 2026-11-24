@@ -195,7 +195,7 @@
     const maxByTag={};
     selectedTagNames.forEach(name=>{
       maxByTag[name]=Math.max(1,...candidates.map(word=>{
-        const values=window.VocabOSTagStore.getWordTags(word.id).filter(tag=>tag.name.toLowerCase()===name.toLowerCase()&&typeof tag.value==="number").map(tag=>tag.value);
+        const values=window.VocabOSTagStore.getAllWordTags(word.id).filter(tag=>tag.name.toLowerCase()===name.toLowerCase()&&typeof tag.value==="number").map(tag=>tag.value);
         return values.length?Math.max(...values):0;
       }));
     });
@@ -203,7 +203,7 @@
       const n=noteFor(w),r=recordFor(w.id);
       let hits=0,strength=0;
       selectedTagNames.forEach(name=>{
-        const matching=window.VocabOSTagStore.getWordTags(w.id).filter(tag=>tag.name.toLowerCase()===name.toLowerCase());
+        const matching=window.VocabOSTagStore.getAllWordTags(w.id).filter(tag=>tag.name.toLowerCase()===name.toLowerCase());
         if(matching.length){
           hits++;
           const numeric=matching.filter(tag=>typeof tag.value==="number").map(tag=>tag.value);
@@ -228,7 +228,7 @@
     const tags=[];
     criteria.filter(id=>id.startsWith("tag:")).forEach(id=>{
       const name=id.slice(4);
-      const found=window.VocabOSTagStore.getWordTags(w.id).filter(tag=>tag.name.toLowerCase()===name.toLowerCase());
+      const found=window.VocabOSTagStore.getAllWordTags(w.id).filter(tag=>tag.name.toLowerCase()===name.toLowerCase());
       if(found.length)tags.push(name+(found[0].value===null?"":" "+found.map(tag=>tag.value).join("/")));
     });
     if(criteria.includes("etymology")&&hasEtymology(w))tags.push("語源");
@@ -255,7 +255,7 @@
     }
     panel.innerHTML='<p class="learning-preview-title">'+ids.length+'語を選びました</p><ol class="learning-preview-list">'+ids.map(function(id){
       const w=byId(id),tags=criteriaNamesFor(w,criteria);
-      return '<li><strong>'+safeText(w.word)+'</strong><small>'+(window.VocabOSTagStore.tagsLabel(w.id)||"タグ未設定")+(tags.length?" · "+safeText(tags.join(" / ")):"")+'</small></li>';
+      return '<li><strong>'+safeText(w.word)+'</strong><small>'+(window.VocabOSTagStore.getAllWordTags(w.id).map(tag=>tag.name+(tag.value===null?"":" "+tag.value)).join(" · ")||"タグ未設定")+(tags.length?" · "+safeText(tags.join(" / ")):"")+'</small></li>';
     }).join("")+'</ol>';
     start.disabled=false;
   }
