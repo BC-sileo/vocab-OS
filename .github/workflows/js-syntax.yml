@@ -29,6 +29,7 @@ jobs:
           node --check fsrs-loader.js
           node --check theme.js
           node --check notifications.js
+          node --check backup.js
           node --check sw.js
           node --check worker/index.js
       - name: Test tag migration and import
