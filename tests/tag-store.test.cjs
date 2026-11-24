@@ -56,6 +56,8 @@ assert.equal(tags.getVisibleEntityTags("sense", "abandon:sense:0", 7).some(tag =
 assert.equal(tags.bulkAddTag([7, 8], "REVIEW", "important"), 2);
 assert.equal(tags.matchesTagQuery(8, "REVIEW=important"), true);
 assert.equal(tags.bulkRemoveTag([7, 8], "REVIEW"), 2);
+assert.equal(tags.matchesTagQuery(7, "REVIEW"), false, "bulk removal invalidates lookup indexes");
+assert.equal(tags.getAllWordTags(7).length, new Set(tags.getAllWordTags(7).map(tag => tag.entityType+":"+tag.entityId+":"+tag.id+":"+String(tag.value))).size, "indexed lookups do not duplicate assignments");
 const exported = tags.exportCSV([words[0]]);
 assert.match(exported, /sense,abandon:sense:0,FORMAL/);
 assert.match(exported, /example,abandon:sense:0:example,ACADEMIC/);
