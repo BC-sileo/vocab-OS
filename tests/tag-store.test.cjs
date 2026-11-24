@@ -60,6 +60,26 @@ const exported = tags.exportCSV([words[0]]);
 assert.match(exported, /sense,abandon:sense:0,FORMAL/);
 assert.match(exported, /example,abandon:sense:0:example,ACADEMIC/);
 
+const restoredStorage = new Map();
+const restoredContext = {
+  console, Map, Set, Array, Number, String, Math, JSON, Date, Object,
+  localStorage: {
+    getItem(key) { return restoredStorage.has(key) ? restoredStorage.get(key) : null; },
+    setItem(key, value) { restoredStorage.set(key, String(value)); }
+  }
+};
+restoredContext.window = restoredContext;
+vm.runInNewContext(fs.readFileSync("tag-store.js", "utf8"), restoredContext);
+const restoredTags = restoredContext.VocabOSTagStore;
+const restoredWords = [{ id: 7, word: "Abandon" }];
+restoredTags.initialize(restoredWords);
+const restorePreview = restoredTags.previewImport(exported);
+assert.equal(restorePreview.summary.tagAdditions, tags.getAllWordTags(7).length, "full CSV import previews all word and nested tags");
+const restoreReport = restoredTags.applyImport(restorePreview, restoredWords);
+assert.equal(restoreReport.tagsAdded, tags.getAllWordTags(7).length, "full CSV import restores every tag assignment");
+assert.equal(restoredTags.getAllWordTags(7).length, tags.getAllWordTags(7).length);
+assert.equal(restoredTags.matchesTagQuery(7, "ACADEMIC AND ABSTRACT"), true);
+
 tags.addTag("word", 7, "VEN度", 15, "second-source");
 assert.equal(tags.getNumericValue(7, "VEN度"), undefined, "conflicting numeric assertions are not silently collapsed");
 const conflict = tags.previewImport("word,tags\nAbandon,VEN度:14");
