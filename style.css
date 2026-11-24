@@ -494,3 +494,31 @@ body.has-background-image .note-section .hint,body.has-background-image .note-li
 
 .learning-tag-criteria{display:grid;gap:7px;margin:8px 0 12px}
 .tag-import-preview:empty{display:none}
+
+/* Nested tag controls and bulk actions */
+.tag-entity-control{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0 3px}
+.tag-entity-control .word-tag-chips{margin:0;gap:5px}
+.tag-entity-control .word-tag-chip{padding:3px 6px;font-size:10px}
+.tag-entity-control .word-tag-chip button{font-size:14px}
+.tag-mini-editor{display:inline-block}
+.tag-mini-editor>summary{list-style:none;cursor:pointer;padding:4px 8px;border:1px dashed var(--line);border-radius:7px;color:var(--muted);font-size:10px;font-weight:750}
+.tag-mini-editor>summary::-webkit-details-marker{display:none}
+.tag-mini-editor[open]{flex:1 1 100%}
+.tag-mini-fields{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.tag-mini-fields input{width:min(38%,150px);min-width:90px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--text);font:inherit;font-size:11px}
+.tag-mini-fields button{padding:5px 9px;font-size:11px}
+.note-list-row{display:flex;align-items:center;gap:8px;min-width:0}
+.note-list-row .note-list-item{flex:1;min-width:0}
+.tag-word-select{width:18px;height:18px;flex:0 0 18px;accent-color:var(--accent);cursor:pointer}
+.tag-bulk-tools{margin:8px 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.tag-bulk-tools>summary{cursor:pointer;font-size:12px;font-weight:800;color:var(--accent);list-style:none}
+.tag-bulk-tools>summary::-webkit-details-marker{display:none}
+.tag-bulk-content{display:grid;gap:10px;padding-top:10px}
+.tag-bulk-actions{display:flex;align-items:center;flex-wrap:wrap;gap:7px}
+.tag-bulk-actions button,.tag-bulk-fields button{width:auto;margin:0;padding:7px 9px;font-size:11px}
+.tag-bulk-actions span{font-size:11px;font-weight:750;color:var(--muted)}
+.tag-bulk-fields{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.7fr);gap:7px}
+.tag-bulk-fields input{min-width:0;width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--text);font:inherit;font-size:12px}
+.tag-bulk-fields button{grid-column:span 1}
+.tag-bulk-content .secondary-wide-btn{margin:0}
+@media(max-width:420px){.tag-bulk-fields{grid-template-columns:1fr 1fr}.tag-mini-fields input{width:42%}}
