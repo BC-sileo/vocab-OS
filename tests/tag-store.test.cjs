@@ -46,6 +46,20 @@ assert.equal(tags.matchesTagQuery(7, "新J8=3 AND VEN度>=10"), true);
 assert.equal(tags.matchesTagQuery(7, "新J8=3|4 AND !CASUAL"), true);
 assert.equal(tags.matchesTagQuery(7, "VEN度<10"), false);
 
+tags.addEntityTag("sense", "abandon:sense:0", 7, "FORMAL", null, "manual");
+tags.addEntityTag("example", "abandon:sense:0:example", 7, "ACADEMIC", null, "manual");
+assert.equal(tags.getAllWordTags(7).some(tag => tag.entityType === "sense" && tag.name === "FORMAL"), true);
+assert.equal(tags.matchesTagQuery(7, "ACADEMIC AND VEN度>=10"), true, "tag queries include tagged examples");
+assert.equal(tags.getVisibleEntityTags("sense", "abandon:sense:0", 7).some(tag => tag.name === "FORMAL"), false, "word-level tags are not repeated on senses");
+tags.addEntityTag("sense", "abandon:sense:0", 7, "ABSTRACT", null, "manual");
+assert.equal(tags.getVisibleEntityTags("sense", "abandon:sense:0", 7).some(tag => tag.name === "ABSTRACT"), true);
+assert.equal(tags.bulkAddTag([7, 8], "REVIEW", "important"), 2);
+assert.equal(tags.matchesTagQuery(8, "REVIEW=important"), true);
+assert.equal(tags.bulkRemoveTag([7, 8], "REVIEW"), 2);
+const exported = tags.exportCSV([words[0]]);
+assert.match(exported, /sense,abandon:sense:0,FORMAL/);
+assert.match(exported, /example,abandon:sense:0:example,ACADEMIC/);
+
 tags.addTag("word", 7, "VEN度", 15, "second-source");
 assert.equal(tags.getNumericValue(7, "VEN度"), undefined, "conflicting numeric assertions are not silently collapsed");
 const conflict = tags.previewImport("word,tags\nAbandon,VEN度:14");
