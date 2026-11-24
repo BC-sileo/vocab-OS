@@ -38,6 +38,42 @@ try {
   const page = await browser.newPage();
   page.on("pageerror", error => errors.push(error.message));
 
+  await page.addInitScript(() => {
+    localStorage.setItem("vocabOS_v02", JSON.stringify({
+      pageSize: 10,
+      sessionPages: 1,
+      mode: "swipe",
+      states: { "1": "old-review-state" },
+      notes: {
+        "1": {
+          memo: "_preserve this user-authored core image",
+          imageUrl: "https://example.com/vocabulary-image.jpg",
+          imageSource: "https://example.com/source",
+          imageCreator: "Test creator",
+          imageLicense: "Test license",
+          viewCount: 37
+        }
+      }
+    }));
+    localStorage.setItem("vocabOS_learning_v1", JSON.stringify({
+      records: { "1": { weak: true, completedFirstRun: true, nextReviewAt: 123456789 } },
+      activeSession: null,
+      pendingSelection: null,
+      wordCount: 5
+    }));
+    localStorage.setItem("vocabOS_tags_v1", JSON.stringify({
+      version: 1,
+      nextTagId: 2,
+      tags: [{ id: 1, name: "PRESERVE_TAG", key: "preserve_tag" }],
+      assignments: [{ entityType: "word", entityId: 1, wordId: 1, tagId: 1, value: "source-value", source: "test-source" }],
+      customWords: [],
+      imports: []
+    }));
+    localStorage.setItem("vocabOS_push_config_v1", JSON.stringify({
+      workerUrl: "https://example.workers.dev",
+      apiToken: "must-not-be-exported",
+    }));
+  });
   await page.goto(`http://127.0.0.1:${address.port}/`, { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "単語ノートを開く" }).click();
   await page.locator(".note-list-item").first().waitFor();
@@ -50,6 +86,21 @@ try {
   await page.locator("#wordTagValue").fill("1");
   await page.locator("#addWordTag").click();
   await page.locator("#wordTagChips").getByText("E2E_CHECK 1").waitFor();
+
+  const backupDownloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "データをバックアップ" }).click();
+  const backupDownload = await backupDownloadPromise;
+  assert.match(backupDownload.suggestedFilename(), /^vocab-os-backup-.*\\.json$/);
+  const backupPath = await backupDownload.path();
+  const backup = JSON.parse(await readFile(backupPath, "utf8"));
+  assert.equal(backup.format, "vocab-os-backup");
+  assert.ok(backup.data.vocabOS_v02.notes["1"].memo.includes("preserve this user-authored core image"));
+  assert.equal(backup.data.vocabOS_v02.notes["1"].imageSource, "https://example.com/source");
+  assert.equal(backup.data.vocabOS_v02.notes["1"].viewCount, 37);
+  assert.equal(backup.data.vocabOS_learning_v1.records["1"].completedFirstRun, true);
+  assert.equal(backup.data.vocabOS_tags_v1.assignments[0].source, "test-source");
+  assert.ok(backup.manifest.excludedKeys.some(key => key.includes("vocabOS_push_config_v1")));
+  assert.equal(JSON.stringify(backup).includes("must-not-be-exported"), false, "notification API tokens are excluded");
 
   // Repeatedly update the note subtree; this used to trigger a MutationObserver loop.
   await page.locator("#noteSearch").fill(firstWord);
@@ -71,7 +122,7 @@ try {
   await page.locator("#startLearningSelection:not([disabled])").waitFor();
 
   assert.deepEqual(errors, [], `browser runtime errors: ${errors.join("; ")}`);
-  console.log("E2E smoke passed: app boot, notes navigation, tag edit, observer stability, importer preview, first-run word selection.");
+  console.log("E2E smoke passed: app boot, notes navigation, tag edit, lossless local-data backup, secret exclusion, observer stability, importer preview, first-run word selection.");
 } finally {
   if (browser) await browser.close();
   await new Promise(resolve => server.close(resolve));

@@ -56,7 +56,7 @@
       <p id="notificationStatus" class="notification-status" aria-live="polite">通知はまだ設定されていません。</p>
       <p class="hint">初回設定：<a href="./setup-keys.html">キー生成</a> → <a href="https://github.com/BC-sileo/vocab-OS/blob/main/NOTIFICATIONS_SETUP.md" target="_blank" rel="noopener">通知設定ガイド</a></p>
     </section>
-    <section class="card home-theme-card">
+    <section class="card data-safety-card">\n      <p class="eyebrow">DATA SAFETY</p>\n      <h2>データの保護</h2>\n      <p class="hint">語彙データやタグ、ユーザーメモ、画像情報、現在の学習状態をJSONで保存します。通知API_TOKENは含めません。大きなデータ移行や初期化の前にバックアップしてください。</p>\n      <button id="exportBackupBtn" class="secondary-wide-btn" type="button">データをバックアップ</button>\n      <p id="backupStatus" class="hint" aria-live="polite"></p>\n    </section>\n    <section class="card home-theme-card">
       <p class="eyebrow">APPEARANCE</p>
       <h2>背景を選ぶ</h2>
       <p class="hint">好きな背景に切り替えられます。選択はこの端末に保存され、次回も引き継がれます。</p>
@@ -215,6 +215,6 @@
   <script src="fsrs-loader.js?v=1"></script>
   <script src="learning.js?v=13"></script>
   <script src="theme.js"></script>
-  <script src="notifications.js?v=2"></script>
+  <script src="notifications.js?v=2"></script>\n  <script src="backup.js?v=1"></script>
 </body>
 </html>
