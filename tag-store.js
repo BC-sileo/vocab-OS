@@ -146,17 +146,29 @@
     const header=rows[0].map(v=>v.trim().toLowerCase());
     const hasHeader=header.some(v=>["word","単語","spelling"].includes(v));
     const columns=hasHeader?header:["word","tags","translation","pos","source"];
+    const hasEntityColumns=columns.includes("entity_type")&&columns.includes("entity_id");
     const wordColumn=hasHeader?columns.findIndex(v=>["word","単語","spelling"].includes(v)):0;
     if(wordColumn<0)throw new Error("列名に word（または単語）が必要です。");
     if(hasHeader)rows.shift();
     return rows.map(cells=>{
       const get=names=>{const i=columns.findIndex(v=>names.includes(v));return i<0?"":String(cells[i]||"").trim();};
+      const entityType=get(["entity_type","entitytype"]).toLowerCase();
+      const entityId=get(["entity_id","entityid"]);
+      const entityTagName=hasEntityColumns?get(["tag_name","tag"]):"";
+      const rawEntityValue=get(["value"]);
+      const numericEntityValue=rawEntityValue!==""&&Number.isFinite(Number(rawEntityValue));
+      const entityTag=entityTagName?{
+        entityType,entityId,name:entityTagName,
+        value:rawEntityValue===""?null:(numericEntityValue?Number(rawEntityValue):rawEntityValue)
+      }:null;
+      if(entityTag&&(!["word","sense","example","collocation"].includes(entityType)||(entityType!=="word"&&!entityId)))throw new Error("CSVのentity_type / entity_idが不正です。");
       return {
         word:String(cells[wordColumn]||"").trim(),
-        tags:get(["tags","tag","タグ","tags"]),
+        tags:get(hasEntityColumns?["tags","タグ"]:["tags","tag","タグ"]),
         translation:get(["translation","meaning","意味","訳"]),
         pos:get(["pos","品詞"]),
-        source:get(["source","出典"])
+        source:get(["source","出典"]),
+        entityTags:entityTag?[entityTag]:[]
       };
     }).filter(item=>item.word);
   }
@@ -174,7 +186,7 @@
     rawRows.forEach(row=>{
       const key=normalizeWordKey(row.word);if(!key)return;
       if(!grouped.has(key))grouped.set(key,{...row});
-      else{const prior=grouped.get(key);prior.tags=[prior.tags,row.tags].filter(Boolean).join(";");prior.translation=prior.translation||row.translation;prior.pos=prior.pos||row.pos;prior.source=[prior.source,row.source].filter(Boolean).join(";");}
+      else{const prior=grouped.get(key);prior.tags=[prior.tags,row.tags].filter(Boolean).join(";");prior.entityTags=(prior.entityTags||[]).concat(row.entityTags||[]);prior.translation=prior.translation||row.translation;prior.pos=prior.pos||row.pos;prior.source=[prior.source,row.source].filter(Boolean).join(";");}
     });
     const rows=Array.from(grouped.values());
     rows.forEach(row=>{
@@ -195,15 +207,26 @@
       )||incomingTags.some(other=>
         other!==incoming&&other.name.normalize("NFKC").trim().toLocaleLowerCase("en-US")===incoming.name.normalize("NFKC").trim().toLocaleLowerCase("en-US")&&JSON.stringify(other.value??null)!==JSON.stringify(incoming.value??null)
       ));
-      items.push({row,key,existingId:existing?.id||null,status:existing?"existing":candidates.length?"ambiguous":"new",candidates,existingTags:currentTags,additions,conflicts});
+      const incomingEntityTags=Array.from(new Map((row.entityTags||[]).map(tag=>[
+        tag.entityType+"\\u0000"+tag.entityId+"\\u0000"+tag.name.normalize("NFKC").trim().toLocaleLowerCase("en-US")+"\\u0000"+JSON.stringify(tag.value??null),tag
+      ])).values());
+      const entityTagAdditions=incomingEntityTags.filter(tag=>{
+        if(tag.entityType==="word")return !getWordTags(existing?.id).some(current=>current.name.toLowerCase()===tag.name.toLowerCase()&&JSON.stringify(current.value??null)===JSON.stringify(tag.value??null));
+        return !getEntityTags(tag.entityType,tag.entityId).some(current=>current.name.toLowerCase()===tag.name.toLowerCase()&&JSON.stringify(current.value??null)===JSON.stringify(tag.value??null));
+      });
+      const entityTagConflicts=incomingEntityTags.filter(tag=>{
+        const current=tag.entityType==="word"?getWordTags(existing?.id):getEntityTags(tag.entityType,tag.entityId);
+        return current.some(old=>old.name.toLowerCase()===tag.name.toLowerCase()&&JSON.stringify(old.value??null)!==JSON.stringify(tag.value??null));
+      });
+      items.push({row,key,existingId:existing?.id||null,status:existing?"existing":candidates.length?"ambiguous":"new",candidates,existingTags:currentTags,additions,conflicts,entityTagAdditions,entityTagConflicts});
     });
     return {items,summary:{
       new:items.filter(x=>x.status==="new").length,
       existing:items.filter(x=>x.status==="existing").length,
       ambiguous:items.filter(x=>x.status==="ambiguous").length,
       repeated:rawRows.length-items.length,
-      tagAdditions:items.reduce((n,x)=>n+x.additions.length,0),
-      conflicts:items.reduce((n,x)=>n+x.conflicts.length,0)
+      tagAdditions:items.reduce((n,x)=>n+x.additions.length+x.entityTagAdditions.length,0),
+      conflicts:items.reduce((n,x)=>n+x.conflicts.length+x.entityTagConflicts.length,0)
     }};
   }
   function applyImport(preview,words){
@@ -226,7 +249,14 @@
       sources.forEach(source=>{if(addTag("word",word.id,"出典",source,source))report.tagsAdded++;});
       const primarySource=sources[0]||null;
       item.additions.forEach(tag=>{if(addTag("word",word.id,tag.name,tag.value,primarySource))report.tagsAdded++;});
+      item.entityTagAdditions.forEach(tag=>{
+        const added=tag.entityType==="word"
+          ? addTag("word",word.id,tag.name,tag.value,primarySource,word.id)
+          : addEntityTag(tag.entityType,tag.entityId,word.id,tag.name,tag.value,primarySource);
+        if(added)report.tagsAdded++;
+      });
       item.conflicts.forEach(tag=>report.conflicts.push({word:word.word,tag:tag.name,existing:(item.existingTags||[]).filter(t=>t.name.toLowerCase()===tag.name.toLowerCase()).map(t=>t.value),incoming:tag.value}));
+      item.entityTagConflicts.forEach(tag=>report.conflicts.push({word:word.word,tag:tag.name,entityType:tag.entityType,existing:(tag.entityType==="word"?getWordTags(word.id):getEntityTags(tag.entityType,tag.entityId)).filter(t=>t.name.toLowerCase()===tag.name.toLowerCase()).map(t=>t.value),incoming:tag.value}));
       addedInThisBatch.set(item.key,word.id);
     });
     data.imports.push({at:Date.now(),summary:report,keys:Array.from(addedInThisBatch.keys())});
