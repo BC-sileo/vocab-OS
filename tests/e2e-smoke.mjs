@@ -72,7 +72,6 @@ try {
     localStorage.setItem("vocabOS_push_config_v1", JSON.stringify({
       workerUrl: "https://example.workers.dev",
       apiToken: "must-not-be-exported",
-      deviceId: "test-device"
     }));
   });
   await page.goto(`http://127.0.0.1:${address.port}/`, { waitUntil: "networkidle" });
