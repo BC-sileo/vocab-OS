@@ -6,6 +6,12 @@
   const escapeHTML=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const parseValue=raw=>raw===""?null:(Number.isFinite(Number(raw))?Number(raw):raw);
   const wordKey=word=>tags.normalizeWordKey(word.word);
+  function stableEntityKey(value){
+    const source=String(value??"").normalize("NFKC").trim().toLocaleLowerCase("en-US");
+    let hash=2166136261;
+    for(let i=0;i<source.length;i++)hash=Math.imul(hash^source.charCodeAt(i),16777619);
+    return (hash>>>0).toString(36);
+  }
 
   function wordTagMarkup(word){
     const current=tags.getWordTags(word.id);
@@ -27,16 +33,23 @@
   function decorateNoteEntities(word,detail){
     const prefix=wordKey(word);
     detail.querySelectorAll(".meaning-fold").forEach((node,index)=>{
-      const senseId=prefix+":sense:"+index;
+      const title=node.querySelector("summary strong")?.textContent||("sense-"+index);
+      const senseId=prefix+":sense:"+stableEntityKey(title);
       injectEntityControl(node,"sense",senseId,word,"語義");
       const example=node.querySelector(".meaning-example-fold");
-      if(example)injectEntityControl(node,"example",senseId+":example",word,"語義内の例文",example);
+      if(example){
+        const sentence=example.querySelector(".meaning-example p")?.textContent||example.textContent||"example";
+        injectEntityControl(node,"example",senseId+":example:"+stableEntityKey(sentence),word,"語義内の例文",example);
+      }
     });
     detail.querySelectorAll(".domain-example").forEach((node,index)=>{
-      injectEntityControl(node,"example",prefix+":domain-example:"+index,word,"他分野の用例");
+      const expression=node.querySelector(".domain-example-top strong")?.textContent||("domain-example-"+index);
+      injectEntityControl(node,"example",prefix+":domain-example:"+stableEntityKey(expression),word,"他分野の用例");
     });
     detail.querySelectorAll(".usage-item").forEach((node,index)=>{
-      injectEntityControl(node,"collocation",prefix+":collocation:"+index,word,"語法・コロケーション");
+      const itemId=node.querySelector("[data-usage-item]")?.dataset.usageItem;
+      const identity=itemId||stableEntityKey(node.querySelector(".usage-diagram")?.textContent||node.textContent||("collocation-"+index));
+      injectEntityControl(node,"collocation",prefix+":collocation:"+identity,word,"語法・コロケーション");
     });
     const mixed=detail.querySelector(".mixed-sentence-section");
     if(mixed)injectEntityControl(mixed,"example",prefix+":mixed-sentence",word,"混合例文");
