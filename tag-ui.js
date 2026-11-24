@@ -210,7 +210,11 @@
     updateSelectionCount();
   }
   function updateSelectionCount(){
-    const count=$("[data-selection-count]");if(count)count.textContent=selectedWords.size+"語選択中";
+    const count=$("[data-selection-count]");
+    if(!count)return;
+    const next=selectedWords.size+"語選択中";
+    // Avoid feeding our own text update back into the panel MutationObserver.
+    if(count.textContent!==next)count.textContent=next;
   }
   const panel=$("#notesListPanel");
   if(panel){
