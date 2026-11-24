@@ -62,8 +62,16 @@ try {
   await page.locator("#tagImportPreviewPanel .tag-import-summary").waitFor();
   assert.match(await page.locator("#tagImportPreviewPanel").innerText(), /E2E_IMPORT/);
 
+  await page.locator("#tagImportBack").click();
+  await page.locator("#notesHomeBtn").click();
+  await page.getByRole("button", { name: "初見モード" }).click();
+  await page.locator("#learningSetupView:not(.hidden)").waitFor();
+  await page.locator("#chooseLearningWords").click();
+  await page.locator("#learningSelectionPreview").getByText(/語/).first().waitFor();
+  await page.locator("#startLearningSelection:not([disabled])").waitFor();
+
   assert.deepEqual(errors, [], `browser runtime errors: ${errors.join("; ")}`);
-  console.log("E2E smoke passed: app boot, notes navigation, tag edit, observer stability, importer preview.");
+  console.log("E2E smoke passed: app boot, notes navigation, tag edit, observer stability, importer preview, first-run word selection.");
 } finally {
   if (browser) await browser.close();
   await new Promise(resolve => server.close(resolve));
