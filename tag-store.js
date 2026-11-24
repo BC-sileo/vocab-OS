@@ -159,7 +159,8 @@
       const numericEntityValue=rawEntityValue!==""&&Number.isFinite(Number(rawEntityValue));
       const entityTag=entityTagName?{
         entityType,entityId,name:entityTagName,
-        value:rawEntityValue===""?null:(numericEntityValue?Number(rawEntityValue):rawEntityValue)
+        value:rawEntityValue===""?null:(numericEntityValue?Number(rawEntityValue):rawEntityValue),
+        source:get(["tag_source"])
       }:null;
       if(entityTag&&(!["word","sense","example","collocation"].includes(entityType)||(entityType!=="word"&&!entityId)))throw new Error("CSVのentity_type / entity_idが不正です。");
       return {
@@ -251,8 +252,8 @@
       item.additions.forEach(tag=>{if(addTag("word",word.id,tag.name,tag.value,primarySource))report.tagsAdded++;});
       item.entityTagAdditions.forEach(tag=>{
         const added=tag.entityType==="word"
-          ? addTag("word",word.id,tag.name,tag.value,primarySource,word.id)
-          : addEntityTag(tag.entityType,tag.entityId,word.id,tag.name,tag.value,primarySource);
+          ? addTag("word",word.id,tag.name,tag.value,tag.source||primarySource,word.id)
+          : addEntityTag(tag.entityType,tag.entityId,word.id,tag.name,tag.value,tag.source||primarySource);
         if(added)report.tagsAdded++;
       });
       item.conflicts.forEach(tag=>report.conflicts.push({word:word.word,tag:tag.name,existing:(item.existingTags||[]).filter(t=>t.name.toLowerCase()===tag.name.toLowerCase()).map(t=>t.value),incoming:tag.value}));
@@ -282,7 +283,7 @@
   }
   function exportCSV(words){
     const quote=value=>{const text=String(value??"");return /[",\r\n]/.test(text)?'"'+text.replace(/"/g,'""')+'"':text;};
-    const rows=[["word","translation","pos","entity_type","entity_id","tag","value","source"]];
+    const rows=[["word","translation","pos","entity_type","entity_id","tag","value","tag_source"]];
     (words||[]).forEach(word=>{
       const assignments=data.assignments.filter(item=>
         (item.entityType==="word"&&String(item.entityId)===String(word.id))||
