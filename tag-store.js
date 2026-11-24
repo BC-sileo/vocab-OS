@@ -5,6 +5,33 @@
   const VERSION=1;
   let data=load();
   let wordIndex=new Map();
+  let assignmentsByEntity=new Map();
+  let assignmentsByWord=new Map();
+  let assignmentsIndexed=false;
+  const entityKey=(type,id)=>String(type)+"\\u0000"+String(id);
+  function appendIndex(map,key,item){
+    if(!map.has(key))map.set(key,[]);
+    map.get(key).push(item);
+  }
+  function indexAssignment(item){
+    appendIndex(assignmentsByEntity,entityKey(item.entityType,item.entityId),item);
+    const ownerId=item.entityType==="word"?item.entityId:item.wordId;
+    if(ownerId!==undefined&&ownerId!==null)appendIndex(assignmentsByWord,String(ownerId),item);
+  }
+  function ensureAssignmentIndexes(){
+    if(assignmentsIndexed)return;
+    assignmentsByEntity=new Map();assignmentsByWord=new Map();
+    data.assignments.forEach(indexAssignment);
+    assignmentsIndexed=true;
+  }
+  function assignmentsFor(entityType,entityId){
+    ensureAssignmentIndexes();
+    return assignmentsByEntity.get(entityKey(entityType,entityId))||[];
+  }
+  function assignmentsForWord(wordId){
+    ensureAssignmentIndexes();
+    return assignmentsByWord.get(String(wordId))||[];
+  }
 
   function load(){
     try{
@@ -56,16 +83,18 @@
     const tag=ensureTag(name);
     if(!tag)return false;
     const normalizedValue=value===undefined||value===null||value===""?null:value;
-    const exists=data.assignments.some(item=>
-      item.entityType===entityType&&String(item.entityId)===String(entityId)&&
-      item.tagId===tag.id&&JSON.stringify(item.value??null)===JSON.stringify(normalizedValue)
-    );
-    if(exists){
-      const prior=data.assignments.find(item=>item.entityType===entityType&&String(item.entityId)===String(entityId)&&item.tagId===tag.id&&JSON.stringify(item.value??null)===JSON.stringify(normalizedValue));
-      if(prior&&wordId!==undefined&&wordId!==null&&String(prior.wordId??"")!==String(wordId)){prior.wordId=wordId;save();}
+    const candidates=assignmentsFor(entityType,entityId);
+    const prior=candidates.find(item=>item.tagId===tag.id&&JSON.stringify(item.value??null)===JSON.stringify(normalizedValue));
+    if(prior){
+      if(wordId!==undefined&&wordId!==null&&String(prior.wordId??"")!==String(wordId)){
+        prior.wordId=wordId;assignmentsIndexed=false;save();
+      }
       return false;
     }
-    data.assignments.push({entityType,entityId,wordId:wordId??(entityType==="word"?entityId:null),tagId:tag.id,value:normalizedValue,source:source||null});
+    const item={entityType,entityId,wordId:wordId??(entityType==="word"?entityId:null),tagId:tag.id,value:normalizedValue,source:source||null};
+    data.assignments.push(item);
+    ensureAssignmentIndexes();
+    indexAssignment(item);
     return true;
   }
   function addEntityTag(entityType,entityId,wordId,name,value,source){
@@ -79,21 +108,18 @@
       item.entityType===entityType&&String(item.entityId)===String(entityId)&&
       (item.tagId===tagId)&&(value===undefined||JSON.stringify(item.value??null)===JSON.stringify(value))
     ));
-    if(data.assignments.length!==before)save();
+    if(data.assignments.length!==before){assignmentsIndexed=false;save();}
     return before-data.assignments.length;
   }
   function getTags(entityType,entityId){
-    return data.assignments.filter(item=>item.entityType===entityType&&String(item.entityId)===String(entityId))
+    return assignmentsFor(entityType,entityId)
       .map(item=>{const def=data.tags.find(tag=>tag.id===item.tagId);return def?{id:def.id,name:def.name,value:item.value,source:item.source}:null;})
       .filter(Boolean);
   }
   function getWordTags(wordId){return getTags("word",wordId);}
   function getEntityTags(entityType,entityId){return getTags(entityType,entityId);}
   function getAllWordTags(wordId){
-    return data.assignments.filter(item=>
-      (item.entityType==="word"&&String(item.entityId)===String(wordId))||
-      (item.entityType!=="word"&&String(item.wordId??"")===String(wordId))
-    ).map(item=>{
+    return assignmentsForWord(wordId).map(item=>{
       const def=data.tags.find(tag=>tag.id===item.tagId);
       return def?{id:def.id,name:def.name,value:item.value,source:item.source,entityType:item.entityType,entityId:item.entityId}:null;
     }).filter(Boolean);
@@ -285,10 +311,7 @@
     const quote=value=>{const text=String(value??"");return /[",\r\n]/.test(text)?'"'+text.replace(/"/g,'""')+'"':text;};
     const rows=[["word","translation","pos","entity_type","entity_id","tag","value","tag_source"]];
     (words||[]).forEach(word=>{
-      const assignments=data.assignments.filter(item=>
-        (item.entityType==="word"&&String(item.entityId)===String(word.id))||
-        (item.entityType!=="word"&&String(item.wordId??"")===String(word.id))
-      );
+      const assignments=assignmentsForWord(word.id);
       if(!assignments.length)rows.push([word.word,word.translation,word.pos,"word",word.id,"","",""]);
       assignments.forEach(item=>{
         const def=data.tags.find(tag=>tag.id===item.tagId);
