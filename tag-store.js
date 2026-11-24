@@ -304,7 +304,7 @@
     const before=data.assignments.length;
     data.assignments=data.assignments.filter(item=>!(item.entityType==="word"&&ids.has(String(item.entityId))&&item.tagId===definition.id));
     const removed=before-data.assignments.length;
-    if(removed)save();
+    if(removed){assignmentsIndexed=false;save();}
     return removed;
   }
   function exportCSV(words){
