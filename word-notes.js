@@ -549,7 +549,7 @@ function noteSearchText(w,n){
  const independent=n.independentMeanings||map?.independentMeanings||[];
  const independentText=Array.isArray(independent)?independent.map(item=>typeof item==="string"?item:[item.label,item.description,item.meaning].join(" ")).join(" "):"";
  const domainText=Array.isArray(n.domainExamples)?n.domainExamples.map(item=>[item.domain,item.expression,item.meaning,item.explanation].join(" ")).join(" "):"";
- return [w.word,w.translation,effectiveCoreImage(w,n),window.VocabOSTagStore.tagsLabel(w.id),n.meaning,n.usage,mapText,independentText,domainText].join(" ").toLowerCase();
+ return [w.word,w.translation,effectiveCoreImage(w,n),window.VocabOSTagStore.getAllWordTags(w.id).map(tag=>tag.name+(tag.value===null?"":" "+tag.value)).join(" "),n.meaning,n.usage,mapText,independentText,domainText].join(" ").toLowerCase();
 }
 function renderNoteList(){
  const q=$("#noteSearch").value.trim().toLowerCase();
