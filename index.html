@@ -84,7 +84,7 @@
   <main id="tagImportView" class="hidden">
     <section class="card">
       <div class="section-head"><div><p class="eyebrow">VOCABULARY DATA</p><h2>タグ・インポート</h2></div><button id="tagImportBack" class="subtle-btn">単語一覧へ</button></div>
-      <p class="hint">CSV・TSVを貼り付けて取り込めます。列は word, tags, translation, pos, source。タグは「VEN度:18;新J8:3;FORMAL」の形式です。既存情報は原則上書きしません。</p>
+      <p class="hint">CSV・TSVを貼り付けて取り込めます。通常は word, tags, translation, pos, source。タグは「VEN度:18;新J8:3;FORMAL」の形式です。一括操作から出力したCSVは、語義・例文・コロケーションのタグも含めて復元できます。既存情報は原則上書きしません。</p>
       <textarea id="tagImportText" class="word-memo" rows="9" placeholder="word,tags,translation,pos,source&#10;abandon,VEN度:18;新J8:3,手放す,v,新JACET8000"></textarea>
       <button id="tagImportPreview" class="secondary-wide-btn">取り込み内容を確認</button>
       <section id="tagImportPreviewPanel" class="tag-import-preview" aria-live="polite"></section>
@@ -208,12 +208,12 @@
     </div>
   </aside>
 
-  <script src="tag-store.js?v=3"></script>
+  <script src="tag-store.js?v=4"></script>
   <script src="app.js?v=12"></script>
   <script src="word-notes.js?v=11"></script>
-  <script src="tag-ui.js?v=4"></script>
+  <script src="tag-ui.js?v=5"></script>
   <script src="fsrs-loader.js?v=1"></script>
-  <script src="learning.js?v=12"></script>
+  <script src="learning.js?v=13"></script>
   <script src="theme.js"></script>
   <script src="notifications.js?v=2"></script>
 </body>
