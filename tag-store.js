@@ -92,8 +92,8 @@
       return false;
     }
     const item={entityType,entityId,wordId:wordId??(entityType==="word"?entityId:null),tagId:tag.id,value:normalizedValue,source:source||null};
-    data.assignments.push(item);
     ensureAssignmentIndexes();
+    data.assignments.push(item);
     indexAssignment(item);
     return true;
   }
