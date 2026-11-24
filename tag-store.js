@@ -52,7 +52,7 @@
     }
     return tag;
   }
-  function addTag(entityType,entityId,name,value,source){
+  function addTag(entityType,entityId,name,value,source,wordId){
     const tag=ensureTag(name);
     if(!tag)return false;
     const normalizedValue=value===undefined||value===null||value===""?null:value;
@@ -60,9 +60,18 @@
       item.entityType===entityType&&String(item.entityId)===String(entityId)&&
       item.tagId===tag.id&&JSON.stringify(item.value??null)===JSON.stringify(normalizedValue)
     );
-    if(exists)return false;
-    data.assignments.push({entityType,entityId,tagId:tag.id,value:normalizedValue,source:source||null});
+    if(exists){
+      const prior=data.assignments.find(item=>item.entityType===entityType&&String(item.entityId)===String(entityId)&&item.tagId===tag.id&&JSON.stringify(item.value??null)===JSON.stringify(normalizedValue));
+      if(prior&&wordId!==undefined&&wordId!==null&&String(prior.wordId??"")!==String(wordId)){prior.wordId=wordId;save();}
+      return false;
+    }
+    data.assignments.push({entityType,entityId,wordId:wordId??(entityType==="word"?entityId:null),tagId:tag.id,value:normalizedValue,source:source||null});
     return true;
+  }
+  function addEntityTag(entityType,entityId,wordId,name,value,source){
+    if(entityType==="word")return addTag("word",wordId,name,value,source,wordId);
+    if(!["sense","example","collocation"].includes(entityType))throw new Error("Unsupported tag entity type: "+entityType);
+    return addTag(entityType,entityId,name,value,source,wordId);
   }
   function removeTag(entityType,entityId,tagId,value){
     const before=data.assignments.length;
@@ -79,6 +88,23 @@
       .filter(Boolean);
   }
   function getWordTags(wordId){return getTags("word",wordId);}
+  function getEntityTags(entityType,entityId){return getTags(entityType,entityId);}
+  function getAllWordTags(wordId){
+    return data.assignments.filter(item=>
+      (item.entityType==="word"&&String(item.entityId)===String(wordId))||
+      (item.entityType!=="word"&&String(item.wordId??"")===String(wordId))
+    ).map(item=>{
+      const def=data.tags.find(tag=>tag.id===item.tagId);
+      return def?{id:def.id,name:def.name,value:item.value,source:item.source,entityType:item.entityType,entityId:item.entityId}:null;
+    }).filter(Boolean);
+  }
+  function getVisibleEntityTags(entityType,entityId,wordId){
+    const inherited=getWordTags(wordId);
+    return getEntityTags(entityType,entityId).filter(tag=>!inherited.some(parent=>
+      parent.name.toLocaleLowerCase("en-US")===tag.name.toLocaleLowerCase("en-US")&&
+      JSON.stringify(parent.value??null)===JSON.stringify(tag.value??null)
+    ));
+  }
   function getNumericValue(wordId,name){
     const key=String(name).toLocaleLowerCase("en-US");
     const matches=getWordTags(wordId).filter(tag=>tag.name.toLocaleLowerCase("en-US")===key&&typeof tag.value==="number");
@@ -207,6 +233,39 @@
     save();rebuildIndex(words);
     return report;
   }
+  function bulkAddTag(wordIds,name,value,source){
+    let added=0;
+    Array.from(new Set((wordIds||[]).map(String))).forEach(id=>{if(addTag("word",id,name,value,source||"bulk"))added++;});
+    if(added)save();
+    return added;
+  }
+  function bulkRemoveTag(wordIds,name){
+    const key=String(name||"").normalize("NFKC").trim().toLocaleLowerCase("en-US");
+    const ids=new Set((wordIds||[]).map(String));
+    const definition=data.tags.find(tag=>tag.key===key);
+    if(!definition)return 0;
+    const before=data.assignments.length;
+    data.assignments=data.assignments.filter(item=>!(item.entityType==="word"&&ids.has(String(item.entityId))&&item.tagId===definition.id));
+    const removed=before-data.assignments.length;
+    if(removed)save();
+    return removed;
+  }
+  function exportCSV(words){
+    const quote=value=>{const text=String(value??"");return /[",\r\n]/.test(text)?'"'+text.replace(/"/g,'""')+'"':text;};
+    const rows=[["word","translation","pos","entity_type","entity_id","tag","value","source"]];
+    (words||[]).forEach(word=>{
+      const assignments=data.assignments.filter(item=>
+        (item.entityType==="word"&&String(item.entityId)===String(word.id))||
+        (item.entityType!=="word"&&String(item.wordId??"")===String(word.id))
+      );
+      if(!assignments.length)rows.push([word.word,word.translation,word.pos,"word",word.id,"","",""]);
+      assignments.forEach(item=>{
+        const def=data.tags.find(tag=>tag.id===item.tagId);
+        if(def)rows.push([word.word,word.translation,word.pos,item.entityType,item.entityId,def.name,item.value===null?"":item.value,item.source||""]);
+      });
+    });
+    return rows.map(row=>row.map(quote).join(",")).join("\r\n");
+  }
   function initialize(words){
     data.customWords.forEach(word=>{if(!words.some(existing=>normalizeWordKey(existing.word)===normalizeWordKey(word.word)))words.push(word);});
     words.forEach(word=>{
@@ -220,7 +279,7 @@
   }
   function matchesTagQuery(wordId,query){
     const groups=String(query||"").trim().split(/\s+AND\s+/i).filter(Boolean);
-    const current=getWordTags(wordId);
+    const current=getAllWordTags(wordId);
     function matchesTerm(rawTerm){
       let term=rawTerm.trim(),negative=false;
       if(term.startsWith("!")){negative=true;term=term.slice(1);}
@@ -252,7 +311,7 @@
     const required=(requiredTags||[]).map(x=>String(x).toLowerCase());
     const excluded=(excludedTags||[]).map(x=>String(x).toLowerCase());
     return words.filter(word=>{
-      const tags=getWordTags(word.id);
+      const tags=getAllWordTags(word.id);
       const names=tags.map(tag=>tag.name.toLowerCase());
       if(required.some(name=>!names.includes(name)))return false;
       if(excluded.some(name=>names.includes(name)))return false;
@@ -261,8 +320,8 @@
   }
   global.VocabOSTagStore={
     initialize,save,normalizeWordKey,rebuildIndex,findWord:key=>wordIndex.get(normalizeWordKey(key))||null,
-    addTag,removeTag,getTags,getWordTags,getNumericValue,tagsLabel,ensureTag,matchesTagQuery,
-    previewImport,applyImport,parseCSV,parseTagCell,searchWords,
+    addTag,addEntityTag,removeTag,getTags,getWordTags,getEntityTags,getAllWordTags,getVisibleEntityTags,getNumericValue,tagsLabel,ensureTag,matchesTagQuery,
+    bulkAddTag,bulkRemoveTag,exportCSV,previewImport,applyImport,parseCSV,parseTagCell,searchWords,
     get definitions(){return data.tags.slice();},
     get customWords(){return data.customWords.slice();}
   };
